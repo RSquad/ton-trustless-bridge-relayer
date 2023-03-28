@@ -1,0 +1,76 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IBaseAdapter",
+  "sourceName": "contracts/Adapter.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "boc",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rootIdx",
+          "type": "uint256"
+        }
+      ],
+      "name": "execute",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

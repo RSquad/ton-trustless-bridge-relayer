@@ -1,0 +1,1377 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "ShardValidator",
+  "sourceName": "contracts/validator/ShardValidator.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "boc",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rootIdx",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "toc",
+          "type": "tuple[100]"
+        }
+      ],
+      "name": "addPrevBlock",
+      "outputs": [
+        {
+          "internalType": "bytes32[10]",
+          "name": "root_hashes",
+          "type": "bytes32[10]"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "verified",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint32",
+              "name": "seq_no",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "start_lt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "end_lt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "new_hash",
+              "type": "bytes32"
+            }
+          ],
+          "internalType": "struct VerifiedBlockInfo[10]",
+          "name": "blocks",
+          "type": "tuple[10]"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint256",
+          "name": "prefix",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "n",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256[32]",
+          "name": "cellIdxs",
+          "type": "uint256[32]"
+        }
+      ],
+      "name": "doParse",
+      "outputs": [],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "x",
+          "type": "uint256"
+        }
+      ],
+      "name": "log2Ceil",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "n",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "keySize",
+          "type": "uint256"
+        }
+      ],
+      "name": "parseDict",
+      "outputs": [
+        {
+          "internalType": "uint256[32]",
+          "name": "cellIdxs",
+          "type": "uint256[32]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "boc",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rootIdx",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "toc",
+          "type": "tuple[100]"
+        }
+      ],
+      "name": "parseShardProofPath",
+      "outputs": [
+        {
+          "internalType": "bytes32[10]",
+          "name": "root_hashes",
+          "type": "bytes32[10]"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "verified",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint32",
+              "name": "seq_no",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "start_lt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "end_lt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "new_hash",
+              "type": "bytes32"
+            }
+          ],
+          "internalType": "struct VerifiedBlockInfo[10]",
+          "name": "blocks",
+          "type": "tuple[10]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        }
+      ],
+      "name": "readBit",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "value",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        }
+      ],
+      "name": "readBool",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "size",
+          "type": "uint256"
+        }
+      ],
+      "name": "readBytes32BitSize",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "buffer",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "sizeb",
+          "type": "uint256"
+        }
+      ],
+      "name": "readBytes32ByteSize",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "buffer",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        }
+      ],
+      "name": "readCell",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "idx",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "boc",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rootIdx",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "toc",
+          "type": "tuple[100]"
+        }
+      ],
+      "name": "readMasterProof",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "new_hash",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "boc",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rootIdx",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "toc",
+          "type": "tuple[100]"
+        }
+      ],
+      "name": "readStateProof",
+      "outputs": [
+        {
+          "internalType": "bytes32[10]",
+          "name": "root_hashes",
+          "type": "bytes32[10]"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "verified",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint32",
+              "name": "seq_no",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "start_lt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "end_lt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "new_hash",
+              "type": "bytes32"
+            }
+          ],
+          "internalType": "struct VerifiedBlockInfo[10]",
+          "name": "blocks",
+          "type": "tuple[10]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint16",
+          "name": "size",
+          "type": "uint16"
+        }
+      ],
+      "name": "readUint",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "size",
+          "type": "uint8"
+        }
+      ],
+      "name": "readUint16",
+      "outputs": [
+        {
+          "internalType": "uint16",
+          "name": "value",
+          "type": "uint16"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "size",
+          "type": "uint8"
+        }
+      ],
+      "name": "readUint32",
+      "outputs": [
+        {
+          "internalType": "uint32",
+          "name": "value",
+          "type": "uint32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint16",
+          "name": "size",
+          "type": "uint16"
+        }
+      ],
+      "name": "readUint64",
+      "outputs": [
+        {
+          "internalType": "uint64",
+          "name": "value",
+          "type": "uint64"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "size",
+          "type": "uint8"
+        }
+      ],
+      "name": "readUint8",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "value",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        }
+      ],
+      "name": "readUnaryLength",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b50612344806100206000396000f3fe608060405234801561001057600080fd5b50600436106101365760003560e01c806378c64141116100b2578063a6d8ea9811610081578063ad7117b311610066578063ad7117b3146102ef578063b88d34ee14610302578063d5ce2f9c1461031557600080fd5b8063a6d8ea98146102a4578063a77230cf146102c757600080fd5b806378c641411461023f578063924547a5146102525780639aa3c695146102655780639c544ceb1461027857600080fd5b80632395b911116101095780634dca6f06116100ee5780634dca6f06146101f4578063505a7b9b146102075780637893a08a1461022c57600080fd5b80632395b911146101c1578063420a02f3146101d457600080fd5b806309dd718e1461013b57806319aac94a146101655780631a1ae01c146101865780631f6520e61461019b575b600080fd5b61014e610149366004611d12565b610328565b60405161015c929190611d71565b60405180910390f35b610178610173366004611e16565b610903565b60405190815260200161015c565b610199610194366004611e80565b61094a565b005b6101ae6101a9366004611f48565b610bae565b60405161ffff909116815260200161015c565b6101786101cf366004611d12565b610c47565b6101e76101e2366004611e16565b610cb6565b60405161015c9190611fbb565b610178610202366004611ff1565b610d06565b61021a61021536600461201e565b610d8a565b60405160ff909116815260200161015c565b61017861023a36600461207d565b610e61565b61017861024d36600461201e565b610ef8565b61014e610260366004611d12565b610f1e565b61021a610273366004611f48565b61141d565b61028b61028636600461207d565b6114b2565b60405167ffffffffffffffff909116815260200161015c565b6102b76102b236600461201e565b611553565b604051901515815260200161015c565b6102da6102d5366004611f48565b611571565b60405163ffffffff909116815260200161015c565b6101786102fd3660046120e4565b61160c565b610178610310366004611e16565b611681565b61014e610323366004611d12565b6116d6565b6103306119ae565b6103386119cd565b600083856064811061034c5761034c6120fd565b6020020151516103a35760405162461bcd60e51b815260206004820152601260248201527f726f6f74206973206e6f742065786f746963000000000000000000000000000060448201526064015b60405180910390fd5b60008486606481106103b7576103b76120fd565b6020020151602001516000600481106103d2576103d26120fd565b602002015190508481606481106103eb576103eb6120fd565b602002015160200151600060048110610406576104066120fd565b6020020151905061041b888887846020611571565b63ffffffff16639bc7a987146104735760405162461bcd60e51b815260206004820152600f60248201527f6e6f74206120426c6f636b496e666f0000000000000000000000000000000000604482015260640161039a565b610481888887846020611571565b50600061049089898885611553565b905060006104a08a8a8986611553565b9050816104de578683606481106104b9576104b96120fd565b6020020151602001516000600481106104d4576104d46120fd565b6020020151610511565b8683606481106104f0576104f06120fd565b60200201516020015160016004811061050b5761050b6120fd565b60200201515b9250806105e95760006105288b8b8a8760406114b2565b9050600061053a8c8c8b886020611571565b9050600061054d8d8d8c89610100610903565b9050600a8710156105e157808988600a811061056b5761056b6120fd565b6020020181815250506040518060a001604052806001151581526020018363ffffffff168152602001600067ffffffffffffffff1681526020018467ffffffffffffffff1681526020016000801b8152508888600a81106105ce576105ce6120fd565b6020020152866105dd8161215b565b9750505b5050506108f6565b8683606481106105fb576105fb6120fd565b602002015160200151600060048110610616576106166120fd565b602002015160ff146107825760006106638b8b8a8b886064811061063c5761063c6120fd565b602002015160200151600060048110610657576106576120fd565b602002015160406114b2565b905060006106a68c8c8b8c896064811061067f5761067f6120fd565b60200201516020015160006004811061069a5761069a6120fd565b60200201516020611571565b905060006106ea8d8d8c8d8a606481106106c2576106c26120fd565b6020020151602001516000600481106106dd576106dd6120fd565b6020020151610100610903565b9050600a87101561077e57808988600a8110610708576107086120fd565b6020020181815250506040518060a001604052806001151581526020018363ffffffff168152602001600067ffffffffffffffff1681526020018467ffffffffffffffff1681526020016000801b8152508888600a811061076b5761076b6120fd565b60200201528661077a8161215b565b9750505b5050505b868360648110610794576107946120fd565b6020020151602001516001600481106107af576107af6120fd565b602002015160ff146108f65760006107f08b8b8a8b88606481106107d5576107d56120fd565b602002015160200151600160048110610657576106576120fd565b905060006108278c8c8b8c896064811061080c5761080c6120fd565b60200201516020015160016004811061069a5761069a6120fd565b9050600061085e8d8d8c8d8a60648110610843576108436120fd565b6020020151602001516001600481106106dd576106dd6120fd565b9050600a8710156108f257808988600a811061087c5761087c6120fd565b6020020181815250506040518060a001604052806001151581526020018363ffffffff168152602001600067ffffffffffffffff1681526020018467ffffffffffffffff1681526020016000801b8152508888600a81106108df576108df6120fd565b6020020152866108ee8161215b565b9750505b5050505b5050505094509492505050565b6000805b821561093e5761091987878787610d8a565b61092a9060ff16600183901b612175565b9050826109368161218d565b935050610907565b90505b95945050505050565b60008561095989898888611553565b6109ad5761096989898888610ef8565b915060005b828110156109a7576109828a8a8989610d8a565b6109939060ff16600184901b612175565b91508061099f8161215b565b91505061096e565b50610a7c565b6109b989898888611553565b610a1d576109d5898988886109cd8961160c565b60ff166114b2565b67ffffffffffffffff16915060005b828110156109a7576109f88a8a8989610d8a565b610a099060ff16600184901b612175565b915080610a158161215b565b9150506109e4565b6000610a2b8a8a8989610d8a565b60ff169050610a408a8a89896109cd8a61160c565b67ffffffffffffffff16925060005b83811015610a7957610a6582600185901b612175565b925080610a718161215b565b915050610a4f565b50505b610a8682856121a4565b600003610aec5760005b6020811015610ae657838160208110610aab57610aab6120fd565b602002015160ff03610ad45785848260208110610aca57610aca6120fd565b6020020152610ae6565b80610ade8161215b565b915050610a90565b50610ba3565b6000610af88787610d06565b90506000610b068888610d06565b90508160ff14158015610b2e5750878260648110610b2657610b266120fd565b602002015151155b15610b5d57610b5d8b8b600186901b8b8660018a8d610b4d91906121a4565b610b5791906121a4565b8b61094a565b8060ff14158015610b835750878160648110610b7b57610b7b6120fd565b602002015151155b15610ba057610ba08b8b600286901b8b856001610b4d8b8e6121a4565b50505b505050505050505050565b600060108260ff161115610c045760405162461bcd60e51b815260206004820152601360248201527f6d61782073697a65206973203136206269747300000000000000000000000000604482015260640161039a565b5060005b60ff82161561094157610c1d86868686610d8a565b610c339060ff166201fffe600184901b166121bb565b905081610c3f816121e1565b925050610c08565b600080828460648110610c5c57610c5c6120fd565b602002015160200151600260048110610c7757610c776120fd565b60200201519050610c8c86868584600861141d565b50610c9c86868584610100610903565b50610cac86868584610100610903565b9695505050505050565b610cbe611a1b565b60005b6020811015610cf55760ff828260208110610cde57610cde6120fd565b602002015280610ced8161215b565b915050610cc1565b50610941868660008787878761094a565b6000828260648110610d1a57610d1a6120fd565b602002015160200151838360648110610d3557610d356120fd565b60200201516060015160ff1660048110610d5157610d516120fd565b60200201519050828260648110610d6a57610d6a6120fd565b6020020151606001805190610d7e826121fe565b60ff1690525092915050565b6000806008848460648110610da157610da16120fd565b602002015160400151610db4919061224c565b905060006008858560648110610dcc57610dcc6120fd565b602002015160400151610ddf9190612260565b9050600781888885818110610df657610df66120fd565b7fff00000000000000000000000000000000000000000000000000000000000000920135821690921b1690911c60f81c935060019050858560648110610e3e57610e3e6120fd565b6020020151604001818151610e539190612175565b90525050505b949350505050565b60006101008261ffff161115610eb95760405162461bcd60e51b815260206004820152601360248201527f6d61782073697a65206973203634206269747300000000000000000000000000604482015260640161039a565b5060005b61ffff82161561094157610ed386868686610d8a565b610ee49060ff16600183901b612175565b905081610ef081612274565b925050610ebd565b60005b610f0785858585611553565b15610e595780610f168161215b565b915050610efb565b610f266119ae565b610f2e6119cd565b6000838560648110610f4257610f426120fd565b602002015151610f945760405162461bcd60e51b815260206004820152601260248201527f726f6f74206973206e6f742065786f7469630000000000000000000000000000604482015260640161039a565b6000848660648110610fa857610fa86120fd565b602002015160200151600060048110610fc357610fc36120fd565b60200201519050848160648110610fdc57610fdc6120fd565b602002015160200151600360048110610ff757610ff76120fd565b60200201519050848160648110611010576110106120fd565b60200201516020015160036004811061102b5761102b6120fd565b60200201519050848160648110611044576110446120fd565b60200201516020015160006004811061105f5761105f6120fd565b602002015190506000611076898988856020610cb6565b905060005b60208110156108f657818160208110611096576110966120fd565b602002015160ff146108f6576110aa611a1b565b8282602081106110bc576110bc6120fd565b6020020151815260005b8151156114085760008282602081106110e1576110e16120fd565b6020020151905060008383602081106110fc576110fc6120fd565b602002015261110d8d8d8c84610d8a565b60ff166000036112b85760006111278e8e8d85600461141d565b90508060ff16600a148061113e57508060ff16600b145b61118a5760405162461bcd60e51b815260206004820152601060248201527f6e6f742061205368617264446573637200000000000000000000000000000000604482015260640161039a565b600a8810156112b25760018989600a81106111a7576111a76120fd565b602002015160000190151590811515815250506111c88e8e8d856020611571565b8989600a81106111da576111da6120fd565b60200201516020019063ffffffff16908163ffffffff16815250506112038e8e8d856020611571565b506112128e8e8d8560406114b2565b8989600a8110611224576112246120fd565b60200201516040019067ffffffffffffffff16908167ffffffffffffffff16815250506112558e8e8d8560406114b2565b8989600a8110611267576112676120fd565b602002015167ffffffffffffffff90911660609091015261128d8e8e8d85610100610903565b8a89600a811061129f5761129f6120fd565b6020020152876112ae8161215b565b9850505b506113cb565b8981606481106112ca576112ca6120fd565b6020020151602001516000600481106112e5576112e56120fd565b602002015160ff1461133b57898160648110611303576113036120fd565b60200201516020015160006004811061131e5761131e6120fd565b6020020151838360208110611335576113356120fd565b60200201525b89816064811061134d5761134d6120fd565b602002015160200151600160048110611368576113686120fd565b602002015160ff146113cb5761137f600183612175565b9150898160648110611393576113936120fd565b6020020151602001516001600481106113ae576113ae6120fd565b60200201518383602081106113c5576113c56120fd565b60200201525b6000821180156113ef57508282602081106113e8576113e86120fd565b6020020151155b1561140257816113fe8161218d565b9250505b506110c6565b505080806114159061215b565b91505061107b565b600060088260ff1611156114735760405162461bcd60e51b815260206004820152601260248201527f6d61782073697a65206973203820626974730000000000000000000000000000604482015260640161039a565b5060005b60ff8216156109415761148c86868686610d8a565b61149e906101fe600184901b16612288565b9050816114aa816121e1565b925050611477565b600060408261ffff1611156115095760405162461bcd60e51b815260206004820152601360248201527f6d61782073697a65206973203634206269747300000000000000000000000000604482015260640161039a565b5060005b61ffff8216156109415761152386868686610d8a565b61153f9060ff166801fffffffffffffffe600184901b166122ad565b90508161154b81612274565b92505061150d565b600061156185858585610d8a565b60ff166001149050949350505050565b600060208260ff1611156115c75760405162461bcd60e51b815260206004820152601360248201527f6d61782073697a65206973203332206269747300000000000000000000000000604482015260640161039a565b5060005b60ff821615610941576115e086868686610d8a565b6115f89060ff166401fffffffe600184901b166122d0565b905081611604816121e1565b9250506115cb565b6000805b600183111561165a57611624600183612175565b9150826001166001148015611637575080155b1561164e57611647600183612175565b9150600190505b600183901c9250611610565b826001148015611668575080155b1561167b57611678600183612175565b91505b50919050565b60008061168f8360086122ef565b905060005b81156116cb576116a688888888610d8a565b6116b79060ff16600183901b612175565b9050816116c38161218d565b925050611694565b979650505050505050565b6116de6119ae565b6116e66119cd565b60006116f6878786886020611571565b63ffffffff16639023afe21461174e5760405162461bcd60e51b815260206004820152601760248201527f6e6f7420612053686172645374617465556e73706c6974000000000000000000604482015260640161039a565b6000848660648110611762576117626120fd565b60200201516020015160036004811061177d5761177d6120fd565b60200201519050611792888887846010610bae565b61ffff1661cc26146117e65760405162461bcd60e51b815260206004820152601260248201527f6e6f742061204d63537461746545787472610000000000000000000000000000604482015260640161039a565b8481606481106117f8576117f86120fd565b602002015160200151600260048110611813576118136120fd565b60200201519050600061182a89898885601e610cb6565b905060005b60208110156108f65781816020811061184a5761184a6120fd565b602002015160ff146108f65760428783836020811061186b5761186b6120fd565b602002015160648110611880576118806120fd565b60200201516040018181516118959190612175565b90525060006118b28b8b8a868660208110610657576106576120fd565b905060006118ce8c8c8b87876020811061069a5761069a6120fd565b905060006118ea8d8d8c8888602081106106dd576106dd6120fd565b905060006119068e8e8d8989602081106106dd576106dd6120fd565b9050600a88101561199757818a89600a8110611924576119246120fd565b6020020181815250506040518060a001604052806001151581526020018463ffffffff168152602001600067ffffffffffffffff1681526020018567ffffffffffffffff168152602001828152508989600a8110611984576119846120fd565b6020020152876119938161215b565b9850505b5050505080806119a69061215b565b91505061182f565b604051806101400160405280600a906020820280368337509192915050565b604051806101400160405280600a905b6040805160a0810182526000808252602080830182905292820181905260608201819052608082015282526000199092019101816119dd5790505090565b6040518061040001604052806020906020820280368337509192915050565b60008083601f840112611a4c57600080fd5b50813567ffffffffffffffff811115611a6457600080fd5b602083019150836020828501011115611a7c57600080fd5b9250929050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b604051610100810167ffffffffffffffff81118282101715611ad657611ad6611a83565b60405290565b6040516080810167ffffffffffffffff81118282101715611ad657611ad6611a83565b604051610c80810167ffffffffffffffff81118282101715611ad657611ad6611a83565b604051610400810167ffffffffffffffff81118282101715611ad657611ad6611a83565b80358015158114611b5757600080fd5b919050565b600082601f830112611b6d57600080fd5b611b75611adc565b806080840185811115611b8757600080fd5b845b81811015611ba1578035845260209384019301611b89565b509095945050505050565b803560ff81168114611b5757600080fd5b803563ffffffff81168114611b5757600080fd5b803561ffff81168114611b5757600080fd5b600082601f830112611bf457600080fd5b611bfc611adc565b806080840185811115611c0e57600080fd5b845b81811015611ba157611c2181611bd1565b845260209384019301611c10565b600082601f830112611c4057600080fd5b611c48611aff565b8061d480840185811115611c5b57600080fd5b845b81811015611ba1576102208188031215611c775760008081fd5b611c7f611ab2565b611c8882611b47565b81526020611c9889828501611b5c565b8183015260a080840135604084015260c0611cb4818601611bac565b606085015260e0611cc78c828801611b5c565b6080860152611cd96101608701611bbd565b83860152611ceb8c6101808801611be3565b82860152611cfc6102008701611bac565b9085015250509085529093019261022001611c5d565b60008060008061d4c08587031215611d2957600080fd5b843567ffffffffffffffff811115611d4057600080fd5b611d4c87828801611a3a565b90955093505060208501359150611d668660408701611c2f565b905092959194509250565b6107808101818460005b600a811015611d9a578151835260209283019290910190600101611d7b565b50505061014082018360005b600a811015611e0c57815180511515845260208082015163ffffffff168186015260408083015167ffffffffffffffff90811691870191909152606080840151909116908601526080918201519185019190915260a09093019290910190600101611da6565b5050509392505050565b600080600080600061d4e08688031215611e2f57600080fd5b853567ffffffffffffffff811115611e4657600080fd5b611e5288828901611a3a565b9096509450611e6690508760208801611c2f565b9497939650939461d4a0810135945061d4c0013592915050565b600080600080600080600061d90080898b031215611e9d57600080fd5b883567ffffffffffffffff811115611eb457600080fd5b611ec08b828c01611a3a565b9099509750506020898101359650611edb8b60408c01611c2f565b955061d4c08a0135945061d4e08a013593508a61d51f8b0112611efd57600080fd5b611f05611b23565b918a0191808c841115611f1757600080fd5b61d5008c015b84811015611f345780358352918301918301611f1d565b508094505050505092959891949750929550565b600080600080600061d4e08688031215611f6157600080fd5b853567ffffffffffffffff811115611f7857600080fd5b611f8488828901611a3a565b9096509450611f9890508760208801611c2f565b925061d4a08601359150611faf61d4c08701611bac565b90509295509295909350565b6104008101818360005b6020808210611fd45750611fe8565b825184529283019290910190600101611fc5565b50505092915050565b60008061d4a0838503121561200557600080fd5b61200f8484611c2f565b9461d480939093013593505050565b60008060008061d4c0858703121561203557600080fd5b843567ffffffffffffffff81111561204c57600080fd5b61205887828801611a3a565b909550935061206c90508660208701611c2f565b9396929550929361d4a00135925050565b600080600080600061d4e0868803121561209657600080fd5b853567ffffffffffffffff8111156120ad57600080fd5b6120b988828901611a3a565b90965094506120cd90508760208801611c2f565b925061d4a08601359150611faf61d4c08701611bd1565b6000602082840312156120f657600080fd5b5035919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b6000600019820361216e5761216e61212c565b5060010190565b600082198211156121885761218861212c565b500190565b60008161219c5761219c61212c565b506000190190565b6000828210156121b6576121b661212c565b500390565b600061ffff8083168185168083038211156121d8576121d861212c565b01949350505050565b600060ff8216806121f4576121f461212c565b6000190192915050565b600060ff821660ff81036122145761221461212c565b60010192915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601260045260246000fd5b60008261225b5761225b61221d565b500490565b60008261226f5761226f61221d565b500690565b600061ffff8216806121f4576121f461212c565b600060ff821660ff84168060ff038211156122a5576122a561212c565b019392505050565b600067ffffffffffffffff8083168185168083038211156121d8576121d861212c565b600063ffffffff8083168185168083038211156121d8576121d861212c565b60008160001904831182151516156123095761230961212c565b50029056fea2646970667358221220d118f57b7d1f0f99bf12b8ece4fc37485553ef65c31890fb07c4b74ab6fa4d8664736f6c634300080f0033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106101365760003560e01c806378c64141116100b2578063a6d8ea9811610081578063ad7117b311610066578063ad7117b3146102ef578063b88d34ee14610302578063d5ce2f9c1461031557600080fd5b8063a6d8ea98146102a4578063a77230cf146102c757600080fd5b806378c641411461023f578063924547a5146102525780639aa3c695146102655780639c544ceb1461027857600080fd5b80632395b911116101095780634dca6f06116100ee5780634dca6f06146101f4578063505a7b9b146102075780637893a08a1461022c57600080fd5b80632395b911146101c1578063420a02f3146101d457600080fd5b806309dd718e1461013b57806319aac94a146101655780631a1ae01c146101865780631f6520e61461019b575b600080fd5b61014e610149366004611d12565b610328565b60405161015c929190611d71565b60405180910390f35b610178610173366004611e16565b610903565b60405190815260200161015c565b610199610194366004611e80565b61094a565b005b6101ae6101a9366004611f48565b610bae565b60405161ffff909116815260200161015c565b6101786101cf366004611d12565b610c47565b6101e76101e2366004611e16565b610cb6565b60405161015c9190611fbb565b610178610202366004611ff1565b610d06565b61021a61021536600461201e565b610d8a565b60405160ff909116815260200161015c565b61017861023a36600461207d565b610e61565b61017861024d36600461201e565b610ef8565b61014e610260366004611d12565b610f1e565b61021a610273366004611f48565b61141d565b61028b61028636600461207d565b6114b2565b60405167ffffffffffffffff909116815260200161015c565b6102b76102b236600461201e565b611553565b604051901515815260200161015c565b6102da6102d5366004611f48565b611571565b60405163ffffffff909116815260200161015c565b6101786102fd3660046120e4565b61160c565b610178610310366004611e16565b611681565b61014e610323366004611d12565b6116d6565b6103306119ae565b6103386119cd565b600083856064811061034c5761034c6120fd565b6020020151516103a35760405162461bcd60e51b815260206004820152601260248201527f726f6f74206973206e6f742065786f746963000000000000000000000000000060448201526064015b60405180910390fd5b60008486606481106103b7576103b76120fd565b6020020151602001516000600481106103d2576103d26120fd565b602002015190508481606481106103eb576103eb6120fd565b602002015160200151600060048110610406576104066120fd565b6020020151905061041b888887846020611571565b63ffffffff16639bc7a987146104735760405162461bcd60e51b815260206004820152600f60248201527f6e6f74206120426c6f636b496e666f0000000000000000000000000000000000604482015260640161039a565b610481888887846020611571565b50600061049089898885611553565b905060006104a08a8a8986611553565b9050816104de578683606481106104b9576104b96120fd565b6020020151602001516000600481106104d4576104d46120fd565b6020020151610511565b8683606481106104f0576104f06120fd565b60200201516020015160016004811061050b5761050b6120fd565b60200201515b9250806105e95760006105288b8b8a8760406114b2565b9050600061053a8c8c8b886020611571565b9050600061054d8d8d8c89610100610903565b9050600a8710156105e157808988600a811061056b5761056b6120fd565b6020020181815250506040518060a001604052806001151581526020018363ffffffff168152602001600067ffffffffffffffff1681526020018467ffffffffffffffff1681526020016000801b8152508888600a81106105ce576105ce6120fd565b6020020152866105dd8161215b565b9750505b5050506108f6565b8683606481106105fb576105fb6120fd565b602002015160200151600060048110610616576106166120fd565b602002015160ff146107825760006106638b8b8a8b886064811061063c5761063c6120fd565b602002015160200151600060048110610657576106576120fd565b602002015160406114b2565b905060006106a68c8c8b8c896064811061067f5761067f6120fd565b60200201516020015160006004811061069a5761069a6120fd565b60200201516020611571565b905060006106ea8d8d8c8d8a606481106106c2576106c26120fd565b6020020151602001516000600481106106dd576106dd6120fd565b6020020151610100610903565b9050600a87101561077e57808988600a8110610708576107086120fd565b6020020181815250506040518060a001604052806001151581526020018363ffffffff168152602001600067ffffffffffffffff1681526020018467ffffffffffffffff1681526020016000801b8152508888600a811061076b5761076b6120fd565b60200201528661077a8161215b565b9750505b5050505b868360648110610794576107946120fd565b6020020151602001516001600481106107af576107af6120fd565b602002015160ff146108f65760006107f08b8b8a8b88606481106107d5576107d56120fd565b602002015160200151600160048110610657576106576120fd565b905060006108278c8c8b8c896064811061080c5761080c6120fd565b60200201516020015160016004811061069a5761069a6120fd565b9050600061085e8d8d8c8d8a60648110610843576108436120fd565b6020020151602001516001600481106106dd576106dd6120fd565b9050600a8710156108f257808988600a811061087c5761087c6120fd565b6020020181815250506040518060a001604052806001151581526020018363ffffffff168152602001600067ffffffffffffffff1681526020018467ffffffffffffffff1681526020016000801b8152508888600a81106108df576108df6120fd565b6020020152866108ee8161215b565b9750505b5050505b5050505094509492505050565b6000805b821561093e5761091987878787610d8a565b61092a9060ff16600183901b612175565b9050826109368161218d565b935050610907565b90505b95945050505050565b60008561095989898888611553565b6109ad5761096989898888610ef8565b915060005b828110156109a7576109828a8a8989610d8a565b6109939060ff16600184901b612175565b91508061099f8161215b565b91505061096e565b50610a7c565b6109b989898888611553565b610a1d576109d5898988886109cd8961160c565b60ff166114b2565b67ffffffffffffffff16915060005b828110156109a7576109f88a8a8989610d8a565b610a099060ff16600184901b612175565b915080610a158161215b565b9150506109e4565b6000610a2b8a8a8989610d8a565b60ff169050610a408a8a89896109cd8a61160c565b67ffffffffffffffff16925060005b83811015610a7957610a6582600185901b612175565b925080610a718161215b565b915050610a4f565b50505b610a8682856121a4565b600003610aec5760005b6020811015610ae657838160208110610aab57610aab6120fd565b602002015160ff03610ad45785848260208110610aca57610aca6120fd565b6020020152610ae6565b80610ade8161215b565b915050610a90565b50610ba3565b6000610af88787610d06565b90506000610b068888610d06565b90508160ff14158015610b2e5750878260648110610b2657610b266120fd565b602002015151155b15610b5d57610b5d8b8b600186901b8b8660018a8d610b4d91906121a4565b610b5791906121a4565b8b61094a565b8060ff14158015610b835750878160648110610b7b57610b7b6120fd565b602002015151155b15610ba057610ba08b8b600286901b8b856001610b4d8b8e6121a4565b50505b505050505050505050565b600060108260ff161115610c045760405162461bcd60e51b815260206004820152601360248201527f6d61782073697a65206973203136206269747300000000000000000000000000604482015260640161039a565b5060005b60ff82161561094157610c1d86868686610d8a565b610c339060ff166201fffe600184901b166121bb565b905081610c3f816121e1565b925050610c08565b600080828460648110610c5c57610c5c6120fd565b602002015160200151600260048110610c7757610c776120fd565b60200201519050610c8c86868584600861141d565b50610c9c86868584610100610903565b50610cac86868584610100610903565b9695505050505050565b610cbe611a1b565b60005b6020811015610cf55760ff828260208110610cde57610cde6120fd565b602002015280610ced8161215b565b915050610cc1565b50610941868660008787878761094a565b6000828260648110610d1a57610d1a6120fd565b602002015160200151838360648110610d3557610d356120fd565b60200201516060015160ff1660048110610d5157610d516120fd565b60200201519050828260648110610d6a57610d6a6120fd565b6020020151606001805190610d7e826121fe565b60ff1690525092915050565b6000806008848460648110610da157610da16120fd565b602002015160400151610db4919061224c565b905060006008858560648110610dcc57610dcc6120fd565b602002015160400151610ddf9190612260565b9050600781888885818110610df657610df66120fd565b7fff00000000000000000000000000000000000000000000000000000000000000920135821690921b1690911c60f81c935060019050858560648110610e3e57610e3e6120fd565b6020020151604001818151610e539190612175565b90525050505b949350505050565b60006101008261ffff161115610eb95760405162461bcd60e51b815260206004820152601360248201527f6d61782073697a65206973203634206269747300000000000000000000000000604482015260640161039a565b5060005b61ffff82161561094157610ed386868686610d8a565b610ee49060ff16600183901b612175565b905081610ef081612274565b925050610ebd565b60005b610f0785858585611553565b15610e595780610f168161215b565b915050610efb565b610f266119ae565b610f2e6119cd565b6000838560648110610f4257610f426120fd565b602002015151610f945760405162461bcd60e51b815260206004820152601260248201527f726f6f74206973206e6f742065786f7469630000000000000000000000000000604482015260640161039a565b6000848660648110610fa857610fa86120fd565b602002015160200151600060048110610fc357610fc36120fd565b60200201519050848160648110610fdc57610fdc6120fd565b602002015160200151600360048110610ff757610ff76120fd565b60200201519050848160648110611010576110106120fd565b60200201516020015160036004811061102b5761102b6120fd565b60200201519050848160648110611044576110446120fd565b60200201516020015160006004811061105f5761105f6120fd565b602002015190506000611076898988856020610cb6565b905060005b60208110156108f657818160208110611096576110966120fd565b602002015160ff146108f6576110aa611a1b565b8282602081106110bc576110bc6120fd565b6020020151815260005b8151156114085760008282602081106110e1576110e16120fd565b6020020151905060008383602081106110fc576110fc6120fd565b602002015261110d8d8d8c84610d8a565b60ff166000036112b85760006111278e8e8d85600461141d565b90508060ff16600a148061113e57508060ff16600b145b61118a5760405162461bcd60e51b815260206004820152601060248201527f6e6f742061205368617264446573637200000000000000000000000000000000604482015260640161039a565b600a8810156112b25760018989600a81106111a7576111a76120fd565b602002015160000190151590811515815250506111c88e8e8d856020611571565b8989600a81106111da576111da6120fd565b60200201516020019063ffffffff16908163ffffffff16815250506112038e8e8d856020611571565b506112128e8e8d8560406114b2565b8989600a8110611224576112246120fd565b60200201516040019067ffffffffffffffff16908167ffffffffffffffff16815250506112558e8e8d8560406114b2565b8989600a8110611267576112676120fd565b602002015167ffffffffffffffff90911660609091015261128d8e8e8d85610100610903565b8a89600a811061129f5761129f6120fd565b6020020152876112ae8161215b565b9850505b506113cb565b8981606481106112ca576112ca6120fd565b6020020151602001516000600481106112e5576112e56120fd565b602002015160ff1461133b57898160648110611303576113036120fd565b60200201516020015160006004811061131e5761131e6120fd565b6020020151838360208110611335576113356120fd565b60200201525b89816064811061134d5761134d6120fd565b602002015160200151600160048110611368576113686120fd565b602002015160ff146113cb5761137f600183612175565b9150898160648110611393576113936120fd565b6020020151602001516001600481106113ae576113ae6120fd565b60200201518383602081106113c5576113c56120fd565b60200201525b6000821180156113ef57508282602081106113e8576113e86120fd565b6020020151155b1561140257816113fe8161218d565b9250505b506110c6565b505080806114159061215b565b91505061107b565b600060088260ff1611156114735760405162461bcd60e51b815260206004820152601260248201527f6d61782073697a65206973203820626974730000000000000000000000000000604482015260640161039a565b5060005b60ff8216156109415761148c86868686610d8a565b61149e906101fe600184901b16612288565b9050816114aa816121e1565b925050611477565b600060408261ffff1611156115095760405162461bcd60e51b815260206004820152601360248201527f6d61782073697a65206973203634206269747300000000000000000000000000604482015260640161039a565b5060005b61ffff8216156109415761152386868686610d8a565b61153f9060ff166801fffffffffffffffe600184901b166122ad565b90508161154b81612274565b92505061150d565b600061156185858585610d8a565b60ff166001149050949350505050565b600060208260ff1611156115c75760405162461bcd60e51b815260206004820152601360248201527f6d61782073697a65206973203332206269747300000000000000000000000000604482015260640161039a565b5060005b60ff821615610941576115e086868686610d8a565b6115f89060ff166401fffffffe600184901b166122d0565b905081611604816121e1565b9250506115cb565b6000805b600183111561165a57611624600183612175565b9150826001166001148015611637575080155b1561164e57611647600183612175565b9150600190505b600183901c9250611610565b826001148015611668575080155b1561167b57611678600183612175565b91505b50919050565b60008061168f8360086122ef565b905060005b81156116cb576116a688888888610d8a565b6116b79060ff16600183901b612175565b9050816116c38161218d565b925050611694565b979650505050505050565b6116de6119ae565b6116e66119cd565b60006116f6878786886020611571565b63ffffffff16639023afe21461174e5760405162461bcd60e51b815260206004820152601760248201527f6e6f7420612053686172645374617465556e73706c6974000000000000000000604482015260640161039a565b6000848660648110611762576117626120fd565b60200201516020015160036004811061177d5761177d6120fd565b60200201519050611792888887846010610bae565b61ffff1661cc26146117e65760405162461bcd60e51b815260206004820152601260248201527f6e6f742061204d63537461746545787472610000000000000000000000000000604482015260640161039a565b8481606481106117f8576117f86120fd565b602002015160200151600260048110611813576118136120fd565b60200201519050600061182a89898885601e610cb6565b905060005b60208110156108f65781816020811061184a5761184a6120fd565b602002015160ff146108f65760428783836020811061186b5761186b6120fd565b602002015160648110611880576118806120fd565b60200201516040018181516118959190612175565b90525060006118b28b8b8a868660208110610657576106576120fd565b905060006118ce8c8c8b87876020811061069a5761069a6120fd565b905060006118ea8d8d8c8888602081106106dd576106dd6120fd565b905060006119068e8e8d8989602081106106dd576106dd6120fd565b9050600a88101561199757818a89600a8110611924576119246120fd565b6020020181815250506040518060a001604052806001151581526020018463ffffffff168152602001600067ffffffffffffffff1681526020018567ffffffffffffffff168152602001828152508989600a8110611984576119846120fd565b6020020152876119938161215b565b9850505b5050505080806119a69061215b565b91505061182f565b604051806101400160405280600a906020820280368337509192915050565b604051806101400160405280600a905b6040805160a0810182526000808252602080830182905292820181905260608201819052608082015282526000199092019101816119dd5790505090565b6040518061040001604052806020906020820280368337509192915050565b60008083601f840112611a4c57600080fd5b50813567ffffffffffffffff811115611a6457600080fd5b602083019150836020828501011115611a7c57600080fd5b9250929050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b604051610100810167ffffffffffffffff81118282101715611ad657611ad6611a83565b60405290565b6040516080810167ffffffffffffffff81118282101715611ad657611ad6611a83565b604051610c80810167ffffffffffffffff81118282101715611ad657611ad6611a83565b604051610400810167ffffffffffffffff81118282101715611ad657611ad6611a83565b80358015158114611b5757600080fd5b919050565b600082601f830112611b6d57600080fd5b611b75611adc565b806080840185811115611b8757600080fd5b845b81811015611ba1578035845260209384019301611b89565b509095945050505050565b803560ff81168114611b5757600080fd5b803563ffffffff81168114611b5757600080fd5b803561ffff81168114611b5757600080fd5b600082601f830112611bf457600080fd5b611bfc611adc565b806080840185811115611c0e57600080fd5b845b81811015611ba157611c2181611bd1565b845260209384019301611c10565b600082601f830112611c4057600080fd5b611c48611aff565b8061d480840185811115611c5b57600080fd5b845b81811015611ba1576102208188031215611c775760008081fd5b611c7f611ab2565b611c8882611b47565b81526020611c9889828501611b5c565b8183015260a080840135604084015260c0611cb4818601611bac565b606085015260e0611cc78c828801611b5c565b6080860152611cd96101608701611bbd565b83860152611ceb8c6101808801611be3565b82860152611cfc6102008701611bac565b9085015250509085529093019261022001611c5d565b60008060008061d4c08587031215611d2957600080fd5b843567ffffffffffffffff811115611d4057600080fd5b611d4c87828801611a3a565b90955093505060208501359150611d668660408701611c2f565b905092959194509250565b6107808101818460005b600a811015611d9a578151835260209283019290910190600101611d7b565b50505061014082018360005b600a811015611e0c57815180511515845260208082015163ffffffff168186015260408083015167ffffffffffffffff90811691870191909152606080840151909116908601526080918201519185019190915260a09093019290910190600101611da6565b5050509392505050565b600080600080600061d4e08688031215611e2f57600080fd5b853567ffffffffffffffff811115611e4657600080fd5b611e5288828901611a3a565b9096509450611e6690508760208801611c2f565b9497939650939461d4a0810135945061d4c0013592915050565b600080600080600080600061d90080898b031215611e9d57600080fd5b883567ffffffffffffffff811115611eb457600080fd5b611ec08b828c01611a3a565b9099509750506020898101359650611edb8b60408c01611c2f565b955061d4c08a0135945061d4e08a013593508a61d51f8b0112611efd57600080fd5b611f05611b23565b918a0191808c841115611f1757600080fd5b61d5008c015b84811015611f345780358352918301918301611f1d565b508094505050505092959891949750929550565b600080600080600061d4e08688031215611f6157600080fd5b853567ffffffffffffffff811115611f7857600080fd5b611f8488828901611a3a565b9096509450611f9890508760208801611c2f565b925061d4a08601359150611faf61d4c08701611bac565b90509295509295909350565b6104008101818360005b6020808210611fd45750611fe8565b825184529283019290910190600101611fc5565b50505092915050565b60008061d4a0838503121561200557600080fd5b61200f8484611c2f565b9461d480939093013593505050565b60008060008061d4c0858703121561203557600080fd5b843567ffffffffffffffff81111561204c57600080fd5b61205887828801611a3a565b909550935061206c90508660208701611c2f565b9396929550929361d4a00135925050565b600080600080600061d4e0868803121561209657600080fd5b853567ffffffffffffffff8111156120ad57600080fd5b6120b988828901611a3a565b90965094506120cd90508760208801611c2f565b925061d4a08601359150611faf61d4c08701611bd1565b6000602082840312156120f657600080fd5b5035919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b6000600019820361216e5761216e61212c565b5060010190565b600082198211156121885761218861212c565b500190565b60008161219c5761219c61212c565b506000190190565b6000828210156121b6576121b661212c565b500390565b600061ffff8083168185168083038211156121d8576121d861212c565b01949350505050565b600060ff8216806121f4576121f461212c565b6000190192915050565b600060ff821660ff81036122145761221461212c565b60010192915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601260045260246000fd5b60008261225b5761225b61221d565b500490565b60008261226f5761226f61221d565b500690565b600061ffff8216806121f4576121f461212c565b600060ff821660ff84168060ff038211156122a5576122a561212c565b019392505050565b600067ffffffffffffffff8083168185168083038211156121d8576121d861212c565b600063ffffffff8083168185168083038211156121d8576121d861212c565b60008160001904831182151516156123095761230961212c565b50029056fea2646970667358221220d118f57b7d1f0f99bf12b8ece4fc37485553ef65c31890fb07c4b74ab6fa4d8664736f6c634300080f0033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

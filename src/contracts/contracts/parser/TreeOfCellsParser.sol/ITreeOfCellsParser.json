@@ -1,0 +1,260 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "ITreeOfCellsParser",
+  "sourceName": "contracts/parser/TreeOfCellsParser.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "boc",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bytes4",
+              "name": "magic",
+              "type": "bytes4"
+            },
+            {
+              "internalType": "uint256",
+              "name": "root_count",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cell_count",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "absent_count",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "ref_byte_size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "offset_byte_size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "has_index",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "has_roots",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "has_crc32c",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "has_cache_bits",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "roots_offset",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "index_offset",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "data_offset",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "data_size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "total_size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rootIdx",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct BagOfCellsInfo",
+          "name": "info",
+          "type": "tuple"
+        }
+      ],
+      "name": "get_tree_of_cells",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "boc",
+          "type": "bytes"
+        }
+      ],
+      "name": "parseSerializedHeader",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes4",
+              "name": "magic",
+              "type": "bytes4"
+            },
+            {
+              "internalType": "uint256",
+              "name": "root_count",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cell_count",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "absent_count",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "ref_byte_size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "offset_byte_size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "has_index",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "has_roots",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "has_crc32c",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "has_cache_bits",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "roots_offset",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "index_offset",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "data_offset",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "data_size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "total_size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rootIdx",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct BagOfCellsInfo",
+          "name": "header",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

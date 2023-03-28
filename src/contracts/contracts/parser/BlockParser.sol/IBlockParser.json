@@ -1,0 +1,669 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IBlockParser",
+  "sourceName": "contracts/parser/BlockParser.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "publicKey",
+          "type": "bytes32"
+        }
+      ],
+      "name": "computeNodeId",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "boc",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rootIdx",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "treeOfCells",
+          "type": "tuple[100]"
+        }
+      ],
+      "name": "parseCandidatesRootBlock",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint8",
+              "name": "cType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint64",
+              "name": "weight",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "adnl_addr",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "pubkey",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "node_id",
+              "type": "bytes32"
+            }
+          ],
+          "internalType": "struct ValidatorDescription[32]",
+          "name": "",
+          "type": "tuple[32]"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "prefixLength",
+          "type": "uint256"
+        }
+      ],
+      "name": "parsePartValidators",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint8",
+              "name": "cType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint64",
+              "name": "weight",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "adnl_addr",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "pubkey",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "node_id",
+              "type": "bytes32"
+            }
+          ],
+          "internalType": "struct ValidatorDescription[32]",
+          "name": "",
+          "type": "tuple[32]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "proofBoc",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bytes4",
+              "name": "magic",
+              "type": "bytes4"
+            },
+            {
+              "internalType": "uint256",
+              "name": "root_count",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cell_count",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "absent_count",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "ref_byte_size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "offset_byte_size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "has_index",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "has_roots",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "has_crc32c",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "has_cache_bits",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "roots_offset",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "index_offset",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "data_offset",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "data_size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "total_size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rootIdx",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct BagOfCellsInfo",
+          "name": "proofBocInfo",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "proofTreeOfCells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "txRootHash",
+          "type": "bytes32"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint8",
+              "name": "checkCode",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "addressHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "lt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "prevTransHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "prevTransLt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint32",
+              "name": "time",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "OutMesagesCount",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint8",
+              "name": "oldStatus",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint8",
+              "name": "newStatus",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "fees",
+              "type": "bytes32"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "bool",
+                  "name": "hasInMessage",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "hasOutMessages",
+                  "type": "bool"
+                },
+                {
+                  "components": [
+                    {
+                      "components": [
+                        {
+                          "internalType": "uint256",
+                          "name": "Type",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "ihrDisabled",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "bounce",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "bounced",
+                          "type": "bool"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bytes32",
+                              "name": "hash",
+                              "type": "bytes32"
+                            },
+                            {
+                              "internalType": "uint8",
+                              "name": "wc",
+                              "type": "uint8"
+                            }
+                          ],
+                          "internalType": "struct TonAddress",
+                          "name": "src",
+                          "type": "tuple"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bytes32",
+                              "name": "hash",
+                              "type": "bytes32"
+                            },
+                            {
+                              "internalType": "uint8",
+                              "name": "wc",
+                              "type": "uint8"
+                            }
+                          ],
+                          "internalType": "struct TonAddress",
+                          "name": "dest",
+                          "type": "tuple"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "value",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "ihrFee",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "fwdFee",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "uint256",
+                          "name": "createdLt",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "uint256",
+                          "name": "createdAt",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "importFee",
+                          "type": "bytes32"
+                        }
+                      ],
+                      "internalType": "struct RawCommonMessageInfo",
+                      "name": "info",
+                      "type": "tuple"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "bodyIdx",
+                      "type": "uint256"
+                    }
+                  ],
+                  "internalType": "struct Message",
+                  "name": "inMessage",
+                  "type": "tuple"
+                },
+                {
+                  "components": [
+                    {
+                      "components": [
+                        {
+                          "internalType": "uint256",
+                          "name": "Type",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "ihrDisabled",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "bounce",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "bounced",
+                          "type": "bool"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bytes32",
+                              "name": "hash",
+                              "type": "bytes32"
+                            },
+                            {
+                              "internalType": "uint8",
+                              "name": "wc",
+                              "type": "uint8"
+                            }
+                          ],
+                          "internalType": "struct TonAddress",
+                          "name": "src",
+                          "type": "tuple"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bytes32",
+                              "name": "hash",
+                              "type": "bytes32"
+                            },
+                            {
+                              "internalType": "uint8",
+                              "name": "wc",
+                              "type": "uint8"
+                            }
+                          ],
+                          "internalType": "struct TonAddress",
+                          "name": "dest",
+                          "type": "tuple"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "value",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "ihrFee",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "fwdFee",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "uint256",
+                          "name": "createdLt",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "uint256",
+                          "name": "createdAt",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "importFee",
+                          "type": "bytes32"
+                        }
+                      ],
+                      "internalType": "struct RawCommonMessageInfo",
+                      "name": "info",
+                      "type": "tuple"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "bodyIdx",
+                      "type": "uint256"
+                    }
+                  ],
+                  "internalType": "struct Message[5]",
+                  "name": "outMessages",
+                  "type": "tuple[5]"
+                }
+              ],
+              "internalType": "struct MessagesHeader",
+              "name": "messages",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct TransactionHeader",
+          "name": "transaction",
+          "type": "tuple"
+        }
+      ],
+      "name": "parse_block",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
