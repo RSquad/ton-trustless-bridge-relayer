@@ -18,7 +18,6 @@ require('dotenv').config();
       type: 'postgres',
       synchronize: true,
       entities: ['**/*.entity{.ts,.js}'],
-      database: 'trustless_db',
       url: process.env.DATABASE_URL,
     }),
     // TypeOrmModule.forRoot({
