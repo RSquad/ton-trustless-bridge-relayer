@@ -7,6 +7,7 @@ import { TonExplorerModule } from './modules/ton-explorer/ton-explorer.module';
 import { TonValidatorModule } from './modules/ton-validator/ton-validator.module';
 import { EthProviderModule } from './modules/eth-provider/eth-provider.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     TonValidatorModule,
     EthProviderModule,
     EventEmitterModule.forRoot(),
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
