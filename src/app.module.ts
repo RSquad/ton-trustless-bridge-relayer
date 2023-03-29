@@ -8,17 +8,27 @@ import { TonValidatorModule } from './modules/ton-validator/ton-validator.module
 import { EthProviderModule } from './modules/eth-provider/eth-provider.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { HealthModule } from './modules/health/health.module';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config();
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: './data/data.db',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      type: 'postgres',
       synchronize: true,
-      dropSchema: true,
+      entities: ['**/*.entity{.ts,.js}'],
+      database: 'trustless_db',
+      url: process.env.DATABASE_URL,
     }),
+    // TypeOrmModule.forRoot({
+    //   type: 'sqlite',
+    //   database: './data/data.db',
+    //   entities: [__dirname + '/**/*.entity{.ts,.js}'],
+    //   synchronize: true,
+    //   // dropSchema: true,
+    // }),
+    // TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     TonExplorerModule,
     TonValidatorModule,
     EthProviderModule,
