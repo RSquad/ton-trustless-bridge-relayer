@@ -23,7 +23,7 @@ import {
   parseMcBlockRocks,
   parseShardBlockRocks,
 } from 'src/modules/ton-explorer/utils';
-import { address, TonClient4 } from 'ton';
+import { TonClient4 } from 'ton';
 import ValidatorAbi from '../../../../contracts/contracts/Validator.sol/Validator.json';
 import BridgeAbi from '../../../../contracts/contracts/Bridge.sol/Bridge.json';
 import TransactionParserAbi from '../../../../contracts/contracts/parser/TransactionParser.sol/TransactionParser.json';
