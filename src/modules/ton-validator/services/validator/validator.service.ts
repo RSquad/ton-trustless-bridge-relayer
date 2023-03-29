@@ -391,7 +391,7 @@ export class ValidatorService {
     return {
       txBoc: txBoc.toString('hex'),
       boc: boc.toString('hex'),
-      adapter: '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318',
+      adapter: '0x135517aE246d678AbE3a8DBA59F3A49661593778',
     };
 
     // return await this.transactionsRepository.update(
