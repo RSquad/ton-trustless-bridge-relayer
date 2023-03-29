@@ -62,10 +62,10 @@ export async function getInitialBlock({
   initKeyBlockSeqno,
   newKeyBlockSeqno,
 }: Awaited<ReturnType<typeof initExample>>) {
-  const initialKeyBlockWithShards = await tonClient4.getBlock(initKeyBlockSeqno);
+  const initialKeyBlockWithShards = await tonClient4.getBlock(newKeyBlockSeqno);
 
   const initialKeyBlockInformation = initialKeyBlockWithShards.shards.find(
-    (blockRes) => blockRes.seqno === initKeyBlockSeqno,
+    (blockRes) => blockRes.seqno === newKeyBlockSeqno,
   );
 
   if (!initialKeyBlockInformation) {
