@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OnEvent } from '@nestjs/event-emitter';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ethers } from 'ethers';
 import {
   BlockParser,
@@ -17,7 +16,6 @@ import {
   PSTransaction,
 } from 'src/lib/steps';
 import { ProviderService } from 'src/modules/eth-provider/services/provider/provider.service';
-import { TonBlock } from 'src/modules/ton-explorer/entities/block.entity';
 import { KeyBlockSaved } from 'src/modules/ton-explorer/events/key-block-saved.event';
 import {
   parseMcBlockRocks,
@@ -29,7 +27,7 @@ import BridgeAbi from '../../../../contracts/contracts/Bridge.sol/Bridge.json';
 import TransactionParserAbi from '../../../../contracts/contracts/parser/TransactionParser.sol/TransactionParser.json';
 import BlockParserAbi from '../../../../contracts/contracts/parser/BlockParser.sol/BlockParser.json';
 import TOCParserAbi from '../../../../contracts/contracts/parser/TreeOfCellsParser.sol/TreeOfCellsParser.json';
-import { MoreThan, Repository } from 'typeorm';
+import { MoreThan } from 'typeorm';
 import {
   BlockIdExt,
   CFriendlyAddressString,
@@ -37,11 +35,13 @@ import {
 } from 'src/lib/ton-types';
 import axios from 'axios';
 import _ from 'lodash';
-import { TonTransaction } from 'src/modules/ton-explorer/entities/transaction.entity';
 import { concatMap, from, Subject } from 'rxjs';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import TonRocks from '../../../../lib/ton-rocks-js';
+import { TonTransactionService } from 'src/modules/prisma/services/ton-transaction/ton-transaction.service';
+import { TonBlockService } from 'src/modules/prisma/services/ton-block/ton-block.service';
+import { TonTransaction } from '@prisma/client';
 
 const toncenterUrl = 'https://testnet.toncenter.com/api/v2/';
 
@@ -101,10 +101,8 @@ export class ValidatorService {
   constructor(
     private providerService: ProviderService,
     private configService: ConfigService,
-    @InjectRepository(TonBlock)
-    private blocksRepository: Repository<TonBlock>,
-    @InjectRepository(TonTransaction)
-    private transactionsRepository: Repository<TonTransaction>,
+    private tonBlockService: TonBlockService,
+    private tonTransactionService: TonTransactionService,
   ) {
     this.keyblocksBuffer
       .pipe(
@@ -136,10 +134,18 @@ export class ValidatorService {
     );
     if (await this.checkIfBlockValidated(data)) {
       console.log('key block already checked');
-      await this.blocksRepository.update(
-        { id: data.data.id },
-        { checked: true },
-      );
+      await this.tonBlockService.updateTonBlock({
+        where: {
+          id: data.data.id,
+        },
+        data: {
+          checked: true,
+        },
+      });
+      // await this.blocksRepository.update(
+      //   { id: data.data.id },
+      //   { checked: true },
+      // );
       return;
     }
     const needInit = await this.checkInitValidatorsNeeded();
@@ -202,7 +208,15 @@ export class ValidatorService {
       }
     }
     await this.validatorContract.initValidators();
-    await this.blocksRepository.update({ id: data.data.id }, { checked: true });
+    await this.tonBlockService.updateTonBlock({
+      where: {
+        id: data.data.id,
+      },
+      data: {
+        checked: true,
+      },
+    });
+    // await this.blocksRepository.update({ id: data.data.id }, { checked: true });
   }
 
   async updateValidators(data: KeyBlockSaved) {
@@ -283,7 +297,15 @@ export class ValidatorService {
       );
     }
     await this.validatorContract.setValidatorSet();
-    await this.blocksRepository.update({ id: data.data.id }, { checked: true });
+    await this.tonBlockService.updateTonBlock({
+      where: {
+        id: data.data.id,
+      },
+      data: {
+        checked: true,
+      },
+    });
+    // await this.blocksRepository.update({ id: data.data.id }, { checked: true });
   }
 
   async validateMcBlockByValidator(seqno: number) {
@@ -292,10 +314,24 @@ export class ValidatorService {
       '0x' + blockData.id.root_hash,
     );
     if (isVerified) {
-      return await this.blocksRepository.update(
-        { seqno: blockData.id.seqno, workchain: -1 },
-        { checked: true },
-      );
+      const dbItem = await this.tonBlockService.tonBlocks({
+        where: {
+          seqno: blockData.id.seqno as number,
+          workchain: -1,
+        },
+      });
+      await this.tonBlockService.updateTonBlock({
+        where: {
+          id: dbItem[0].id,
+        },
+        data: {
+          checked: true,
+        },
+      });
+      // return await this.blocksRepository.update(
+      //   { seqno: blockData.id.seqno, workchain: -1 },
+      //   { checked: true },
+      // );
     }
     console.log('start validate block', blockData.id.root_hash);
 
@@ -333,20 +369,39 @@ export class ValidatorService {
     await this.validatorContract.addCurrentBlockToVerifiedSet(
       '0x' + blockData.id.root_hash,
     );
+    const dbItem = await this.tonBlockService.tonBlocks({
+      where: {
+        seqno: blockData.id.seqno as number,
+        workchain: -1,
+      },
+    });
+    return await this.tonBlockService.updateTonBlock({
+      where: {
+        id: dbItem[0].id,
+      },
+      data: {
+        checked: true,
+      },
+    });
 
-    return await this.blocksRepository.update(
-      { seqno: blockData.id.seqno, workchain: -1 },
-      { checked: true },
-    );
+    // return await this.blocksRepository.update(
+    //   { seqno: blockData.id.seqno, workchain: -1 },
+    //   { checked: true },
+    // );
   }
 
   async validateTransaction(transaction: TonTransaction) {
-    const dbTx = await this.transactionsRepository.findOne({
-      where: {
-        ...transaction,
-      },
-      relations: { mcParent: { mcParent: true } },
-    });
+    const dbTx = (
+      await this.tonTransactionService.tonTransactions({
+        where: { ...transaction },
+      })
+    )[0];
+    // const dbTx = await this.transactionsRepository.findOne({
+    //   where: {
+    //     ...transaction,
+    //   },
+    //   relations: { mcParent: { mcParent: true } },
+    // });
 
     const block =
       dbTx.mcParent.workchain === -1
@@ -401,11 +456,12 @@ export class ValidatorService {
   }
 
   async validateShardBlock(blockDbId: number) {
-    const dbShardBlock = await this.blocksRepository.findOne({
-      where: {
-        id: blockDbId,
-      },
-      relations: ['mcParent'],
+    const dbShardBlock = await this.tonBlockService.tonBlock({
+      id: blockDbId,
+      // where: {
+      //   id: blockDbId,
+      // },
+      // relations: ['mcParent'],
     });
 
     const shardIsVerified = await this.validatorContract.isVerifiedBlock(
@@ -413,13 +469,17 @@ export class ValidatorService {
     );
 
     if (shardIsVerified) {
-      return await this.blocksRepository.update(
+      return await this.tonBlockService.updateTonBlock(
         {
-          id: dbShardBlock.id,
-          seqno: dbShardBlock.seqno,
-          workchain: dbShardBlock.workchain,
+          where: { id: dbShardBlock.id },
+          data: { checked: true },
         },
-        { checked: true },
+        // {
+        //   id: dbShardBlock.id,
+        //   // seqno: dbShardBlock.seqno,
+        //   // workchain: dbShardBlock.workchain,
+        // },
+        // { checked: true },
       );
     }
 
@@ -470,27 +530,32 @@ export class ValidatorService {
       Buffer.from(bocProof, 'base64'),
     );
 
-    return await this.blocksRepository.update(
-      {
-        id: dbShardBlock.id,
-        seqno: dbShardBlock.seqno,
-        workchain: dbShardBlock.workchain,
-      },
-      { checked: true },
+    return await this.tonBlockService.updateTonBlock(
+      { where: { id: dbShardBlock.id }, data: { checked: true } },
+      // {
+      //   id: dbShardBlock.id,
+      //   seqno: dbShardBlock.seqno,
+      //   workchain: dbShardBlock.workchain,
+      // },
+      // { checked: true },
     );
   }
 
   async validateMCBlockByState(blockDbId: number) {
-    const dbBlock = await this.blocksRepository.findOne({
-      where: {
-        id: blockDbId,
-      },
+    const dbBlock = await this.tonBlockService.tonBlock({
+      // where: {
+      id: blockDbId,
+      // },
     });
 
-    const nextBlock = await this.blocksRepository.findOne({
+    const [nextBlock] = await this.tonBlockService.tonBlocks({
       where: {
         workchain: -1,
-        seqno: MoreThan(dbBlock.seqno),
+        checked: true,
+        seqno: {
+          gt: dbBlock.seqno,
+        },
+        // seqno: MoreThan(dbBlock.seqno),
       },
     });
 
@@ -514,13 +579,14 @@ export class ValidatorService {
       Buffer.from(nextBlock.rootHash, 'base64'),
     );
 
-    return await this.blocksRepository.update(
-      {
-        id: dbBlock.id,
-        seqno: dbBlock.seqno,
-        workchain: dbBlock.workchain,
-      },
-      { checked: true },
+    return await this.tonBlockService.updateTonBlock(
+      { where: { id: dbBlock.id }, data: { checked: true } },
+      // {
+      //   id: dbBlock.id,
+      //   seqno: dbBlock.seqno,
+      //   workchain: dbBlock.workchain,
+      // },
+      // { checked: true },
     );
   }
 }

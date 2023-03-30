@@ -5,8 +5,8 @@ import { ProviderService } from '../../services/provider/provider.service';
 export class AccountController {
   constructor(private provider: ProviderService) {}
 
-  @Get()
-  getAccountBalance() {
-    return this.provider.getAccount();
-  }
+  // @Get()
+  // getAccountBalance() {
+  //   return this.provider.getAccount();
+  // }
 }

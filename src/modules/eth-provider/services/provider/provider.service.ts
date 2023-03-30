@@ -10,11 +10,7 @@ export class ProviderService {
   provider: ethers.JsonRpcProvider;
   signer: ethers.Wallet;
 
-  constructor(
-    private configService: ConfigService,
-    @InjectRepository(Account)
-    private accountRepository: Repository<Account>,
-  ) {
+  constructor(private configService: ConfigService) {
     this.provider = new ethers.JsonRpcProvider(
       configService.get<string>('NETWORK'),
     );
@@ -24,48 +20,48 @@ export class ProviderService {
       this.provider,
     );
 
-    this.init();
+    // this.init();
   }
 
-  async init() {
-    const addr = await this.signer.getAddress();
-    const userEx = await this.accountRepository.findOne({
-      where: {
-        address: addr,
-      },
-    });
-    if (!userEx) {
-      const newUser = this.accountRepository.create({ address: addr });
-      newUser.initialBalance = ethers.formatEther(
-        await this.provider.getBalance(addr),
-      );
-      newUser.balance = newUser.initialBalance;
+  // async init() {
+  //   const addr = await this.signer.getAddress();
+  //   const userEx = await this.accountRepository.findOne({
+  //     where: {
+  //       address: addr,
+  //     },
+  //   });
+  //   if (!userEx) {
+  //     const newUser = this.accountRepository.create({ address: addr });
+  //     newUser.initialBalance = ethers.formatEther(
+  //       await this.provider.getBalance(addr),
+  //     );
+  //     newUser.balance = newUser.initialBalance;
 
-      await this.accountRepository.insert(newUser);
-    }
+  //     await this.accountRepository.insert(newUser);
+  //   }
 
-    setInterval(async () => {
-      const user = await this.accountRepository.findOne({
-        where: {
-          address: addr,
-        },
-      });
+  //   setInterval(async () => {
+  //     const user = await this.accountRepository.findOne({
+  //       where: {
+  //         address: addr,
+  //       },
+  //     });
 
-      this.accountRepository.update(
-        { id: user.id },
-        { balance: ethers.formatEther(await this.provider.getBalance(addr)) },
-      );
-    }, 10000);
-  }
+  //     this.accountRepository.update(
+  //       { id: user.id },
+  //       { balance: ethers.formatEther(await this.provider.getBalance(addr)) },
+  //     );
+  //   }, 10000);
+  // }
 
-  async getAccount() {
-    const addr = await this.signer.getAddress();
-    const userEx = await this.accountRepository.findOne({
-      where: {
-        address: addr,
-      },
-    });
+  // async getAccount() {
+  //   const addr = await this.signer.getAddress();
+  //   const userEx = await this.accountRepository.findOne({
+  //     where: {
+  //       address: addr,
+  //     },
+  //   });
 
-    return userEx;
-  }
+  //   return userEx;
+  // }
 }

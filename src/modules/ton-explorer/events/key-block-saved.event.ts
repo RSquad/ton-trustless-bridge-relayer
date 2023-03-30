@@ -1,4 +1,4 @@
-import { TonBlock } from '../entities/block.entity';
+import { TonBlock } from '@prisma/client';
 
 export class KeyBlockSaved {
   data: TonBlock;

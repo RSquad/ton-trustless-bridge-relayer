@@ -1,14 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { TonBlock } from '../../entities/block.entity';
-import { Repository } from 'typeorm';
-import { TonTransaction } from '../../entities/transaction.entity';
 import { getInitialBlock, initExample, parseMcBlockRocks } from '../../utils';
 import { TonClient4 } from 'ton';
-import { getBlock } from 'src/lib/utils/lite-api';
-import { loadBlock, readBlockRootCell } from 'src/lib/utils/boc';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { KeyBlockSaved } from '../../events/key-block-saved.event';
+import { TonTransactionService } from 'src/modules/prisma/services/ton-transaction/ton-transaction.service';
+import { TonBlockService } from 'src/modules/prisma/services/ton-block/ton-block.service';
 
 const MC_INTERVAL = 10 * 1000;
 
@@ -24,10 +20,8 @@ export class BlockSubscriptionService {
   });
 
   constructor(
-    @InjectRepository(TonBlock)
-    private blocksRepository: Repository<TonBlock>,
-    @InjectRepository(TonTransaction)
-    private transactionsRepository: Repository<TonTransaction>,
+    private tonBlockService: TonBlockService,
+    private tonTransactionService: TonTransactionService,
     private eventEmitter: EventEmitter2,
   ) {
     this.init();
@@ -66,20 +60,34 @@ export class BlockSubscriptionService {
             this.tonClient4,
           );
 
-          const dbMcBlock = this.blocksRepository.create(mcBlock);
-          dbMcBlock.isKeyBlock = blockData.boc.info.key_block;
-          const mcTonBlock = await this.blocksRepository.save(dbMcBlock);
+          const tonMasterChainBlock = await this.tonBlockService.createTonBlock(
+            {
+              ...mcBlock,
+              transactions: undefined,
+              isKeyBlock: blockData.boc.info.key_block,
+            },
+          );
+
+          // const dbMcBlock = this.blocksRepository.create(mcBlock);
+          // dbMcBlock.isKeyBlock = blockData.boc.info.key_block;
+          // const mcTonBlock = await this.blocksRepository.save(dbMcBlock);
 
           for (let k = 0; k < mcBlock.transactions.length; k++) {
             console.log('start parse tx with index:', k);
             const transaction = mcBlock.transactions[k];
 
-            const dbTransaction =
-              this.transactionsRepository.create(transaction);
-            await this.transactionsRepository.save({
-              ...dbTransaction,
-              mcParent: mcTonBlock,
-            });
+            const tonMCTransaction =
+              await this.tonTransactionService.createTonTransaction({
+                ...transaction,
+                mcParent: { connect: { id: tonMasterChainBlock.id } },
+              });
+
+            // const dbTransaction =
+            //   this.transactionsRepository.create(transaction);
+            // await this.transactionsRepository.save({
+            //   ...dbTransaction,
+            //   mcParent: mcTonBlock,
+            // });
           }
 
           for (let j = 0; j < blockShards.shards.length; j++) {
@@ -89,27 +97,37 @@ export class BlockSubscriptionService {
               continue;
             }
 
-            const dbBlock = this.blocksRepository.create(block);
-            dbBlock.mcParent = mcTonBlock;
-            const tonBlock = await this.blocksRepository.save(dbBlock);
+            const tonShardBlock = await this.tonBlockService.createTonBlock({
+              ...block,
+              transactions: undefined,
+              mcParent: { connect: { id: tonMasterChainBlock.id } },
+            });
+            // const dbBlock = this.blocksRepository.create(block);
+            // dbBlock.mcParent = mcTonBlock;
+            // const tonBlock = await this.blocksRepository.save(dbBlock);
 
             for (let k = 0; k < block.transactions.length; k++) {
               console.log('start parse shard tx with index:', k);
               const transaction = block.transactions[k];
 
-              const dbTransaction =
-                this.transactionsRepository.create(transaction);
-              await this.transactionsRepository.save({
-                ...dbTransaction,
-                mcParent: tonBlock,
-              });
+              const shardTransaction =
+                await this.tonTransactionService.createTonTransaction({
+                  ...transaction,
+                  mcParent: { connect: { id: tonShardBlock.id } },
+                });
+              // const dbTransaction =
+              //   this.transactionsRepository.create(transaction);
+              // await this.transactionsRepository.save({
+              //   ...dbTransaction,
+              //   mcParent: tonBlock,
+              // });
             }
           }
           console.log(blockData.boc.info.key_block);
           if (blockData.boc.info.key_block) {
             this.eventEmitter.emit(
               'keyblock.saved',
-              new KeyBlockSaved(mcTonBlock),
+              new KeyBlockSaved(tonMasterChainBlock),
             );
           }
 

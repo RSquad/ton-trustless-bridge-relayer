@@ -1,5 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { TonTransaction } from 'src/modules/ton-explorer/entities/transaction.entity';
+import { TonTransaction } from '@prisma/client';
+// import { TonTransaction } from 'src/modules/ton-explorer/entities/transaction.entity';
 import { ValidatorService } from '../../services/validator/validator.service';
 
 @Controller('validator')

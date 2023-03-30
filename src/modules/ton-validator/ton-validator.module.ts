@@ -1,18 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { EthProviderModule } from '../eth-provider/eth-provider.module';
-import { TonBlock } from '../ton-explorer/entities/block.entity';
-import { TonTransaction } from '../ton-explorer/entities/transaction.entity';
 import { ValidatorService } from './services/validator/validator.service';
 import { ValidatorController } from './controllers/validator/validator.controller';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
-  imports: [
-    EthProviderModule,
-    ConfigModule,
-    TypeOrmModule.forFeature([TonBlock, TonTransaction]),
-  ],
+  imports: [EthProviderModule, ConfigModule, PrismaModule],
   providers: [ValidatorService],
   controllers: [ValidatorController],
 })
