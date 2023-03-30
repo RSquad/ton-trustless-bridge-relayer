@@ -53,7 +53,7 @@ export function getBlockInfo(id: BlockRequest, retry = 0) {
       if (retry >= 100) {
         throw e;
       }
-      console.log('failed req, attemp:', retry);
+      // console.log('failed req, attemp:', retry);
       await sleep();
       return getBlockInfo(id, retry + 1);
     });
