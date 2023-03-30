@@ -121,19 +121,19 @@ export class ValidatorService {
 
   @OnEvent('keyblock.saved')
   handleKeyBlockSavedEvent(data: KeyBlockSaved) {
-    console.log('keyblock saved cached');
+    // console.log('keyblock saved cached');
     this.keyblocksBuffer.next(data);
   }
 
   async handleKeyBlockSavedEvent2(data: KeyBlockSaved) {
-    console.log(
-      'check keyblock',
-      data.data.seqno,
-      data.data.workchain,
-      data.data.rootHash,
-    );
+    // console.log(
+    //   'check keyblock',
+    //   data.data.seqno,
+    //   data.data.workchain,
+    //   data.data.rootHash,
+    // );
     if (await this.checkIfBlockValidated(data)) {
-      console.log('key block already checked');
+      // console.log('key block already checked');
       await this.tonBlockService.updateTonBlock({
         where: {
           id: data.data.id,
@@ -150,13 +150,13 @@ export class ValidatorService {
     }
     const needInit = await this.checkInitValidatorsNeeded();
     if (needInit) {
-      console.log('start init validators');
+      // console.log('start init validators');
       await this.initValidators(data);
-      console.log('end init validators');
+      // console.log('end init validators');
     } else {
-      console.log('start update validators');
+      // console.log('start update validators');
       await this.updateValidators(data);
-      console.log('end update validators');
+      // console.log('end update validators');
     }
   }
 
@@ -188,8 +188,8 @@ export class ValidatorService {
     await proven.add(await PSSetValidators.fromBlock(blockData.data));
 
     const jsonData = proven.toJSON();
-    console.log('how works');
-    console.log(jsonData);
+    // console.log('how works');
+    // console.log(jsonData);
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const bocs: string[] = jsonData.find((el) => el.type === 'set-validators')!
@@ -333,7 +333,7 @@ export class ValidatorService {
       //   { checked: true },
       // );
     }
-    console.log('start validate block', blockData.id.root_hash);
+    // console.log('start validate block', blockData.id.root_hash);
 
     // cannot get from ton client
     const signaturesRes: Signature[] = (
@@ -354,7 +354,7 @@ export class ValidatorService {
         subArr.push(signatures[0]);
       }
 
-      console.log(blockData.id);
+      // console.log(blockData.id);
       await this.validatorContract.verifyValidators(
         '0x' + blockData.id.root_hash,
         `0x${blockData.id.file_hash}`,
@@ -365,7 +365,7 @@ export class ValidatorService {
         })) as any[20],
       );
     }
-    console.log('verifyValidators ended successfully', blockData.id.root_hash);
+    // console.log('verifyValidators ended successfully', blockData.id.root_hash);
     await this.validatorContract.addCurrentBlockToVerifiedSet(
       '0x' + blockData.id.root_hash,
     );
@@ -490,7 +490,7 @@ export class ValidatorService {
       )
     ).data.result;
 
-    console.log(shardProofRes.links);
+    // console.log(shardProofRes.links);
 
     const bocProof = shardProofRes.links.find(
       (l) => l.id.seqno === dbShardBlock.seqno,
@@ -509,22 +509,22 @@ export class ValidatorService {
       await this.validateMcBlockByValidator(dbShardBlock.mcParent.seqno);
     }
 
-    console.log('hsard proof boc:', bocProof);
-    console.log(
-      'fixed proof boc:',
-      Buffer.from(bocProof, 'base64').toString('hex'),
-    );
+    // console.log('hsard proof boc:', bocProof);
+    // console.log(
+    //   'fixed proof boc:',
+    //   Buffer.from(bocProof, 'base64').toString('hex'),
+    // );
 
     const mcBlockCell = await TonRocks.types.Cell.fromBoc(
       Buffer.from(bocProof, 'base64').toString('hex'),
     );
 
-    console.log('hash check block: ==============');
-    console.log(
-      mcBlockCell[0].refs[0].hashes.map((h) =>
-        Buffer.from(h).toString('base64'),
-      ),
-    );
+    // console.log('hash check block: ==============');
+    // console.log(
+    //   mcBlockCell[0].refs[0].hashes.map((h) =>
+    //     Buffer.from(h).toString('base64'),
+    //   ),
+    // );
 
     await this.validatorContract.parseShardProofPath(
       Buffer.from(bocProof, 'base64'),

@@ -9,26 +9,26 @@ import { AProofStep } from './a-proof-step';
 import type { IStateUpdate } from './base-types';
 
 function walkTree(cell: TonRocks.types.Cell, parts: TonRocks.types.Cell[]) {
-  console.log('start walk:', Buffer.from(cell.getHash()).toString('hex'));
+  // console.log('start walk:', Buffer.from(cell.getHash()).toString('hex'));
   if (parts.length === 0 || cell.refs.length === 0) {
     return cell;
   }
 
   cell.refs = cell.refs.map((ref) => {
-    console.log('some ref:', Buffer.from(ref.getHash()).toString('hex'));
+    // console.log('some ref:', Buffer.from(ref.getHash()).toString('hex'));
     const hash = Buffer.from(ref.getHash()).toString('hex');
     const index = parts.findIndex(
       (part) => Buffer.from(part.getHash()).toString('hex') === hash,
     );
 
     if (index === -1) {
-      console.log('part not found');
+      // console.log('part not found');
       return walkTree(ref, parts);
     }
 
     const newRef = parts[index];
     // parts = [...parts.slice(0, index), ...parts.slice(index + 1)];
-    console.log('part found', index);
+    // console.log('part found', index);
     return walkTree(newRef, parts);
   });
 
@@ -42,11 +42,11 @@ export abstract class AValidatorsProofStep extends AProofStep {
     const cells = await TonRocks.types.Cell.fromBoc(rootBoc);
     let cellsRoot = cells[0];
 
-    console.log(
-      '=== root_hash:',
-      Buffer.from(cellsRoot.getHash()).toString('hex'),
-      '===',
-    );
+    // console.log(
+    //   '=== root_hash:',
+    //   Buffer.from(cellsRoot.getHash()).toString('hex'),
+    //   '===',
+    // );
     // console.log(
     //   '(from boc) Prunned block root cell hash (extra):',
     //   proofPruned.refs.map((c) => Buffer.from(c.hashes[0]).toString('hex')),

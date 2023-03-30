@@ -44,7 +44,7 @@ export class BlockSubscriptionService {
           throw new Error('invalid last masterchain block from provider');
 
         for (let i = this.startMcBlockNumber + 1; i < lastMcBlock; i++) {
-          console.log('start parse block with seqno:', i);
+          // console.log('start parse block with seqno:', i);
           const blockShards = await this.tonClient4.getBlock(i);
 
           const mcBlock = blockShards.shards.find(
@@ -73,7 +73,7 @@ export class BlockSubscriptionService {
           // const mcTonBlock = await this.blocksRepository.save(dbMcBlock);
 
           for (let k = 0; k < mcBlock.transactions.length; k++) {
-            console.log('start parse tx with index:', k);
+            // console.log('start parse tx with index:', k);
             const transaction = mcBlock.transactions[k];
 
             const tonMCTransaction =
@@ -91,7 +91,7 @@ export class BlockSubscriptionService {
           }
 
           for (let j = 0; j < blockShards.shards.length; j++) {
-            console.log('start parse shardblock with seqno:', j);
+            // console.log('start parse shardblock with seqno:', j);
             const block = blockShards.shards[j];
             if (block.seqno === mcBlock.seqno && block.workchain === -1) {
               continue;
@@ -107,7 +107,7 @@ export class BlockSubscriptionService {
             // const tonBlock = await this.blocksRepository.save(dbBlock);
 
             for (let k = 0; k < block.transactions.length; k++) {
-              console.log('start parse shard tx with index:', k);
+              // console.log('start parse shard tx with index:', k);
               const transaction = block.transactions[k];
 
               const shardTransaction =
@@ -123,7 +123,7 @@ export class BlockSubscriptionService {
               // });
             }
           }
-          console.log(blockData.boc.info.key_block);
+          // console.log(blockData.boc.info.key_block);
           if (blockData.boc.info.key_block) {
             this.eventEmitter.emit(
               'keyblock.saved',

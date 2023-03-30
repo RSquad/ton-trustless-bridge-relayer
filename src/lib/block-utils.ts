@@ -77,11 +77,11 @@ export const makeBocLeaf = async (
   // console.log('leaf hash:', Buffer.from(rootLeaf.hashes[0]).toString('hex'));
   const bocLeaf = await rootLeaf.toBoc(false);
   const bufLeaf = Buffer.from(bocLeaf);
-  console.log(`=== begin bocLeaf ${idx} ===`);
+  // console.log(`=== begin bocLeaf ${idx} ===`);
   // console.log('=== begin bocConfigParams ===');
-  console.log(bufLeaf.toString('hex'));
+  // console.log(bufLeaf.toString('hex'));
   // console.log(Buffer.from(bocConfigParams).toString('hex'));
-  console.log(`=== end bocLeaf ${idx} ===`);
+  // console.log(`=== end bocLeaf ${idx} ===`);
 
   return bufLeaf;
 };
@@ -89,11 +89,11 @@ export const makeBocLeaf = async (
 export const checkBoc = async (boc: string): Promise<Buffer> => {
   const cells = await TonRocks.types.Cell.fromBoc(boc);
   const cellsRoot = cells[0];
-  console.log(
-    '=== root_hash:',
-    Buffer.from(cellsRoot.getHash()).toString('hex'),
-    '===',
-  );
+  // console.log(
+  //   '=== root_hash:',
+  //   Buffer.from(cellsRoot.getHash()).toString('hex'),
+  //   '===',
+  // );
 
   // console.log("BLOCK PARSING BEGIN");
   // const parsedBlock = TonRocks.bc.BlockParser.parseBlock(cellsRoot);
@@ -159,7 +159,7 @@ export const buildProofExcept = async (
       // proof.refs[i] = await cloneTree(c);
       proof.refs[i] = await buildProofExcept(c, listExcept);
     } else {
-      console.log('prune', hexHash);
+      // console.log('prune', hexHash);
       proof.refs[i] = await createPrunnedBranchCell(hash, c.depth[0]);
     }
   }
@@ -259,10 +259,10 @@ export const buildProof = async (
 };
 
 export const printPath = (p: TonRocks.types.Cell[]): void => {
-  console.log(
-    'path:',
-    p.map((c: TonRocks.types.Cell) => Buffer.from(c.getHash()).toString('hex')),
-  );
+  // console.log(
+  //   'path:',
+  //   p.map((c: TonRocks.types.Cell) => Buffer.from(c.getHash()).toString('hex')),
+  // );
 };
 
 export const printTreeList = (
@@ -274,7 +274,7 @@ export const printTreeList = (
     Buffer.from(c.getHash()).toString('hex');
   const hexCurrentId = cellToHexId(root);
   const { refs } = root;
-  console.log(prefix, hexCurrentId, refs.length);
+  // console.log(prefix, hexCurrentId, refs.length);
   refs.forEach((ref: TonRocks.types.Cell) => {
     printTreeList(ref, ' ' + prefix);
   });

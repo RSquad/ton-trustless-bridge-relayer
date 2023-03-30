@@ -50,8 +50,8 @@ export class PSSetValidators extends AValidatorsProofStep {
     const proof = await buildProof(p, true);
     proof.refs[0] = await buildProof([root.refs[0]]);
     await proof.finalizeTree();
-    console.log('before config refs:');
-    console.log(proof.refs[3].refs[3].refs);
+    // console.log('before config refs:');
+    // console.log(proof.refs[3].refs[3].refs);
 
     const parts: ISubTree[] = [];
     // TODO: make better
@@ -59,8 +59,8 @@ export class PSSetValidators extends AValidatorsProofStep {
       proof.refs[3].refs[3].refs[proof.refs[3].refs[3].refs.length - 1],
       parts,
     );
-    console.log('parts:');
-    console.log(parts);
+    // console.log('parts:');
+    // console.log(parts);
 
     const partsIndex = parts.reduce((m, p) => {
       const i = Buffer.from(p.root.getHash()).toString('hex');
@@ -79,18 +79,18 @@ export class PSSetValidators extends AValidatorsProofStep {
     const proofPruned = await buildProofExcept(proof, keysPartsIndex);
     await proofPruned.finalizeTree();
 
-    console.log("CELLS SHOULDN'T be pruned", keysPartsIndex);
-    console.log(
-      'proof before prune',
-      proof.refs.map((c) => Buffer.from(c.hashes[0]).toString('hex')),
-      Buffer.from(proof.hashes[0]).toString('hex'),
-    );
-    console.log(
-      'Prunned block root cell hash (extra):',
-      proofPruned.refs.map((c) => Buffer.from(c.getHash()).toString('hex')),
-      // proofPruned.refs[3],
-      Buffer.from(proofPruned.hashes[0]).toString('hex'),
-    );
+    // console.log("CELLS SHOULDN'T be pruned", keysPartsIndex);
+    // console.log(
+    //   'proof before prune',
+    //   proof.refs.map((c) => Buffer.from(c.hashes[0]).toString('hex')),
+    //   Buffer.from(proof.hashes[0]).toString('hex'),
+    // );
+    // console.log(
+    //   'Prunned block root cell hash (extra):',
+    //   proofPruned.refs.map((c) => Buffer.from(c.getHash()).toString('hex')),
+    //   // proofPruned.refs[3],
+    //   Buffer.from(proofPruned.hashes[0]).toString('hex'),
+    // );
     const bocProofPruned = await proofPruned.toBoc(false);
 
     const hexBoc = Buffer.from(bocProofPruned).toString('hex');
