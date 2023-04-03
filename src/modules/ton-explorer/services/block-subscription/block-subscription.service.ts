@@ -154,7 +154,7 @@ export class BlockSubscriptionService implements OnModuleDestroy {
     } else {
       // 8372790
       // 8371747
-      // 8372792 
+      // 8372792
       // shard: 9881488 8371766?? h7xg3RIiceOnsU7oah+ZnzPXUpGZkIuCMLu45IJTyQw=
       // const keyblock = (
       //   await this.tonApi.getMasterchainBlockWithShards(8372792)

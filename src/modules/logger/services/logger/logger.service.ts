@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class LoggerService {
   config = {
-    apiCallLog: true,
-    dbLog: true,
+    apiCallLog: false,
+    dbLog: false,
     validatorBlockLog: true,
   };
 
