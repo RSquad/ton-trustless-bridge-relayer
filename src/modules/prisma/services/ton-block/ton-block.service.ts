@@ -21,11 +21,11 @@ export class TonBlockService {
       workchain: block.workchain,
     };
     // check if block is already in db
-    console.log({
-      workchain: dtoBlock.workchain,
-      seqno: dtoBlock.seqno,
-      shard: dtoBlock.shard,
-    });
+    // console.log({
+    //   workchain: dtoBlock.workchain,
+    //   seqno: dtoBlock.seqno,
+    //   shard: dtoBlock.shard,
+    // });
     const exists = await this.prisma.tonBlock.findFirst({
       where: {
         workchain: dtoBlock.workchain,
