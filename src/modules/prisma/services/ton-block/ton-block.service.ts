@@ -1,22 +1,97 @@
 import { Injectable } from '@nestjs/common';
-import { TonBlock, TonTransaction, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { BaseTonBlockInfo } from 'src/lib/types';
+import { LoggerService } from 'src/modules/logger/services/logger/logger.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class TonBlockService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private logger: LoggerService) {}
 
-  async tonBlock(postWhereUniqueInput: Prisma.TonBlockWhereUniqueInput) {
-    return this.prisma.tonBlock.findUnique({
-      where: postWhereUniqueInput,
-      include: {
-        shards: {
-          include: {
-            transactions: true,
-          },
+  async createTonBlock<T extends BaseTonBlockInfo>(
+    block: T,
+    isKeyBlock = false,
+    parentId?: number,
+  ) {
+    const dtoBlock: BaseTonBlockInfo = {
+      fileHash: block.fileHash,
+      rootHash: block.rootHash,
+      seqno: block.seqno,
+      shard: block.shard,
+      workchain: block.workchain,
+    };
+    // check if block is already in db
+    console.log({
+      workchain: dtoBlock.workchain,
+      seqno: dtoBlock.seqno,
+      shard: dtoBlock.shard,
+    });
+    const exists = await this.prisma.tonBlock.findFirst({
+      where: {
+        workchain: dtoBlock.workchain,
+        seqno: dtoBlock.seqno,
+        shard: dtoBlock.shard,
+      },
+    });
+
+    if (exists) {
+      const updatedBlock = await this.prisma.tonBlock.update({
+        where: { id: exists.id },
+        data: {
+          ...dtoBlock,
+          checked: false,
+          isKeyBlock: isKeyBlock,
+          inprogress: false,
         },
-        mcParent: true,
-        transactions: true,
+      });
+
+      this.logger.dbLog(
+        `[BlockDb] ${
+          dtoBlock.workchain === -1 ? 'mc' : 'shard'
+        } block updated:`,
+        updatedBlock.seqno,
+      );
+      return updatedBlock;
+    }
+
+    const connect = !!parentId
+      ? {
+          mcParent: {
+            connect: {
+              id: parentId,
+            },
+          },
+        }
+      : undefined;
+    const createdBlock = await this.prisma.tonBlock.create({
+      data: {
+        ...dtoBlock,
+        isKeyBlock: isKeyBlock,
+        ...connect,
+      },
+    });
+    this.logger.dbLog(
+      `[BlockDb] ${dtoBlock.workchain === -1 ? 'mc' : 'shard'} block created:`,
+      createdBlock.seqno,
+    );
+    return createdBlock;
+  }
+
+  updateTonBlockStatus({
+    blockId,
+    checked,
+    inprogress,
+  }: {
+    blockId: number;
+    checked?: boolean;
+    inprogress?: boolean;
+  }) {
+    return this.prisma.tonBlock.update({
+      where: {
+        id: blockId,
+      },
+      data: {
+        ...{ checked, inprogress },
       },
     });
   }
@@ -47,26 +122,18 @@ export class TonBlockService {
     });
   }
 
-  async createTonBlock(data: Prisma.TonBlockCreateInput): Promise<TonBlock> {
-    return this.prisma.tonBlock.create({
-      data,
-    });
-  }
-
-  async updateTonBlock(params: {
-    where: Prisma.TonBlockWhereUniqueInput;
-    data: Prisma.TonBlockUpdateInput;
-  }): Promise<TonBlock> {
-    const { data, where } = params;
-    return this.prisma.tonBlock.update({
-      data,
-      where,
-    });
-  }
-
-  async deletePost(where: Prisma.TonBlockWhereUniqueInput): Promise<TonBlock> {
-    return this.prisma.tonBlock.delete({
-      where,
+  async tonBlock(postWhereUniqueInput: Prisma.TonBlockWhereUniqueInput) {
+    return this.prisma.tonBlock.findUnique({
+      where: postWhereUniqueInput,
+      include: {
+        shards: {
+          include: {
+            transactions: true,
+          },
+        },
+        mcParent: true,
+        transactions: true,
+      },
     });
   }
 }

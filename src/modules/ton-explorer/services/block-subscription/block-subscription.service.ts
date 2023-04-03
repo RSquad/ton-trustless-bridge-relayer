@@ -1,164 +1,170 @@
-import { Injectable } from '@nestjs/common';
-import { getInitialBlock, initExample, parseMcBlockRocks } from '../../utils';
-import { TonClient4 } from 'ton';
+import { OnModuleDestroy } from '@nestjs/common';
+import { INestApplication, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { KeyBlockSaved } from '../../events/key-block-saved.event';
-import { TonTransactionService } from 'src/modules/prisma/services/ton-transaction/ton-transaction.service';
+import { TonBlock } from '@prisma/client';
+import { concatMap, delay, exhaustMap, of, Subject, Subscription } from 'rxjs';
+import { GotKeyblock } from 'src/events/got-keyblock.event';
+import { BaseTonBlockInfo, BaseTonTransactionInfo } from 'src/lib/types';
+import { hexToBase64 } from 'src/lib/utils';
+import { parseBlock } from 'src/lib/utils/blockReader';
+import { ContractService } from 'src/modules/eth-provider/services/contract/contract.service';
+import { LoggerService } from 'src/modules/logger/services/logger/logger.service';
 import { TonBlockService } from 'src/modules/prisma/services/ton-block/ton-block.service';
+import { TonTransactionService } from 'src/modules/prisma/services/ton-transaction/ton-transaction.service';
+import { TonApiService } from '../../../ton-reader/services/ton-api/ton-api.service';
 
 const MC_INTERVAL = 10 * 1000;
 
 @Injectable()
-export class BlockSubscriptionService {
-  mcIntervalId?: NodeJS.Timer = undefined;
-  startLT?: number;
-  startMcBlockNumber?: number;
-  mcInterval = MC_INTERVAL;
-
-  tonClient4 = new TonClient4({
-    endpoint: 'https://testnet-v4.tonhubapi.com',
-  });
+export class BlockSubscriptionService implements OnModuleDestroy {
+  private sub: Subscription;
+  actualBlock$ = new Subject<BaseTonBlockInfo>();
+  loop$ = this.actualBlock$.pipe(
+    delay(MC_INTERVAL),
+    concatMap((block) => {
+      return of(this.tick(block));
+    }),
+  );
 
   constructor(
+    private tonApi: TonApiService,
+    private logger: LoggerService,
+    private contractService: ContractService,
     private tonBlockService: TonBlockService,
     private tonTransactionService: TonTransactionService,
     private eventEmitter: EventEmitter2,
   ) {
-    this.init();
+    this.sub = this.loop$.subscribe();
+    this.getInitialKeyblock().then((block) => {
+      this.actualBlock$.next(block);
+    });
   }
 
-  async start() {
-    this.stop();
+  onModuleDestroy() {
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
+  }
 
-    let isMcProcessing = false;
+  async tick(initialblock: BaseTonBlockInfo) {
+    this.logger.apiLog('[BlockSub] run tick...');
+    let seqno = initialblock.seqno;
+    const actualBlock = await this.tonApi.getLastBlock();
+    this.logger.apiLog(
+      `[BlockSub] checking mcblocks from ${seqno} to ${actualBlock.seqno} `,
+    );
 
-    const mcTick = async () => {
-      if (isMcProcessing) return;
+    while (seqno < actualBlock.seqno) {
+      const shardsData = await this.tonApi.getMasterchainBlockWithShards(seqno);
+      const mcBlock = shardsData.find(
+        (block) => block.seqno === seqno && block.workchain === -1,
+      );
+      const shards = shardsData.filter(
+        (block) => block.seqno !== seqno && block.workchain != -1,
+      );
 
-      isMcProcessing = true;
-
-      try {
-        const lastMcBlickRes = (await this.tonClient4.getLastBlock()).last;
-        const lastMcBlock = lastMcBlickRes.seqno;
-        if (!lastMcBlock)
-          throw new Error('invalid last masterchain block from provider');
-
-        for (let i = this.startMcBlockNumber + 1; i < lastMcBlock; i++) {
-          // console.log('start parse block with seqno:', i);
-          const blockShards = await this.tonClient4.getBlock(i);
-
-          const mcBlock = blockShards.shards.find(
-            (b) => b.seqno === i && b.workchain === -1,
-          );
-
-          if (!mcBlock) {
-            throw Error('no mc block');
-          }
-
-          const blockData = await parseMcBlockRocks(
-            mcBlock.seqno,
-            this.tonClient4,
-          );
-
-          const tonMasterChainBlock = await this.tonBlockService.createTonBlock(
-            {
-              ...mcBlock,
-              transactions: undefined,
-              isKeyBlock: blockData.boc.info.key_block,
-            },
-          );
-
-          // const dbMcBlock = this.blocksRepository.create(mcBlock);
-          // dbMcBlock.isKeyBlock = blockData.boc.info.key_block;
-          // const mcTonBlock = await this.blocksRepository.save(dbMcBlock);
-
-          for (let k = 0; k < mcBlock.transactions.length; k++) {
-            // console.log('start parse tx with index:', k);
-            const transaction = mcBlock.transactions[k];
-
-            const tonMCTransaction =
-              await this.tonTransactionService.createTonTransaction({
-                ...transaction,
-                mcParent: { connect: { id: tonMasterChainBlock.id } },
-              });
-
-            // const dbTransaction =
-            //   this.transactionsRepository.create(transaction);
-            // await this.transactionsRepository.save({
-            //   ...dbTransaction,
-            //   mcParent: mcTonBlock,
-            // });
-          }
-
-          for (let j = 0; j < blockShards.shards.length; j++) {
-            // console.log('start parse shardblock with seqno:', j);
-            const block = blockShards.shards[j];
-            if (block.seqno === mcBlock.seqno && block.workchain === -1) {
-              continue;
-            }
-
-            const tonShardBlock = await this.tonBlockService.createTonBlock({
-              ...block,
-              transactions: undefined,
-              mcParent: { connect: { id: tonMasterChainBlock.id } },
-            });
-            // const dbBlock = this.blocksRepository.create(block);
-            // dbBlock.mcParent = mcTonBlock;
-            // const tonBlock = await this.blocksRepository.save(dbBlock);
-
-            for (let k = 0; k < block.transactions.length; k++) {
-              // console.log('start parse shard tx with index:', k);
-              const transaction = block.transactions[k];
-
-              const shardTransaction =
-                await this.tonTransactionService.createTonTransaction({
-                  ...transaction,
-                  mcParent: { connect: { id: tonShardBlock.id } },
-                });
-              // const dbTransaction =
-              //   this.transactionsRepository.create(transaction);
-              // await this.transactionsRepository.save({
-              //   ...dbTransaction,
-              //   mcParent: tonBlock,
-              // });
-            }
-          }
-          // console.log(blockData.boc.info.key_block);
-          if (blockData.boc.info.key_block) {
-            this.eventEmitter.emit(
-              'keyblock.saved',
-              new KeyBlockSaved(tonMasterChainBlock),
-            );
-          }
-
-          this.startMcBlockNumber = lastMcBlock - 1;
-        }
-      } catch (e) {
-        console.error(e);
+      if (!mcBlock) {
+        console.error('NO MC BLOCK FROM API');
+        return initialblock;
       }
 
-      isMcProcessing = false;
-    };
+      const boc = await this.tonApi.getBlockBoc(mcBlock);
+      const parsedBlock = await parseBlock(boc);
+      const prismaMCBlock = await this.tonBlockService.createTonBlock(mcBlock);
 
-    this.mcIntervalId = setInterval(() => mcTick(), this.mcInterval);
-    mcTick();
-  }
-  stop() {
-    clearInterval(this.mcIntervalId);
-  }
+      await this.saveBlockTransactions(mcBlock, prismaMCBlock);
+      await this.saveShardBlocks(shards, prismaMCBlock);
 
-  async init() {
-    const initData = await initExample();
-    const initialBlockInfo = await getInitialBlock(initData);
+      if (parsedBlock.info.key_block) {
+        this.eventEmitter.emit(
+          'keyblock.new',
+          new GotKeyblock(mcBlock, boc, parsedBlock, prismaMCBlock),
+        );
+      }
 
-    if (!this.startMcBlockNumber) {
-      this.startMcBlockNumber = initialBlockInfo.id.seqno - 1;
-      if (!this.startMcBlockNumber)
-        throw new Error('Cannot get start mc block number from provider');
+      seqno += 1;
     }
-    this.startLT = initialBlockInfo.info.end_lt;
-    if (!this.startLT) throw new Error('Cannot get startLT from provider');
 
-    this.start();
+    this.logger.apiLog('[BlockSub] end tick.');
+    this.actualBlock$.next(actualBlock);
+  }
+
+  async saveBlockTransactions(
+    block: BaseTonBlockInfo & { transactions: BaseTonTransactionInfo[] },
+    prismaBlock: TonBlock,
+  ) {
+    for (let idx = 0; idx < block.transactions.length; idx++) {
+      const tx = block.transactions[idx];
+      await this.tonTransactionService.createTonTransaction(tx, prismaBlock.id);
+    }
+  }
+
+  async saveShardBlocks(
+    shards: (BaseTonBlockInfo & { transactions: BaseTonTransactionInfo[] })[],
+    prismaBlock: TonBlock,
+  ) {
+    for (let idx = 0; idx < shards.length; idx++) {
+      const shard = shards[idx];
+      const prismaShard = await this.tonBlockService.createTonBlock(
+        shard,
+        false,
+        prismaBlock.id,
+      );
+      await this.saveBlockTransactions(shard, prismaShard);
+    }
+  }
+
+  async getInitialKeyblock() {
+    this.logger.apiLog('[BlockSub] finding initial keyblock...');
+    const hasKeyblock =
+      (await this.contractService.validatorContract.getValidators())[0]
+        .node_id !==
+      '0x0000000000000000000000000000000000000000000000000000000000000000';
+
+    if (hasKeyblock) {
+      this.logger.apiLog(
+        '[BlockSub] Contract has verified keyblock. Trying to find it...',
+      );
+      let keyblock = await this.tonApi.getLastKeyBlock();
+      let validated =
+        await this.contractService.validatorContract.isVerifiedBlock(
+          Buffer.from(keyblock.rootHash, 'hex'),
+        );
+
+      while (!validated) {
+        this.logger.apiLog(
+          '[BlockSub] Found not verified keyblock:',
+          keyblock.seqno,
+        );
+        keyblock = await this.tonApi.getPreviousKeyBlock(keyblock);
+        validated =
+          await this.contractService.validatorContract.isVerifiedBlock(
+            Buffer.from(keyblock.rootHash, 'hex'),
+          );
+      }
+
+      this.logger.apiLog(
+        '[BlockSub] initial keyblock founded:',
+        keyblock.seqno,
+      );
+      // keyblock = (
+      //   await this.tonApi.getMasterchainBlockWithShards(8372792)
+      // ).find((b) => b.seqno === 8372792 && b.workchain === -1);
+      return keyblock;
+    } else {
+      // 8372790
+      // 8371747
+      // 8372792 
+      // shard: 9881488 8371766?? h7xg3RIiceOnsU7oah+ZnzPXUpGZkIuCMLu45IJTyQw=
+      // const keyblock = (
+      //   await this.tonApi.getMasterchainBlockWithShards(8372792)
+      // ).find((b) => b.seqno === 8372792 && b.workchain === -1);
+      const keyblock = await this.tonApi.getLastKeyBlock();
+      this.logger.apiLog(
+        '[BlockSub] initial keyblock founded:',
+        keyblock.seqno,
+      );
+      return keyblock;
+    }
   }
 }

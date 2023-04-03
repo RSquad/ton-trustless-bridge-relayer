@@ -427,7 +427,7 @@ export const buildPathToConfig = (
   // path.push(p);
   // path.concat(p);
   // console.log(path);
-  console.log('path to config builded');
+  // console.log('path to config builded');
   // return path;
   return path.concat(p);
 };

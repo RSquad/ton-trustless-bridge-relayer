@@ -1,167 +1,121 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OnEvent } from '@nestjs/event-emitter';
-import { ethers } from 'ethers';
-import {
-  BlockParser,
-  Bridge,
-  TransactionParser,
-  TreeOfCellsParser,
-  Validator,
-} from 'src/contracts/typechain';
+import { Subject } from 'rxjs';
+import { GotKeyblock } from 'src/events/got-keyblock.event';
 import {
   ProvenState,
   PSProofValidators,
   PSSetValidators,
   PSTransaction,
 } from 'src/lib/steps';
-import { ProviderService } from 'src/modules/eth-provider/services/provider/provider.service';
-import { KeyBlockSaved } from 'src/modules/ton-explorer/events/key-block-saved.event';
-import {
-  parseMcBlockRocks,
-  parseShardBlockRocks,
-} from 'src/modules/ton-explorer/utils';
-import { TonClient4 } from 'ton';
-import ValidatorAbi from '../../../../contracts/contracts/Validator.sol/Validator.json';
-import BridgeAbi from '../../../../contracts/contracts/Bridge.sol/Bridge.json';
-import TransactionParserAbi from '../../../../contracts/contracts/parser/TransactionParser.sol/TransactionParser.json';
-import BlockParserAbi from '../../../../contracts/contracts/parser/BlockParser.sol/BlockParser.json';
-import TOCParserAbi from '../../../../contracts/contracts/parser/TreeOfCellsParser.sol/TreeOfCellsParser.json';
-import { MoreThan } from 'typeorm';
 import {
   BlockIdExt,
   CFriendlyAddressString,
   InternalTransactionId,
 } from 'src/lib/ton-types';
-import axios from 'axios';
-import _ from 'lodash';
-import { concatMap, from, Subject } from 'rxjs';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import TonRocks from '../../../../lib/ton-rocks-js';
-import { TonTransactionService } from 'src/modules/prisma/services/ton-transaction/ton-transaction.service';
+import { ContractService } from 'src/modules/eth-provider/services/contract/contract.service';
+import { ProviderService } from 'src/modules/eth-provider/services/provider/provider.service';
+import { LoggerService } from 'src/modules/logger/services/logger/logger.service';
 import { TonBlockService } from 'src/modules/prisma/services/ton-block/ton-block.service';
+import { TonTransactionService } from 'src/modules/prisma/services/ton-transaction/ton-transaction.service';
+import { TonApiService } from 'src/modules/ton-reader/services/ton-api/ton-api.service';
+import createLock from '../../utils/SimpleLock';
+import _ from 'lodash';
+import { parseBlock } from 'src/lib/utils/blockReader';
 import { TonTransaction } from '@prisma/client';
-
-const toncenterUrl = 'https://testnet.toncenter.com/api/v2/';
-
-function sleep() {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(undefined);
-    }, 1000);
-  });
-}
-
-interface Signature {
-  node_id_short: string;
-  signature: string;
-}
 
 @Injectable()
 export class ValidatorService {
-  validatorContract: Validator = new ethers.Contract(
-    this.configService.get<string>('VALIDATOR_ADDR'),
-    ValidatorAbi.abi,
-    this.providerService.signer,
-  ) as any;
-
-  bridgeContract: Bridge = new ethers.Contract(
-    this.configService.get<string>('BRIDGE_ADDR'),
-    BridgeAbi.abi,
-    this.providerService.signer,
-  ) as any;
-
-  transactionParserContract: TransactionParser = new ethers.Contract(
-    this.configService.get<string>('TRANSACTION_PARSER_ADDR'),
-    TransactionParserAbi.abi,
-    this.providerService.signer,
-  ) as any;
-
-  blockParserContract: BlockParser = new ethers.Contract(
-    this.configService.get<string>('BLOCK_PARSER_ADDR'),
-    BlockParserAbi.abi,
-    this.providerService.signer,
-  ) as any;
-
-  tocParserContract: TreeOfCellsParser = new ethers.Contract(
-    this.configService.get<string>('TOC_PARSER_ADDR'),
-    TOCParserAbi.abi,
-    this.providerService.signer,
-  ) as any;
-
-  tonClient4 = new TonClient4({
-    endpoint: 'https://testnet-v4.tonhubapi.com',
-  });
-
-  keyblocksBuffer = new Subject<KeyBlockSaved>();
-
   nonce = 0;
+  validatorLock = createLock('validator');
+  bridgeLock = createLock('bridge');
+
+  keyblockBuffer = new Subject<GotKeyblock>();
 
   constructor(
     private providerService: ProviderService,
     private configService: ConfigService,
     private tonBlockService: TonBlockService,
     private tonTransactionService: TonTransactionService,
+    private contractService: ContractService,
+    private tonApi: TonApiService,
+    private logger: LoggerService,
   ) {
-    this.keyblocksBuffer
-      .pipe(
-        concatMap((data) => {
-          return from(this.handleKeyBlockSavedEvent2(data));
-        }),
-      )
-      .subscribe();
-
-    this.providerService.provider
-      .getTransactionCount(this.configService.get<string>('VALIDATOR_ADDR'))
-      .then((nonce) => {
-        this.nonce = nonce;
-      });
+    this.keyblockBuffer.subscribe((data) => {
+      this.handleKeyblock(data);
+    });
   }
 
-  @OnEvent('keyblock.saved')
-  handleKeyBlockSavedEvent(data: KeyBlockSaved) {
-    // console.log('keyblock saved cached');
-    this.keyblocksBuffer.next(data);
+  @OnEvent('keyblock.new')
+  gotKeyblock(data: GotKeyblock) {
+    this.keyblockBuffer.next(data);
   }
 
-  async handleKeyBlockSavedEvent2(data: KeyBlockSaved) {
-    // console.log(
-    //   'check keyblock',
-    //   data.data.seqno,
-    //   data.data.workchain,
-    //   data.data.rootHash,
-    // );
-    if (await this.checkIfBlockValidated(data)) {
-      // console.log('key block already checked');
-      await this.tonBlockService.updateTonBlock({
-        where: {
-          id: data.data.id,
-        },
-        data: {
-          checked: true,
-        },
-      });
-      // await this.blocksRepository.update(
-      //   { id: data.data.id },
-      //   { checked: true },
-      // );
-      return;
+  async handleKeyblock(data: GotKeyblock) {
+    this.logger.validatorLog('[Validator] got keyblock:', data.block.seqno);
+    await this.tonBlockService.updateTonBlockStatus({
+      blockId: data.prismaBlock.id,
+      inprogress: true,
+    });
+
+    const isVerified = await this.syncVerifying(
+      data.block.rootHash,
+      data.prismaBlock.id,
+    );
+
+    if (isVerified) {
+      this.logger.validatorLog(
+        '[Validator] keyblock is veryfied:',
+        data.block.seqno,
+      );
+      return false;
     }
-    const needInit = await this.checkInitValidatorsNeeded();
-    if (needInit) {
-      // console.log('start init validators');
+
+    this.logger.validatorLog(
+      '[Validator] keyblock verifying...:',
+      data.block.seqno,
+    );
+
+    if (await this.checkInitValidatorsNeeded()) {
       await this.initValidators(data);
-      // console.log('end init validators');
     } else {
-      // console.log('start update validators');
       await this.updateValidators(data);
-      // console.log('end update validators');
     }
+
+    await this.tonBlockService.updateTonBlockStatus({
+      blockId: data.prismaBlock.id,
+      inprogress: false,
+      checked: true,
+    });
+
+    this.logger.validatorLog(
+      '[Validator] keyblock verifying complete:',
+      data.block.seqno,
+    );
+
+    return false;
+  }
+
+  async isBlockVerified(rootHash: string) {
+    const hash = Buffer.from(rootHash, 'hex');
+    return await this.contractService.validatorContract.isVerifiedBlock(hash);
+  }
+
+  async syncVerifying(rootHash: string, prismaId: number) {
+    const isVerified = await this.isBlockVerified(rootHash);
+
+    await this.tonBlockService.updateTonBlockStatus({
+      blockId: prismaId,
+      checked: isVerified,
+    });
+
+    return isVerified;
   }
 
   async checkInitValidatorsNeeded() {
-    const validators = await this.validatorContract.getValidators();
+    const validators =
+      await this.contractService.validatorContract.getValidators();
     const nonEmptyValidators = validators.filter(
       (v) =>
         v.pubkey !==
@@ -174,22 +128,10 @@ export class ValidatorService {
     return true;
   }
 
-  async checkIfBlockValidated(data: KeyBlockSaved) {
-    const rootHash = Buffer.from(data.data.rootHash, 'base64');
-    return await this.validatorContract.isVerifiedBlock(rootHash);
-  }
-
-  async initValidators(data: KeyBlockSaved) {
-    const blockData = await parseMcBlockRocks(data.data.seqno, this.tonClient4);
-
-    // console.log('True root hash', blockData.id.root_hash);
-    // console.log('parts:', await PSSetValidators.fromBlock(blockData.data));
+  async initValidators(data: GotKeyblock) {
     const proven = new ProvenState();
-    await proven.add(await PSSetValidators.fromBlock(blockData.data));
-
+    await proven.add(await PSSetValidators.fromBlock(data.boc.data));
     const jsonData = proven.toJSON();
-    // console.log('how works');
-    // console.log(jsonData);
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const bocs: string[] = jsonData.find((el) => el.type === 'set-validators')!
@@ -201,40 +143,36 @@ export class ValidatorService {
       'hex',
     );
 
-    await this.validatorContract.parseCandidatesRootBlock(boc);
-    if (bocs.length > 1) {
-      for (let i = 1; i < bocs.length; i++) {
-        await this.validatorContract.parsePartValidators(bocs[i]);
+    try {
+      await this.validatorLock.acquire();
+
+      await this.contractService.validatorContract.parseCandidatesRootBlock(
+        boc,
+      );
+      if (bocs.length > 1) {
+        for (let i = 1; i < bocs.length; i++) {
+          await this.contractService.validatorContract.parsePartValidators(
+            bocs[i],
+          );
+        }
       }
+      await this.contractService.validatorContract.initValidators();
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      this.validatorLock.release();
     }
-    await this.validatorContract.initValidators();
-    await this.tonBlockService.updateTonBlock({
-      where: {
-        id: data.data.id,
-      },
-      data: {
-        checked: true,
-      },
-    });
-    // await this.blocksRepository.update({ id: data.data.id }, { checked: true });
   }
 
-  async updateValidators(data: KeyBlockSaved) {
-    const blockData = await parseMcBlockRocks(data.data.seqno, this.tonClient4);
-
-    // cannot get from ton client
-    const signaturesRes: Signature[] = (
-      await axios.get(
-        `${toncenterUrl}getMasterchainBlockSignatures?seqno=${blockData.id.seqno}`,
-      )
-    ).data.result.signatures;
+  async updateValidators(data: GotKeyblock) {
+    const signatures = await this.tonApi.getSignatures(data.block.seqno);
 
     const proven = new ProvenState();
     await proven.add(
       await PSProofValidators.fromBlock(
-        BlockIdExt.fromJSON(blockData.id),
-        blockData.data,
-        _.map(signaturesRes, (el) => ({
+        BlockIdExt.fromJSON(data.boc.id),
+        data.boc.data,
+        _.map(signatures, (el) => ({
           node_id: Buffer.from(el.node_id_short, 'base64').toString('hex'),
           r: Buffer.from(el.signature, 'base64').slice(0, 32).toString('hex'),
           s: Buffer.from(el.signature, 'base64').slice(32).toString('hex'),
@@ -255,92 +193,74 @@ export class ValidatorService {
       'hex',
     );
 
-    // console.log(
-    //   'filehash',
-    //   Buffer.from(
-    //     jsonData.find((el) => el.type === 'proof-validators')!.id!.fileHash,
+    try {
+      await this.validatorLock.acquire();
 
-    //   ).toString('hex'),
-    //   blockData.id.file_hash,
-    // );
-
-    await this.validatorContract.parseCandidatesRootBlock(boc);
-    if (bocs.length > 1) {
-      for (let i = 1; i < bocs.length; i++) {
-        await this.validatorContract.parsePartValidators(bocs[i]);
-      }
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const signatures = jsonData.find((el) => el.type === 'proof-validators')!
-      .signatures!;
-
-    for (let i = 0; i < signatures.length; i += 20) {
-      const subArr = signatures.slice(i, i + 20);
-      while (subArr.length < 20) {
-        subArr.push(signatures[0]);
-      }
-
-      await this.validatorContract.verifyValidators(
-        '0x0000000000000000000000000000000000000000000000000000000000000000',
-        // `0x${Buffer.from(
-        //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        //   jsonData.find((el) => el.type === 'proof-validators')!.id!.fileHash,
-        //   'base64',
-        // ).toString('hex')}`,
-        `0x${blockData.id.file_hash}`,
-        subArr.map((c) => ({
-          node_id: `0x${c.node_id}`,
-          r: `0x${c.r}`,
-          s: `0x${c.s}`,
-        })) as any[20],
+      await this.contractService.validatorContract.parseCandidatesRootBlock(
+        boc,
       );
+      if (bocs.length > 1) {
+        for (let i = 1; i < bocs.length; i++) {
+          await this.contractService.validatorContract.parsePartValidators(
+            bocs[i],
+          );
+        }
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const signatures = jsonData.find((el) => el.type === 'proof-validators')!
+        .signatures!;
+
+      for (let i = 0; i < signatures.length; i += 20) {
+        const subArr = signatures.slice(i, i + 20);
+        while (subArr.length < 20) {
+          subArr.push(signatures[0]);
+        }
+
+        await this.contractService.validatorContract.verifyValidators(
+          '0x0000000000000000000000000000000000000000000000000000000000000000',
+          // `0x${Buffer.from(
+          //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          //   jsonData.find((el) => el.type === 'proof-validators')!.id!.fileHash,
+          //   'base64',
+          // ).toString('hex')}`,
+          `0x${data.boc.id.file_hash}`,
+          subArr.map((c) => ({
+            node_id: `0x${c.node_id}`,
+            r: `0x${c.r}`,
+            s: `0x${c.s}`,
+          })) as any[20],
+        );
+      }
+      await this.contractService.validatorContract.setValidatorSet();
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      this.validatorLock.release();
     }
-    await this.validatorContract.setValidatorSet();
-    await this.tonBlockService.updateTonBlock({
-      where: {
-        id: data.data.id,
-      },
-      data: {
-        checked: true,
-      },
-    });
-    // await this.blocksRepository.update({ id: data.data.id }, { checked: true });
   }
 
-  async validateMcBlockByValidator(seqno: number) {
-    const blockData = await parseMcBlockRocks(seqno, this.tonClient4);
-    const isVerified = await this.validatorContract.isVerifiedBlock(
-      '0x' + blockData.id.root_hash,
-    );
-    if (isVerified) {
-      const dbItem = await this.tonBlockService.tonBlocks({
-        where: {
-          seqno: blockData.id.seqno as number,
-          workchain: -1,
-        },
-      });
-      await this.tonBlockService.updateTonBlock({
-        where: {
-          id: dbItem[0].id,
-        },
-        data: {
-          checked: true,
-        },
-      });
-      // return await this.blocksRepository.update(
-      //   { seqno: blockData.id.seqno, workchain: -1 },
-      //   { checked: true },
-      // );
-    }
-    // console.log('start validate block', blockData.id.root_hash);
+  async validateMcBlockByValidator(id: number) {
+    try {
+      await this.validateMCBlockByState(id);
+    } catch (error) {}
 
-    // cannot get from ton client
-    const signaturesRes: Signature[] = (
-      await axios.get(
-        `${toncenterUrl}getMasterchainBlockSignatures?seqno=${blockData.id.seqno}`,
-      )
-    ).data.result.signatures;
+    await this.tonBlockService.updateTonBlockStatus({
+      blockId: id,
+      inprogress: true,
+    });
+    const prismaBlock = await this.tonBlockService.tonBlock({ id: id });
+
+    if (await this.syncVerifying(prismaBlock.rootHash, prismaBlock.id)) {
+      await this.tonBlockService.updateTonBlockStatus({
+        blockId: id,
+        inprogress: false,
+      });
+      return;
+    }
+
+    const blockData = await this.tonApi.getBlockBoc(prismaBlock);
+    const signaturesRes = await this.tonApi.getSignatures(prismaBlock.seqno);
 
     const signatures = signaturesRes.map((el) => ({
       node_id: Buffer.from(el.node_id_short, 'base64').toString('hex'),
@@ -348,78 +268,163 @@ export class ValidatorService {
       s: Buffer.from(el.signature, 'base64').slice(32).toString('hex'),
     }));
 
-    for (let i = 0; i < signatures.length; i += 20) {
-      const subArr = signatures.slice(i, i + 20);
-      while (subArr.length < 20) {
-        subArr.push(signatures[0]);
+    try {
+      await this.validatorLock.acquire();
+      for (let i = 0; i < signatures.length; i += 20) {
+        const subArr = signatures.slice(i, i + 20);
+        while (subArr.length < 20) {
+          subArr.push(signatures[0]);
+        }
+
+        await this.contractService.validatorContract.verifyValidators(
+          '0x' + blockData.id.root_hash,
+          `0x${blockData.id.file_hash}`,
+          subArr.map((c) => ({
+            node_id: `0x${c.node_id}`,
+            r: `0x${c.r}`,
+            s: `0x${c.s}`,
+          })) as any[20],
+        );
       }
 
-      // console.log(blockData.id);
-      await this.validatorContract.verifyValidators(
+      await this.contractService.validatorContract.addCurrentBlockToVerifiedSet(
         '0x' + blockData.id.root_hash,
-        `0x${blockData.id.file_hash}`,
-        subArr.map((c) => ({
-          node_id: `0x${c.node_id}`,
-          r: `0x${c.r}`,
-          s: `0x${c.s}`,
-        })) as any[20],
       );
-    }
-    // console.log('verifyValidators ended successfully', blockData.id.root_hash);
-    await this.validatorContract.addCurrentBlockToVerifiedSet(
-      '0x' + blockData.id.root_hash,
-    );
-    const dbItem = await this.tonBlockService.tonBlocks({
-      where: {
-        seqno: blockData.id.seqno as number,
-        workchain: -1,
-      },
-    });
-    return await this.tonBlockService.updateTonBlock({
-      where: {
-        id: dbItem[0].id,
-      },
-      data: {
+
+      await this.tonBlockService.updateTonBlockStatus({
+        blockId: prismaBlock.id,
         checked: true,
+      });
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      this.validatorLock.release();
+      await this.tonBlockService.updateTonBlockStatus({
+        blockId: id,
+        inprogress: false,
+      });
+    }
+  }
+
+  async validateShardBlock(id: number) {
+    this.logger.validatorLog('start shard validating...');
+    await this.tonBlockService.updateTonBlockStatus({
+      blockId: id,
+      inprogress: true,
+    });
+
+    const prismaShardBlock = await this.tonBlockService.tonBlock({
+      id: id,
+    });
+
+    if (await this.syncVerifying(prismaShardBlock.rootHash, id)) {
+      await this.tonBlockService.updateTonBlockStatus({
+        blockId: id,
+        inprogress: false,
+      });
+
+      this.logger.validatorLog('shard already verified.');
+      return;
+    }
+
+    const shardProofRes = await this.tonApi.getShardProof(prismaShardBlock);
+    const bocProof = shardProofRes.links.find(
+      (l) => l.id.seqno === prismaShardBlock.seqno,
+    )?.proof;
+
+    if (!bocProof) {
+      throw Error('wrong proof');
+    }
+
+    const isVerified = await this.syncVerifying(
+      prismaShardBlock.mcParent.rootHash,
+      prismaShardBlock.mcParent.id,
+    );
+
+    if (!isVerified) {
+      await this.validateMcBlockByValidator(prismaShardBlock.mcParent.id);
+    }
+
+    try {
+      await this.validatorLock.acquire();
+      await this.contractService.validatorContract.parseShardProofPath(
+        Buffer.from(bocProof, 'base64'),
+      );
+      await this.tonBlockService.updateTonBlockStatus({
+        blockId: id,
+        checked: true,
+      });
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      this.validatorLock.release();
+      await this.tonBlockService.updateTonBlockStatus({
+        blockId: id,
+        inprogress: false,
+      });
+      this.logger.validatorLog('shard is verified.');
+    }
+  }
+
+  async validateMCBlockByState(id: number) {
+    await this.tonBlockService.updateTonBlockStatus({
+      blockId: id,
+      inprogress: true,
+    });
+    const prismaBlock = await this.tonBlockService.tonBlock({ id: id });
+    const [nextBlock] = await this.tonBlockService.tonBlocks({
+      where: {
+        workchain: -1,
+        checked: true,
+        seqno: {
+          gt: prismaBlock.seqno,
+        },
       },
     });
 
-    // return await this.blocksRepository.update(
-    //   { seqno: blockData.id.seqno, workchain: -1 },
-    //   { checked: true },
-    // );
+    try {
+      if (!nextBlock) {
+        throw Error('no validated future block');
+      }
+      await this.validatorLock.acquire();
+      const mc_proof = await this.tonApi.getStateProof(prismaBlock, nextBlock);
+      await this.contractService.validatorContract.readStateProof(
+        Buffer.from(mc_proof.state_proof, 'base64'),
+        Buffer.from(nextBlock.rootHash, 'hex'),
+      );
+      await this.tonBlockService.updateTonBlockStatus({
+        blockId: id,
+        checked: true,
+      });
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      this.validatorLock.release();
+      await this.tonBlockService.updateTonBlockStatus({
+        blockId: id,
+        inprogress: false,
+      });
+    }
   }
 
   async validateTransaction(transaction: TonTransaction) {
-    const dbTx = (
+    const prismaTx = (
       await this.tonTransactionService.tonTransactions({
         where: { ...transaction },
       })
     )[0];
-    // const dbTx = await this.transactionsRepository.findOne({
-    //   where: {
-    //     ...transaction,
-    //   },
-    //   relations: { mcParent: { mcParent: true } },
-    // });
 
-    const block =
-      dbTx.mcParent.workchain === -1
-        ? await parseMcBlockRocks(dbTx.mcParent.seqno, this.tonClient4)
-        : await parseShardBlockRocks(
-            dbTx.mcParent.seqno,
-            dbTx.mcParent.mcParent.seqno,
-            this.tonClient4,
-          );
+    const block = await this.tonApi.getBlockBoc(prismaTx.mcParent);
+
     const proven = new ProvenState();
     await proven.add(
       await PSTransaction.fromBlock(
         block.data,
         InternalTransactionId.fromJSON({
-          lt: dbTx.lt,
-          hash: dbTx.hash,
+          lt: prismaTx.lt,
+          hash: prismaTx.hash,
         }),
-        CFriendlyAddressString.from(dbTx.account).asAddress(),
+        CFriendlyAddressString.from(prismaTx.account).asAddress(),
       ),
     );
 
@@ -437,156 +442,10 @@ export class ValidatorService {
       'hex',
     );
 
-    // await this.bridgeContract.readTransaction(
-    //   txBoc,
-    //   boc,
-    //   '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318',
-    // );
-
     return {
       txBoc: txBoc.toString('hex'),
       boc: boc.toString('hex'),
-      adapter: '0x135517aE246d678AbE3a8DBA59F3A49661593778',
+      adapter: this.configService.get<string>('BASEADAPTER_ADDR'),
     };
-
-    // return await this.transactionsRepository.update(
-    //   { id: dbTx.id },
-    //   { checked: true },
-    // );
-  }
-
-  async validateShardBlock(blockDbId: number) {
-    const dbShardBlock = await this.tonBlockService.tonBlock({
-      id: blockDbId,
-      // where: {
-      //   id: blockDbId,
-      // },
-      // relations: ['mcParent'],
-    });
-
-    const shardIsVerified = await this.validatorContract.isVerifiedBlock(
-      Buffer.from(dbShardBlock.rootHash, 'base64'),
-    );
-
-    if (shardIsVerified) {
-      return await this.tonBlockService.updateTonBlock(
-        {
-          where: { id: dbShardBlock.id },
-          data: { checked: true },
-        },
-        // {
-        //   id: dbShardBlock.id,
-        //   // seqno: dbShardBlock.seqno,
-        //   // workchain: dbShardBlock.workchain,
-        // },
-        // { checked: true },
-      );
-    }
-
-    const shardProofRes = (
-      await axios.get(
-        toncenterUrl +
-          `getShardBlockProof?workchain=${dbShardBlock.workchain}&shard=${dbShardBlock.shard}&seqno=${dbShardBlock.seqno}&from_seqno=${dbShardBlock.mcParent.seqno}`,
-      )
-    ).data.result;
-
-    // console.log(shardProofRes.links);
-
-    const bocProof = shardProofRes.links.find(
-      (l) => l.id.seqno === dbShardBlock.seqno,
-    )?.proof;
-
-    if (!bocProof) {
-      throw Error('wrong proof');
-    }
-
-    const isVerified = await this.validatorContract.isVerifiedBlock(
-      Buffer.from(dbShardBlock.mcParent.rootHash, 'base64'),
-    );
-
-    if (!isVerified) {
-      await sleep();
-      await this.validateMcBlockByValidator(dbShardBlock.mcParent.seqno);
-    }
-
-    // console.log('hsard proof boc:', bocProof);
-    // console.log(
-    //   'fixed proof boc:',
-    //   Buffer.from(bocProof, 'base64').toString('hex'),
-    // );
-
-    const mcBlockCell = await TonRocks.types.Cell.fromBoc(
-      Buffer.from(bocProof, 'base64').toString('hex'),
-    );
-
-    // console.log('hash check block: ==============');
-    // console.log(
-    //   mcBlockCell[0].refs[0].hashes.map((h) =>
-    //     Buffer.from(h).toString('base64'),
-    //   ),
-    // );
-
-    await this.validatorContract.parseShardProofPath(
-      Buffer.from(bocProof, 'base64'),
-    );
-
-    return await this.tonBlockService.updateTonBlock(
-      { where: { id: dbShardBlock.id }, data: { checked: true } },
-      // {
-      //   id: dbShardBlock.id,
-      //   seqno: dbShardBlock.seqno,
-      //   workchain: dbShardBlock.workchain,
-      // },
-      // { checked: true },
-    );
-  }
-
-  async validateMCBlockByState(blockDbId: number) {
-    const dbBlock = await this.tonBlockService.tonBlock({
-      // where: {
-      id: blockDbId,
-      // },
-    });
-
-    const [nextBlock] = await this.tonBlockService.tonBlocks({
-      where: {
-        workchain: -1,
-        checked: true,
-        seqno: {
-          gt: dbBlock.seqno,
-        },
-        // seqno: MoreThan(dbBlock.seqno),
-      },
-    });
-
-    if (!nextBlock) {
-      throw Error('no validated future block');
-    }
-
-    const mc_proof = (
-      await axios.get(
-        toncenterUrl +
-          `getShardBlockProof?workchain=${
-            nextBlock.workchain
-          }&shard=${+nextBlock.shard}&seqno=${nextBlock.seqno}&from_seqno=${
-            nextBlock.seqno
-          }`,
-      )
-    ).data.result.mc_proof[0];
-
-    await this.validatorContract.readStateProof(
-      Buffer.from(mc_proof.state_proof, 'base64'),
-      Buffer.from(nextBlock.rootHash, 'base64'),
-    );
-
-    return await this.tonBlockService.updateTonBlock(
-      { where: { id: dbBlock.id }, data: { checked: true } },
-      // {
-      //   id: dbBlock.id,
-      //   seqno: dbBlock.seqno,
-      //   workchain: dbBlock.workchain,
-      // },
-      // { checked: true },
-    );
   }
 }
