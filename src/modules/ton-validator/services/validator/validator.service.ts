@@ -148,17 +148,20 @@ export class ValidatorService {
     try {
       await this.validatorLock.acquire();
 
-      await this.contractService.validatorContract.parseCandidatesRootBlock(
-        boc,
-      );
+      await this.contractService.validatorContract
+        .parseCandidatesRootBlock(boc)
+        .then((tx) => (tx as any).wait());
+
       if (bocs.length > 1) {
         for (let i = 1; i < bocs.length; i++) {
-          await this.contractService.validatorContract.parsePartValidators(
-            bocs[i],
-          );
+          await this.contractService.validatorContract
+            .parsePartValidators(bocs[i])
+            .then((tx) => (tx as any).wait());
         }
       }
-      await this.contractService.validatorContract.initValidators();
+      await this.contractService.validatorContract
+        .initValidators()
+        .then((tx) => (tx as any).wait());
     } catch (error) {
       console.error(error.message);
     } finally {
@@ -198,14 +201,14 @@ export class ValidatorService {
     try {
       await this.validatorLock.acquire();
 
-      await this.contractService.validatorContract.parseCandidatesRootBlock(
-        boc,
-      );
+      await this.contractService.validatorContract
+        .parseCandidatesRootBlock(boc)
+        .then((tx) => (tx as any).wait());
       if (bocs.length > 1) {
         for (let i = 1; i < bocs.length; i++) {
-          await this.contractService.validatorContract.parsePartValidators(
-            bocs[i],
-          );
+          await this.contractService.validatorContract
+            .parsePartValidators(bocs[i])
+            .then((tx) => (tx as any).wait());
         }
       }
 
@@ -219,22 +222,26 @@ export class ValidatorService {
           subArr.push(signatures[0]);
         }
 
-        await this.contractService.validatorContract.verifyValidators(
-          '0x0000000000000000000000000000000000000000000000000000000000000000',
-          // `0x${Buffer.from(
-          //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          //   jsonData.find((el) => el.type === 'proof-validators')!.id!.fileHash,
-          //   'base64',
-          // ).toString('hex')}`,
-          `0x${data.boc.id.file_hash}`,
-          subArr.map((c) => ({
-            node_id: `0x${c.node_id}`,
-            r: `0x${c.r}`,
-            s: `0x${c.s}`,
-          })) as any[5],
-        );
+        await this.contractService.validatorContract
+          .verifyValidators(
+            '0x0000000000000000000000000000000000000000000000000000000000000000',
+            // `0x${Buffer.from(
+            //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            //   jsonData.find((el) => el.type === 'proof-validators')!.id!.fileHash,
+            //   'base64',
+            // ).toString('hex')}`,
+            `0x${data.boc.id.file_hash}`,
+            subArr.map((c) => ({
+              node_id: `0x${c.node_id}`,
+              r: `0x${c.r}`,
+              s: `0x${c.s}`,
+            })) as any[5],
+          )
+          .then((tx) => (tx as any).wait());
       }
-      await this.contractService.validatorContract.setValidatorSet();
+      await this.contractService.validatorContract
+        .setValidatorSet()
+        .then((tx) => (tx as any).wait());
     } catch (error) {
       console.error(error.message);
     } finally {
@@ -278,20 +285,22 @@ export class ValidatorService {
           subArr.push(signatures[0]);
         }
 
-        await this.contractService.validatorContract.verifyValidators(
-          '0x' + blockData.id.root_hash,
-          `0x${blockData.id.file_hash}`,
-          subArr.map((c) => ({
-            node_id: `0x${c.node_id}`,
-            r: `0x${c.r}`,
-            s: `0x${c.s}`,
-          })) as any[5],
-        );
+        await this.contractService.validatorContract
+          .verifyValidators(
+            '0x' + blockData.id.root_hash,
+            `0x${blockData.id.file_hash}`,
+            subArr.map((c) => ({
+              node_id: `0x${c.node_id}`,
+              r: `0x${c.r}`,
+              s: `0x${c.s}`,
+            })) as any[5],
+          )
+          .then((tx) => (tx as any).wait());
       }
 
-      await this.contractService.validatorContract.addCurrentBlockToVerifiedSet(
-        '0x' + blockData.id.root_hash,
-      );
+      await this.contractService.validatorContract
+        .addCurrentBlockToVerifiedSet('0x' + blockData.id.root_hash)
+        .then((tx) => (tx as any).wait());
 
       await this.tonBlockService.updateTonBlockStatus({
         blockId: prismaBlock.id,
@@ -349,9 +358,9 @@ export class ValidatorService {
 
     try {
       await this.validatorLock.acquire();
-      await this.contractService.validatorContract.parseShardProofPath(
-        Buffer.from(bocProof, 'base64'),
-      );
+      await this.contractService.validatorContract
+        .parseShardProofPath(Buffer.from(bocProof, 'base64'))
+        .then((tx) => (tx as any).wait());
       await this.tonBlockService.updateTonBlockStatus({
         blockId: id,
         checked: true,
@@ -390,10 +399,12 @@ export class ValidatorService {
       }
       await this.validatorLock.acquire();
       const mc_proof = await this.tonApi.getStateProof(prismaBlock, nextBlock);
-      await this.contractService.validatorContract.readStateProof(
-        Buffer.from(mc_proof.state_proof, 'base64'),
-        Buffer.from(nextBlock.rootHash, 'hex'),
-      );
+      await this.contractService.validatorContract
+        .readStateProof(
+          Buffer.from(mc_proof.state_proof, 'base64'),
+          Buffer.from(nextBlock.rootHash, 'hex'),
+        )
+        .then((tx) => (tx as any).wait());
       await this.tonBlockService.updateTonBlockStatus({
         blockId: id,
         checked: true,
