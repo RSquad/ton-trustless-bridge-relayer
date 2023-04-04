@@ -25,6 +25,7 @@ export class BlockSubscriptionService implements OnModuleDestroy {
       return of(this.tick(block));
     }),
   );
+  shouldVerifyKeyblock = true;
 
   constructor(
     private tonApi: TonApiService,
@@ -75,18 +76,20 @@ export class BlockSubscriptionService implements OnModuleDestroy {
       await this.saveBlockTransactions(mcBlock, prismaMCBlock);
       await this.saveShardBlocks(shards, prismaMCBlock);
 
-      if (parsedBlock.info.key_block) {
+      if (parsedBlock.info.key_block && this.shouldVerifyKeyblock) {
         this.eventEmitter.emit(
           'keyblock.new',
           new GotKeyblock(mcBlock, boc, parsedBlock, prismaMCBlock),
         );
       }
 
+      this.shouldVerifyKeyblock =
+        !!parsedBlock?.extra?.custom?.config?.config?.map.get('24');
       seqno += 1;
     }
 
     this.logger.apiLog('[BlockSub] end tick.');
-    this.actualBlock$.next(actualBlock);
+    // this.actualBlock$.next(actualBlock);
   }
 
   async saveBlockTransactions(
@@ -156,9 +159,11 @@ export class BlockSubscriptionService implements OnModuleDestroy {
       // 8371747
       // 8372792
       // shard: 9881488 8371766?? h7xg3RIiceOnsU7oah+ZnzPXUpGZkIuCMLu45IJTyQw=
+      // 8374206
+      // 8376603
       // const keyblock = (
-      //   await this.tonApi.getMasterchainBlockWithShards(8372792)
-      // ).find((b) => b.seqno === 8372792 && b.workchain === -1);
+      //   await this.tonApi.getMasterchainBlockWithShards(8376603)
+      // ).find((b) => b.seqno === 8376603 && b.workchain === -1);
       const keyblock = await this.tonApi.getLastKeyBlock();
       this.logger.apiLog(
         '[BlockSub] initial keyblock founded:',

@@ -192,6 +192,17 @@ export class TonApiService {
     return this.getPreviousKeyBlock(lastBlock, true);
   }
 
+  async getNKeyBlocks(n: number) {
+    const seqnoes: number[] = [];
+    let block = await this.getLastKeyBlock();
+    seqnoes.unshift(block.seqno);
+    for (let i = 0; i <= n; i++) {
+      block = await this.getPreviousKeyBlock(block);
+      seqnoes.unshift(block.seqno);
+    }
+    return seqnoes;
+  }
+
   async getSignatures(seqno: number) {
     let signaturesRes: Signature[] = [];
     try {
@@ -200,6 +211,12 @@ export class TonApiService {
       signaturesRes = (
         await axios.get(
           `${this.toncenterUrl}getMasterchainBlockSignatures?seqno=${seqno}`,
+          {
+            headers: {
+              'X-API-KEY':
+                '54dbf47689e0a421871a07296c5f8b443d4b140ad18d26391db4f96e9e19eb0c',
+            },
+          },
         )
       ).data.result.signatures;
     } catch (error) {
@@ -221,6 +238,12 @@ export class TonApiService {
         await axios.get(
           this.toncenterUrl +
             `getShardBlockProof?workchain=${block.workchain}&shard=${block.shard}&seqno=${block.seqno}&from_seqno=${block.mcParent.seqno}`,
+          {
+            headers: {
+              'X-API-KEY':
+                '54dbf47689e0a421871a07296c5f8b443d4b140ad18d26391db4f96e9e19eb0c',
+            },
+          },
         )
       ).data.result;
     } catch (error) {
@@ -237,7 +260,8 @@ export class TonApiService {
 
     try {
       await this.toncenterLock.acquire();
-      await sleep();
+      await sleep(1000);
+      // await sleep();
       mc_proof = (
         await axios.get(
           this.toncenterUrl +
@@ -246,9 +270,20 @@ export class TonApiService {
             }&shard=${+nextBlock.shard}&seqno=${nextBlock.seqno}&from_seqno=${
               block.seqno
             }`,
+          {
+            headers: {
+              'X-API-KEY':
+                '54dbf47689e0a421871a07296c5f8b443d4b140ad18d26391db4f96e9e19eb0c',
+            },
+          },
         )
       ).data.result.mc_proof[0];
+      // console.log(nextBlock);
+      // console.log(block.seqno, block.workchain);
+      console.log(mc_proof);
     } catch (error) {
+      // console.log(nextBlock);
+      // console.log(block.seqno, block.workchain);
       console.error(error.message);
     } finally {
       await this.toncenterLock.release();

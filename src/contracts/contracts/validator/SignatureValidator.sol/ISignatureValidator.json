@@ -54,9 +54,9 @@
               "type": "bytes32"
             }
           ],
-          "internalType": "struct ValidatorDescription[100]",
+          "internalType": "struct ValidatorDescription[20]",
           "name": "",
-          "type": "tuple[100]"
+          "type": "tuple[20]"
         }
       ],
       "stateMutability": "view",
@@ -119,9 +119,9 @@
               "type": "bytes32"
             }
           ],
-          "internalType": "struct ValidatorDescription[100]",
+          "internalType": "struct ValidatorDescription[20]",
           "name": "",
-          "type": "tuple[100]"
+          "type": "tuple[20]"
         }
       ],
       "stateMutability": "view",
@@ -337,9 +337,9 @@
               "type": "bytes32"
             }
           ],
-          "internalType": "struct Vdata[20]",
+          "internalType": "struct Vdata[5]",
           "name": "vdata",
-          "type": "tuple[20]"
+          "type": "tuple[5]"
         }
       ],
       "name": "verifyValidators",

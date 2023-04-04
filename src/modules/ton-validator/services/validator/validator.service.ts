@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OnEvent } from '@nestjs/event-emitter';
-import { Subject } from 'rxjs';
+import { concatMap, of, Subject } from 'rxjs';
 import { GotKeyblock } from 'src/events/got-keyblock.event';
 import {
   ProvenState,
@@ -42,9 +42,11 @@ export class ValidatorService {
     private tonApi: TonApiService,
     private logger: LoggerService,
   ) {
-    this.keyblockBuffer.subscribe((data) => {
-      this.handleKeyblock(data);
-    });
+    this.keyblockBuffer
+      .pipe(concatMap((data) => this.handleKeyblock(data)))
+      .subscribe((res) => {
+        console.log('validating ending:', res);
+      });
   }
 
   @OnEvent('keyblock.new')
@@ -211,9 +213,9 @@ export class ValidatorService {
       const signatures = jsonData.find((el) => el.type === 'proof-validators')!
         .signatures!;
 
-      for (let i = 0; i < signatures.length; i += 20) {
-        const subArr = signatures.slice(i, i + 20);
-        while (subArr.length < 20) {
+      for (let i = 0; i < signatures.length; i += 5) {
+        const subArr = signatures.slice(i, i + 5);
+        while (subArr.length < 5) {
           subArr.push(signatures[0]);
         }
 
@@ -229,7 +231,7 @@ export class ValidatorService {
             node_id: `0x${c.node_id}`,
             r: `0x${c.r}`,
             s: `0x${c.s}`,
-          })) as any[20],
+          })) as any[5],
         );
       }
       await this.contractService.validatorContract.setValidatorSet();
@@ -258,7 +260,7 @@ export class ValidatorService {
       });
       return;
     }
-
+    this.logger.validatorLog('[Validator] validatong block by validators...');
     const blockData = await this.tonApi.getBlockBoc(prismaBlock);
     const signaturesRes = await this.tonApi.getSignatures(prismaBlock.seqno);
 
@@ -270,9 +272,9 @@ export class ValidatorService {
 
     try {
       await this.validatorLock.acquire();
-      for (let i = 0; i < signatures.length; i += 20) {
-        const subArr = signatures.slice(i, i + 20);
-        while (subArr.length < 20) {
+      for (let i = 0; i < signatures.length; i += 5) {
+        const subArr = signatures.slice(i, i + 5);
+        while (subArr.length < 5) {
           subArr.push(signatures[0]);
         }
 
@@ -283,7 +285,7 @@ export class ValidatorService {
             node_id: `0x${c.node_id}`,
             r: `0x${c.r}`,
             s: `0x${c.s}`,
-          })) as any[20],
+          })) as any[5],
         );
       }
 

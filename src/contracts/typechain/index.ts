@@ -23,4 +23,3 @@ export type { IShardValidator } from "./IShardValidator";
 export type { ShardValidator } from "./ShardValidator";
 export type { ISignatureValidator } from "./ISignatureValidator";
 export type { SignatureValidator } from "./SignatureValidator";
-
