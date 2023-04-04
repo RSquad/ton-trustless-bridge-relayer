@@ -89,7 +89,7 @@ export class BlockSubscriptionService implements OnModuleDestroy {
     }
 
     this.logger.apiLog('[BlockSub] end tick.');
-    // this.actualBlock$.next(actualBlock);
+    this.actualBlock$.next(actualBlock);
   }
 
   async saveBlockTransactions(
