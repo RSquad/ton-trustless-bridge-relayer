@@ -119,10 +119,12 @@ export class BlockSubscriptionService implements OnModuleDestroy {
 
   async getInitialKeyblock() {
     this.logger.apiLog('[BlockSub] finding initial keyblock...');
-    const hasKeyblock =
-      (await this.contractService.validatorContract.getValidators())[0]
-        .node_id !==
-      '0x0000000000000000000000000000000000000000000000000000000000000000';
+    // const hasKeyblock =
+    //   (await this.contractService.validatorContract.getValidators())[0]
+    //     .node_id !==
+    //   '0x0000000000000000000000000000000000000000000000000000000000000000';
+
+    const hasKeyblock = false;
 
     if (hasKeyblock) {
       this.logger.apiLog(

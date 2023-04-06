@@ -18,6 +18,23 @@ import axios from 'axios';
 import { parseBlock } from 'src/lib/utils/blockReader';
 import createLock from 'src/modules/ton-validator/utils/SimpleLock';
 import { TonBlock } from '@prisma/client';
+import axiosRetry from 'axios-retry';
+
+axiosRetry(axios, {
+  retries: 100, // number of retries
+  retryDelay: (retryCount) => {
+    console.log(`retry attempt: ${retryCount}`);
+    // return retryCount * 2000; // time interval between retries
+    return 2000;
+  },
+  retryCondition: (error) => {
+    // if retry condition is not specified, by default idempotent requests are retried
+    // return error.response.status === 503;
+    // if (error?.request)
+    // console.log(error?.request);
+    return true;
+  },
+});
 
 // this.getMasterchainBlockWithShards(8293606)
 //   .then((blocks) => {
@@ -43,6 +60,7 @@ import { TonBlock } from '@prisma/client';
 @Injectable()
 export class TonApiService {
   private tonClient4 = new TonClient4({
+    timeout: 31000,
     endpoint: this.configService.get<string>('TON_CLIENT4_ENDPOINT'),
   });
 
@@ -134,19 +152,33 @@ export class TonApiService {
   //   }
   // }
 
-  async getLastBlock(): Promise<BaseTonBlockInfo> {
-    const { last: lastBlock } = await this.tonClient4.getLastBlock();
+  async getLastBlock(count = 0): Promise<BaseTonBlockInfo> {
+    try {
+      const { last: lastBlock } = await this.tonClient4.getLastBlock();
 
-    return formatTonBlock(lastBlock);
+      return formatTonBlock(lastBlock);
+    } catch (error) {
+      if (count >= 20) {
+        throw Error('getLastblock failed by timeout');
+      }
+      return this.getLastBlock(count + 1);
+    }
   }
 
-  async getMasterchainBlockWithShards(seqno: number) {
-    const { shards } = await this.tonClient4.getBlock(seqno);
+  async getMasterchainBlockWithShards(seqno: number, count = 0) {
+    try {
+      const { shards } = await this.tonClient4.getBlock(seqno);
 
-    return shards.map((shard) => ({
-      ...formatTonBlock(shard),
-      transactions: shard.transactions,
-    }));
+      return shards.map((shard) => ({
+        ...formatTonBlock(shard),
+        transactions: shard.transactions,
+      }));
+    } catch (error) {
+      if (count >= 20) {
+        throw Error('getMasterchainBlockWithShards failed by timeout');
+      }
+      return this.getMasterchainBlockWithShards(seqno, count + 1);
+    }
   }
 
   async getBlockBoc(
