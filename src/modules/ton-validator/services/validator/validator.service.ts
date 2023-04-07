@@ -32,6 +32,7 @@ export class ValidatorService {
   bridgeLock = createLock('bridge');
 
   keyblockBuffer = new Subject<GotKeyblock>();
+  isInitialKeyblock = true;
 
   constructor(
     private providerService: ProviderService,
@@ -79,11 +80,12 @@ export class ValidatorService {
       data.block.seqno,
     );
 
-    if (await this.checkInitValidatorsNeeded()) {
+    if (this.isInitialKeyblock || (await this.checkInitValidatorsNeeded())) {
       await this.initValidators(data);
     } else {
       await this.updateValidators(data);
     }
+    this.isInitialKeyblock = false;
 
     await this.tonBlockService.updateTonBlockStatus({
       blockId: data.prismaBlock.id,

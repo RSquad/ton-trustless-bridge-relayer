@@ -17,13 +17,20 @@ export class ExplorerService {
     });
   }
 
-  findAllBlocks() {
-    return this.tonBlockService.tonBlocks({
-      where: {
-        workchain: -1,
-      },
+  countAllBlocks() {
+    return this.tonBlockService.tonBlockCount({
       orderBy: { id: 'desc' },
-      take: 20,
+    });
+  }
+
+  findAllBlocks(skip = 0) {
+    return this.tonBlockService.tonBlocks({
+      // where: {
+      //   workchain: -1,
+      // },
+      orderBy: { id: 'desc' },
+      take: 10,
+      skip,
     });
   }
 
@@ -36,13 +43,25 @@ export class ExplorerService {
     });
   }
 
-  findAllValidatedBlocks() {
+  countValidatedBlocks() {
+    return this.tonBlockService.tonBlockCount({
+      where: {
+        checked: true,
+        // workchain: -1,
+      },
+      orderBy: { id: 'desc' },
+    });
+  }
+
+  findAllValidatedBlocks(skip = 0) {
     return this.tonBlockService.tonBlocks({
       where: {
         checked: true,
+        // workchain: -1,
       },
       orderBy: { id: 'desc' },
-      take: 20,
+      take: 10,
+      skip,
     });
   }
 

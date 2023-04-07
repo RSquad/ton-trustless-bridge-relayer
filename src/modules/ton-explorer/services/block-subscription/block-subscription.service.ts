@@ -71,7 +71,10 @@ export class BlockSubscriptionService implements OnModuleDestroy {
 
       const boc = await this.tonApi.getBlockBoc(mcBlock);
       const parsedBlock = await parseBlock(boc);
-      const prismaMCBlock = await this.tonBlockService.createTonBlock(mcBlock);
+      const prismaMCBlock = await this.tonBlockService.createTonBlock(
+        mcBlock,
+        parsedBlock.info.key_block,
+      );
 
       await this.saveBlockTransactions(mcBlock, prismaMCBlock);
       await this.saveShardBlocks(shards, prismaMCBlock);

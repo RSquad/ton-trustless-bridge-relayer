@@ -1,13 +1,18 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ExplorerService } from '../../services/explorer/explorer.service';
 
 @Controller('ton-explorer')
 export class TonExplorerController {
   constructor(private readonly explorer: ExplorerService) {}
 
+  @Get('count')
+  allblockscount() {
+    return this.explorer.countAllBlocks();
+  }
+
   @Get()
-  findAll() {
-    return this.explorer.findAllBlocks();
+  findAll(@Query('skip') skip: string) {
+    return this.explorer.findAllBlocks(+(skip || '0'));
   }
 
   @Get('keyblocks')
@@ -15,9 +20,14 @@ export class TonExplorerController {
     return this.explorer.findAllKeyBlocks();
   }
 
+  @Get('checkedcount')
+  allcheckedblockscount() {
+    return this.explorer.countValidatedBlocks();
+  }
+
   @Get('checked')
-  findAllCheckedBlocks() {
-    return this.explorer.findAllValidatedBlocks();
+  findAllCheckedBlocks(@Query('skip') skip: string) {
+    return this.explorer.findAllValidatedBlocks(+(skip || '0'));
   }
 
   @Get('demotx')

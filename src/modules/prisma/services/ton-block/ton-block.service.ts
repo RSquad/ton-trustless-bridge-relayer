@@ -96,6 +96,10 @@ export class TonBlockService {
     });
   }
 
+  async tonBlockCount(params: Prisma.TonBlockCountArgs = {}) {
+    return this.prisma.tonBlock.count(params);
+  }
+
   async tonBlocks(params: {
     skip?: number;
     take?: number;
