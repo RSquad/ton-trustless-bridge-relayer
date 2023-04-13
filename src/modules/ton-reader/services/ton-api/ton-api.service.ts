@@ -20,21 +20,24 @@ import createLock from 'src/modules/ton-validator/utils/SimpleLock';
 import { TonBlock } from '@prisma/client';
 import axiosRetry from 'axios-retry';
 
-axiosRetry(axios, {
-  retries: 100, // number of retries
-  retryDelay: (retryCount) => {
-    console.log(`retry attempt: ${retryCount}`);
-    // return retryCount * 2000; // time interval between retries
-    return 2000;
-  },
-  retryCondition: (error) => {
-    // if retry condition is not specified, by default idempotent requests are retried
-    // return error.response.status === 503;
-    // if (error?.request)
-    // console.log(error?.request);
-    return true;
-  },
-});
+// https://testnet.toncenter.com/api/v2/lookupBlock?workchain=0&shard=-9223372036854775808&lt=9882134000003
+// https://testnet.toncenter.com/api/v2/lookupBlock?workchain=0&shard=-9223372036854776000&lt=9882134000003
+
+// axiosRetry(axios, {
+//   retries: 100, // number of retries
+//   retryDelay: (retryCount) => {
+//     console.log(`retry attempt: ${retryCount}`);
+//     // return retryCount * 2000; // time interval between retries
+//     return 2000;
+//   },
+//   retryCondition: (error) => {
+//     // if retry condition is not specified, by default idempotent requests are retried
+//     // return error.response.status === 503;
+//     // if (error?.request)
+//     // console.log(error?.request);
+//     return true;
+//   },
+// });
 
 // this.getMasterchainBlockWithShards(8293606)
 //   .then((blocks) => {
@@ -287,21 +290,22 @@ export class TonApiService {
     return shardProofRes;
   }
 
-  async getStateProof(block: TonBlock, nextBlock: TonBlock) {
+  async getStateProof(nextBlock: TonBlock, block: TonBlock) {
     let mc_proof: any;
 
     try {
       await this.toncenterLock.acquire();
       await sleep(1000);
       // await sleep();
+      // console.log(nextBlock, block.seqno);
+      // const reaStr =
+      //   this.toncenterUrl +
+      //   `getShardBlockProof?workchain=${nextBlock.workchain}&shard=${nextBlock.shard}&seqno=${nextBlock.seqno}&from_seqno=${block.seqno}`;
+      //   console.log(reaStr);
       mc_proof = (
         await axios.get(
           this.toncenterUrl +
-            `getShardBlockProof?workchain=${
-              nextBlock.workchain
-            }&shard=${+nextBlock.shard}&seqno=${nextBlock.seqno}&from_seqno=${
-              block.seqno
-            }`,
+            `getShardBlockProof?workchain=${nextBlock.workchain}&shard=${nextBlock.shard}&seqno=${nextBlock.seqno}&from_seqno=${block.seqno}`,
           {
             headers: {
               'X-API-KEY':
@@ -310,9 +314,10 @@ export class TonApiService {
           },
         )
       ).data.result.mc_proof[0];
+
       // console.log(nextBlock);
       // console.log(block.seqno, block.workchain);
-      console.log(mc_proof);
+      // console.log(mc_proof);
     } catch (error) {
       // console.log(nextBlock);
       // console.log(block.seqno, block.workchain);
@@ -322,5 +327,73 @@ export class TonApiService {
     }
 
     return mc_proof;
+  }
+
+  async getMcblockByProof(block: TonBlock) {
+    let data: any;
+
+    try {
+      await this.toncenterLock.acquire();
+      await sleep(1000);
+
+      data = (
+        await axios.get(
+          this.toncenterUrl +
+            `getShardBlockProof?workchain=${block.workchain}&shard=${block.shard}&seqno=${block.seqno}`,
+          {
+            headers: {
+              'X-API-KEY':
+                '54dbf47689e0a421871a07296c5f8b443d4b140ad18d26391db4f96e9e19eb0c',
+            },
+          },
+        )
+      ).data.result.mc_id;
+    } catch (error) {
+      // console.log(nextBlock);
+      // console.log(block.seqno, block.workchain);
+      console.error(error.message);
+    } finally {
+      await this.toncenterLock.release();
+    }
+
+    return data;
+  }
+
+  async lookupBlock(workchain: number, lt: number) {
+    let res: any;
+    try {
+      await this.toncenterLock.acquire();
+      await sleep(1000);
+      res = (
+        await axios
+          .get(
+            this.toncenterUrl +
+              'lookupBlock' +
+              `?workchain=${workchain}&shard=${'-9223372036854775808'}&lt=${lt}&api_key=54dbf47689e0a421871a07296c5f8b443d4b140ad18d26391db4f96e9e19eb0c`,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+
+                'X-API-KEY':
+                  '54dbf47689e0a421871a07296c5f8b443d4b140ad18d26391db4f96e9e19eb0c',
+                // 'User-Agent': 'PostmanRuntime/7.31.1',
+              },
+            },
+          )
+          .then((r) => {
+            console.log(r.data);
+            return r;
+          })
+          .catch((e) => {
+            console.log(e);
+            return { data: { result: 'failure' } };
+          })
+      ).data.result;
+    } catch (error) {
+    } finally {
+      await this.toncenterLock.release();
+    }
+
+    return res;
   }
 }

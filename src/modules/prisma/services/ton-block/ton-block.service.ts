@@ -96,6 +96,17 @@ export class TonBlockService {
     });
   }
 
+  resetTonBlocksStatus() {
+    return this.prisma.tonBlock.updateMany({
+      where: {
+        checked: true,
+      },
+      data: {
+        checked: false,
+      },
+    });
+  }
+
   async tonBlockCount(params: Prisma.TonBlockCountArgs = {}) {
     return this.prisma.tonBlock.count(params);
   }

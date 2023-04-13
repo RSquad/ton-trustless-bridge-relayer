@@ -121,6 +121,7 @@ export class BlockSubscriptionService implements OnModuleDestroy {
   }
 
   async getInitialKeyblock() {
+    await this.tonBlockService.resetTonBlocksStatus();
     this.logger.apiLog('[BlockSub] finding initial keyblock...');
     // const hasKeyblock =
     //   (await this.contractService.validatorContract.getValidators())[0]

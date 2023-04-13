@@ -254,7 +254,9 @@ export class ValidatorService {
   async validateMcBlockByValidator(id: number) {
     try {
       await this.validateMCBlockByState(id);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
 
     await this.tonBlockService.updateTonBlockStatus({
       blockId: id,
@@ -380,6 +382,7 @@ export class ValidatorService {
   }
 
   async validateMCBlockByState(id: number) {
+    console.log('try check block by validator');
     await this.tonBlockService.updateTonBlockStatus({
       blockId: id,
       inprogress: true,
@@ -401,6 +404,7 @@ export class ValidatorService {
       }
       await this.validatorLock.acquire();
       const mc_proof = await this.tonApi.getStateProof(prismaBlock, nextBlock);
+      // console.log(mc_proof);
       await this.contractService.validatorContract
         .readStateProof(
           Buffer.from(mc_proof.state_proof, 'base64'),

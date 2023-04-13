@@ -36,7 +36,11 @@ export class TonExplorerController {
   }
 
   @Get('findtx/:hash')
-  findTx(@Param('hash') hash: string) {
-    return this.explorer.findTransactionByHash(hash);
+  findTx(
+    @Param('hash') hash: string,
+    @Query('workchain') workchain: string,
+    @Query('lt') lt: string,
+  ) {
+    return this.explorer.findTransactionByHash(hash, +workchain, +lt);
   }
 }
