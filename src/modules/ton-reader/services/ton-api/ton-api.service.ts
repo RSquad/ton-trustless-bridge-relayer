@@ -23,21 +23,21 @@ import axiosRetry from 'axios-retry';
 // https://testnet.toncenter.com/api/v2/lookupBlock?workchain=0&shard=-9223372036854775808&lt=9882134000003
 // https://testnet.toncenter.com/api/v2/lookupBlock?workchain=0&shard=-9223372036854776000&lt=9882134000003
 
-// axiosRetry(axios, {
-//   retries: 100, // number of retries
-//   retryDelay: (retryCount) => {
-//     console.log(`retry attempt: ${retryCount}`);
-//     // return retryCount * 2000; // time interval between retries
-//     return 2000;
-//   },
-//   retryCondition: (error) => {
-//     // if retry condition is not specified, by default idempotent requests are retried
-//     // return error.response.status === 503;
-//     // if (error?.request)
-//     // console.log(error?.request);
-//     return true;
-//   },
-// });
+axiosRetry(axios, {
+  retries: 100, // number of retries
+  retryDelay: (retryCount) => {
+    console.log(`retry attempt: ${retryCount}`);
+    // return retryCount * 2000; // time interval between retries
+    return 2000;
+  },
+  retryCondition: (error) => {
+    // if retry condition is not specified, by default idempotent requests are retried
+    // return error.response.status === 503;
+    // if (error?.request)
+    // console.log(error?.request);
+    return true;
+  },
+});
 
 // this.getMasterchainBlockWithShards(8293606)
 //   .then((blocks) => {
