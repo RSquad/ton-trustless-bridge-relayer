@@ -123,7 +123,12 @@ export class BlockSubscriptionService implements OnModuleDestroy {
   }
 
   async getInitialKeyblock() {
-    await this.tonBlockService.resetTonBlocksStatus();
+    // await this.tonBlockService.resetTonBlocksStatus();
+    // console.log(await this.tonApi.getNKeyBlocks(3));
+    // [ 8665555, 8667811, 8667866, 8670254, 8670312 ]
+    // return {
+    //   seqno: 8665555,
+    // };
     this.logger.apiLog('[BlockSub] finding initial keyblock...');
     // const hasKeyblock =
     //   (await this.contractService.validatorContract.getValidators())[0]
