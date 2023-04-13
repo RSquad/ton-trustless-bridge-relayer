@@ -86,8 +86,10 @@ export class BlockSubscriptionService implements OnModuleDestroy {
         );
       }
 
-      this.shouldVerifyKeyblock =
-        !!parsedBlock?.extra?.custom?.config?.config?.map.get('24');
+      if (parsedBlock.info.key_block) {
+        this.shouldVerifyKeyblock =
+          !!parsedBlock?.extra?.custom?.config?.config?.map.get('24');
+      }
       seqno += 1;
     }
 
