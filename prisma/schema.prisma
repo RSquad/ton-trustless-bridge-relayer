@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// datasource db {
+//   provider = "sqlite"
+//   url      = "file:./data/data.db"
+// }
+
+model TonBlock {
+  id         Int     @id @default(autoincrement())
+  workchain  Int
+  seqno      Int
+  shard      String
+  rootHash   String
+  fileHash   String
+  checked    Boolean @default(false)
+  inprogress Boolean @default(false)
+  isKeyBlock Boolean @default(false)
+
+  mcParentId Int?
+  mcParent   TonBlock?  @relation("mcParentBlocks", fields: [mcParentId], references: [id])
+  shards     TonBlock[] @relation("mcParentBlocks")
+
+  transactions TonTransaction[]
+}
+
+model TonTransaction {
+  id         Int       @id @default(autoincrement())
+
+  account String
+  hash String
+  lt String
+
+  checked Boolean @default(false)
+  inprogress Boolean @default(false)
+
+  mcParent   TonBlock? @relation(fields: [mcParentId], references: [id])
+  mcParentId Int?
+}

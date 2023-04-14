@@ -1,0 +1,2604 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "BlockParser",
+  "sourceName": "contracts/parser/BlockParser.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "proofBoc",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint8",
+              "name": "checkCode",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "addressHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "lt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "prevTransHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "prevTransLt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint32",
+              "name": "time",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "OutMesagesCount",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint8",
+              "name": "oldStatus",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint8",
+              "name": "newStatus",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "fees",
+              "type": "bytes32"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "bool",
+                  "name": "hasInMessage",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "hasOutMessages",
+                  "type": "bool"
+                },
+                {
+                  "components": [
+                    {
+                      "components": [
+                        {
+                          "internalType": "uint256",
+                          "name": "Type",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "ihrDisabled",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "bounce",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "bounced",
+                          "type": "bool"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bytes32",
+                              "name": "hash",
+                              "type": "bytes32"
+                            },
+                            {
+                              "internalType": "uint8",
+                              "name": "wc",
+                              "type": "uint8"
+                            }
+                          ],
+                          "internalType": "struct TonAddress",
+                          "name": "src",
+                          "type": "tuple"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bytes32",
+                              "name": "hash",
+                              "type": "bytes32"
+                            },
+                            {
+                              "internalType": "uint8",
+                              "name": "wc",
+                              "type": "uint8"
+                            }
+                          ],
+                          "internalType": "struct TonAddress",
+                          "name": "dest",
+                          "type": "tuple"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "value",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "ihrFee",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "fwdFee",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "uint256",
+                          "name": "createdLt",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "uint256",
+                          "name": "createdAt",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "importFee",
+                          "type": "bytes32"
+                        }
+                      ],
+                      "internalType": "struct RawCommonMessageInfo",
+                      "name": "info",
+                      "type": "tuple"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "bodyIdx",
+                      "type": "uint256"
+                    }
+                  ],
+                  "internalType": "struct Message",
+                  "name": "inMessage",
+                  "type": "tuple"
+                },
+                {
+                  "components": [
+                    {
+                      "components": [
+                        {
+                          "internalType": "uint256",
+                          "name": "Type",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "ihrDisabled",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "bounce",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "bounced",
+                          "type": "bool"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bytes32",
+                              "name": "hash",
+                              "type": "bytes32"
+                            },
+                            {
+                              "internalType": "uint8",
+                              "name": "wc",
+                              "type": "uint8"
+                            }
+                          ],
+                          "internalType": "struct TonAddress",
+                          "name": "src",
+                          "type": "tuple"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bytes32",
+                              "name": "hash",
+                              "type": "bytes32"
+                            },
+                            {
+                              "internalType": "uint8",
+                              "name": "wc",
+                              "type": "uint8"
+                            }
+                          ],
+                          "internalType": "struct TonAddress",
+                          "name": "dest",
+                          "type": "tuple"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "value",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "ihrFee",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "fwdFee",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "uint256",
+                          "name": "createdLt",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "uint256",
+                          "name": "createdAt",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "importFee",
+                          "type": "bytes32"
+                        }
+                      ],
+                      "internalType": "struct RawCommonMessageInfo",
+                      "name": "info",
+                      "type": "tuple"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "bodyIdx",
+                      "type": "uint256"
+                    }
+                  ],
+                  "internalType": "struct Message[5]",
+                  "name": "outMessages",
+                  "type": "tuple[5]"
+                }
+              ],
+              "internalType": "struct MessagesHeader",
+              "name": "messages",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct TransactionHeader",
+          "name": "transaction",
+          "type": "tuple"
+        }
+      ],
+      "name": "check_block_info",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "publicKey",
+          "type": "bytes32"
+        }
+      ],
+      "name": "computeNodeId",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint256",
+          "name": "prefix",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "n",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256[32]",
+          "name": "cellIdxs",
+          "type": "uint256[32]"
+        }
+      ],
+      "name": "doParse",
+      "outputs": [],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "x",
+          "type": "uint256"
+        }
+      ],
+      "name": "log2Ceil",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "n",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "boc",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rootIdx",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "treeOfCells",
+          "type": "tuple[100]"
+        }
+      ],
+      "name": "parseCandidatesRootBlock",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint8",
+              "name": "cType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint64",
+              "name": "weight",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "adnl_addr",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "pubkey",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "node_id",
+              "type": "bytes32"
+            }
+          ],
+          "internalType": "struct ValidatorDescription[32]",
+          "name": "",
+          "type": "tuple[32]"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        }
+      ],
+      "name": "parseCurrencyCollection",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "coins",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "keySize",
+          "type": "uint256"
+        }
+      ],
+      "name": "parseDict",
+      "outputs": [
+        {
+          "internalType": "uint256[32]",
+          "name": "cellIdxs",
+          "type": "uint256[32]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "prefixLength",
+          "type": "uint256"
+        }
+      ],
+      "name": "parsePartValidators",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint8",
+              "name": "cType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint64",
+              "name": "weight",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "adnl_addr",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "pubkey",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "node_id",
+              "type": "bytes32"
+            }
+          ],
+          "internalType": "struct ValidatorDescription[32]",
+          "name": "validators",
+          "type": "tuple[32]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "proofBoc",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bytes4",
+              "name": "magic",
+              "type": "bytes4"
+            },
+            {
+              "internalType": "uint256",
+              "name": "root_count",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cell_count",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "absent_count",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "ref_byte_size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "offset_byte_size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "has_index",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "has_roots",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "has_crc32c",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "has_cache_bits",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "roots_offset",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "index_offset",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "data_offset",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "data_size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "total_size",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rootIdx",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct BagOfCellsInfo",
+          "name": "proofBocInfo",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "proofTreeOfCells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "txRootHash",
+          "type": "bytes32"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint8",
+              "name": "checkCode",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "addressHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "lt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "prevTransHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "prevTransLt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint32",
+              "name": "time",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "OutMesagesCount",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint8",
+              "name": "oldStatus",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint8",
+              "name": "newStatus",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "fees",
+              "type": "bytes32"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "bool",
+                  "name": "hasInMessage",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "hasOutMessages",
+                  "type": "bool"
+                },
+                {
+                  "components": [
+                    {
+                      "components": [
+                        {
+                          "internalType": "uint256",
+                          "name": "Type",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "ihrDisabled",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "bounce",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "bounced",
+                          "type": "bool"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bytes32",
+                              "name": "hash",
+                              "type": "bytes32"
+                            },
+                            {
+                              "internalType": "uint8",
+                              "name": "wc",
+                              "type": "uint8"
+                            }
+                          ],
+                          "internalType": "struct TonAddress",
+                          "name": "src",
+                          "type": "tuple"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bytes32",
+                              "name": "hash",
+                              "type": "bytes32"
+                            },
+                            {
+                              "internalType": "uint8",
+                              "name": "wc",
+                              "type": "uint8"
+                            }
+                          ],
+                          "internalType": "struct TonAddress",
+                          "name": "dest",
+                          "type": "tuple"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "value",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "ihrFee",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "fwdFee",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "uint256",
+                          "name": "createdLt",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "uint256",
+                          "name": "createdAt",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "importFee",
+                          "type": "bytes32"
+                        }
+                      ],
+                      "internalType": "struct RawCommonMessageInfo",
+                      "name": "info",
+                      "type": "tuple"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "bodyIdx",
+                      "type": "uint256"
+                    }
+                  ],
+                  "internalType": "struct Message",
+                  "name": "inMessage",
+                  "type": "tuple"
+                },
+                {
+                  "components": [
+                    {
+                      "components": [
+                        {
+                          "internalType": "uint256",
+                          "name": "Type",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "ihrDisabled",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "bounce",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "bounced",
+                          "type": "bool"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bytes32",
+                              "name": "hash",
+                              "type": "bytes32"
+                            },
+                            {
+                              "internalType": "uint8",
+                              "name": "wc",
+                              "type": "uint8"
+                            }
+                          ],
+                          "internalType": "struct TonAddress",
+                          "name": "src",
+                          "type": "tuple"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bytes32",
+                              "name": "hash",
+                              "type": "bytes32"
+                            },
+                            {
+                              "internalType": "uint8",
+                              "name": "wc",
+                              "type": "uint8"
+                            }
+                          ],
+                          "internalType": "struct TonAddress",
+                          "name": "dest",
+                          "type": "tuple"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "value",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "ihrFee",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "fwdFee",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "uint256",
+                          "name": "createdLt",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "uint256",
+                          "name": "createdAt",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "importFee",
+                          "type": "bytes32"
+                        }
+                      ],
+                      "internalType": "struct RawCommonMessageInfo",
+                      "name": "info",
+                      "type": "tuple"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "bodyIdx",
+                      "type": "uint256"
+                    }
+                  ],
+                  "internalType": "struct Message[5]",
+                  "name": "outMessages",
+                  "type": "tuple[5]"
+                }
+              ],
+              "internalType": "struct MessagesHeader",
+              "name": "messages",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct TransactionHeader",
+          "name": "transaction",
+          "type": "tuple"
+        }
+      ],
+      "name": "parse_block",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "proofBoc",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "txRootHash",
+          "type": "bytes32"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint8",
+              "name": "checkCode",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "addressHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "lt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "prevTransHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "prevTransLt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint32",
+              "name": "time",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "OutMesagesCount",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint8",
+              "name": "oldStatus",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint8",
+              "name": "newStatus",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "fees",
+              "type": "bytes32"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "bool",
+                  "name": "hasInMessage",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "hasOutMessages",
+                  "type": "bool"
+                },
+                {
+                  "components": [
+                    {
+                      "components": [
+                        {
+                          "internalType": "uint256",
+                          "name": "Type",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "ihrDisabled",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "bounce",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "bounced",
+                          "type": "bool"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bytes32",
+                              "name": "hash",
+                              "type": "bytes32"
+                            },
+                            {
+                              "internalType": "uint8",
+                              "name": "wc",
+                              "type": "uint8"
+                            }
+                          ],
+                          "internalType": "struct TonAddress",
+                          "name": "src",
+                          "type": "tuple"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bytes32",
+                              "name": "hash",
+                              "type": "bytes32"
+                            },
+                            {
+                              "internalType": "uint8",
+                              "name": "wc",
+                              "type": "uint8"
+                            }
+                          ],
+                          "internalType": "struct TonAddress",
+                          "name": "dest",
+                          "type": "tuple"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "value",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "ihrFee",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "fwdFee",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "uint256",
+                          "name": "createdLt",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "uint256",
+                          "name": "createdAt",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "importFee",
+                          "type": "bytes32"
+                        }
+                      ],
+                      "internalType": "struct RawCommonMessageInfo",
+                      "name": "info",
+                      "type": "tuple"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "bodyIdx",
+                      "type": "uint256"
+                    }
+                  ],
+                  "internalType": "struct Message",
+                  "name": "inMessage",
+                  "type": "tuple"
+                },
+                {
+                  "components": [
+                    {
+                      "components": [
+                        {
+                          "internalType": "uint256",
+                          "name": "Type",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "ihrDisabled",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "bounce",
+                          "type": "bool"
+                        },
+                        {
+                          "internalType": "bool",
+                          "name": "bounced",
+                          "type": "bool"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bytes32",
+                              "name": "hash",
+                              "type": "bytes32"
+                            },
+                            {
+                              "internalType": "uint8",
+                              "name": "wc",
+                              "type": "uint8"
+                            }
+                          ],
+                          "internalType": "struct TonAddress",
+                          "name": "src",
+                          "type": "tuple"
+                        },
+                        {
+                          "components": [
+                            {
+                              "internalType": "bytes32",
+                              "name": "hash",
+                              "type": "bytes32"
+                            },
+                            {
+                              "internalType": "uint8",
+                              "name": "wc",
+                              "type": "uint8"
+                            }
+                          ],
+                          "internalType": "struct TonAddress",
+                          "name": "dest",
+                          "type": "tuple"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "value",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "ihrFee",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "fwdFee",
+                          "type": "bytes32"
+                        },
+                        {
+                          "internalType": "uint256",
+                          "name": "createdLt",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "uint256",
+                          "name": "createdAt",
+                          "type": "uint256"
+                        },
+                        {
+                          "internalType": "bytes32",
+                          "name": "importFee",
+                          "type": "bytes32"
+                        }
+                      ],
+                      "internalType": "struct RawCommonMessageInfo",
+                      "name": "info",
+                      "type": "tuple"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "bodyIdx",
+                      "type": "uint256"
+                    }
+                  ],
+                  "internalType": "struct Message[5]",
+                  "name": "outMessages",
+                  "type": "tuple[5]"
+                }
+              ],
+              "internalType": "struct MessagesHeader",
+              "name": "messages",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct TransactionHeader",
+          "name": "transaction",
+          "type": "tuple"
+        }
+      ],
+      "name": "parse_block_extra",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        }
+      ],
+      "name": "readBit",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "value",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        }
+      ],
+      "name": "readBool",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "value",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "size",
+          "type": "uint256"
+        }
+      ],
+      "name": "readBytes32BitSize",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "buffer",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "sizeb",
+          "type": "uint256"
+        }
+      ],
+      "name": "readBytes32ByteSize",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "buffer",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        }
+      ],
+      "name": "readCell",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "idx",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        }
+      ],
+      "name": "readCoins",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "value",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "internalType": "uint256",
+          "name": "size",
+          "type": "uint256"
+        }
+      ],
+      "name": "readInt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint16",
+          "name": "size",
+          "type": "uint16"
+        }
+      ],
+      "name": "readUint",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "size",
+          "type": "uint8"
+        }
+      ],
+      "name": "readUint16",
+      "outputs": [
+        {
+          "internalType": "uint16",
+          "name": "value",
+          "type": "uint16"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "size",
+          "type": "uint8"
+        }
+      ],
+      "name": "readUint32",
+      "outputs": [
+        {
+          "internalType": "uint32",
+          "name": "value",
+          "type": "uint32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint16",
+          "name": "size",
+          "type": "uint16"
+        }
+      ],
+      "name": "readUint64",
+      "outputs": [
+        {
+          "internalType": "uint64",
+          "name": "value",
+          "type": "uint64"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8",
+          "name": "size",
+          "type": "uint8"
+        }
+      ],
+      "name": "readUint8",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "value",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "proofBoc",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "n",
+          "type": "uint256"
+        }
+      ],
+      "name": "readUintLeq",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        },
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "special",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[4]",
+              "name": "refs",
+              "type": "uint256[4]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "cursor",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cursorRef",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32[4]",
+              "name": "_hash",
+              "type": "bytes32[4]"
+            },
+            {
+              "internalType": "uint32",
+              "name": "level_mask",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint16[4]",
+              "name": "depth",
+              "type": "uint16[4]"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cellType",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct CellData[100]",
+          "name": "cells",
+          "type": "tuple[100]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "cellIdx",
+          "type": "uint256"
+        }
+      ],
+      "name": "readUnaryLength",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "value",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b50612fe9806100206000396000f3fe608060405234801561001057600080fd5b50600436106101985760003560e01c80639aa3c695116100e3578063b88d34ee1161008c578063bf49c15011610066578063bf49c150146103be578063ed78d521146103d1578063f2e15bad146103e457600080fd5b8063b88d34ee14610378578063bc8568911461038b578063bddb49a51461039e57600080fd5b8063a77230cf116100bd578063a77230cf1461032a578063ad7117b314610352578063b2bc83c91461036557600080fd5b80639aa3c695146102d85780639c544ceb146102eb578063a6d8ea981461031757600080fd5b80634dca6f06116101455780637893a08a1161011f5780637893a08a1461029f57806378c64141146102b2578063883acc42146102c557600080fd5b80634dca6f0614610254578063505a7b9b1461026757806358ac1aff1461028c57600080fd5b80631f6520e6116101765780631f6520e6146101eb578063420a02f314610211578063491d90b11461023157600080fd5b806319aac94a1461019d5780631a1ae01c146101c35780631acbaa62146101d8575b600080fd5b6101b06101ab366004612343565b6103f7565b6040519081526020015b60405180910390f35b6101d66101d13660046123ad565b61043e565b005b6101b06101e6366004612475565b6106a2565b6101fe6101f936600461248e565b610759565b60405161ffff90911681526020016101ba565b61022461021f366004612343565b6107f7565b6040516101ba9190612501565b61024461023f366004612818565b610847565b60405190151581526020016101ba565b6101b06102623660046129a2565b6108ab565b61027a6102753660046129cf565b61092f565b60405160ff90911681526020016101ba565b61024461029a366004612a2e565b610a06565b6101b06102ad366004612a96565b610be1565b6101b06102c03660046129cf565b610c78565b6101b06102d33660046129cf565b610c9e565b61027a6102e636600461248e565b610cd6565b6102fe6102f9366004612a96565b610d6b565b60405167ffffffffffffffff90911681526020016101ba565b6102446103253660046129cf565b610e0c565b61033d61033836600461248e565b610e2a565b60405163ffffffff90911681526020016101ba565b6101b0610360366004612475565b610ec5565b610244610373366004612afd565b610f3a565b6101b0610386366004612343565b6111b9565b6101b0610399366004612b6e565b61120e565b6103b16103ac366004612bba565b611269565b6040516101ba9190612c19565b6101b06103cc3660046129cf565b611618565b6103b16103df366004612c7d565b611682565b6101b06103f2366004612343565b61171b565b6000805b82156104325761040d8787878761092f565b61041e9060ff16600183901b612d14565b90508261042a81612d2c565b9350506103fb565b90505b95945050505050565b60008561044d89898888610e0c565b6104a15761045d89898888610c78565b915060005b8281101561049b576104768a8a898961092f565b6104879060ff16600184901b612d14565b91508061049381612d43565b915050610462565b50610570565b6104ad89898888610e0c565b610511576104c9898988886104c189610ec5565b60ff16610d6b565b67ffffffffffffffff16915060005b8281101561049b576104ec8a8a898961092f565b6104fd9060ff16600184901b612d14565b91508061050981612d43565b9150506104d8565b600061051f8a8a898961092f565b60ff1690506105348a8a89896104c18a610ec5565b67ffffffffffffffff16925060005b8381101561056d5761055982600185901b612d14565b92508061056581612d43565b915050610543565b50505b61057a8285612d5d565b6000036105e05760005b60208110156105da5783816020811061059f5761059f612d74565b602002015160ff036105c857858482602081106105be576105be612d74565b60200201526105da565b806105d281612d43565b915050610584565b50610697565b60006105ec87876108ab565b905060006105fa88886108ab565b90508160ff14158015610622575087826064811061061a5761061a612d74565b602002015151155b15610651576106518b8b600186901b8b8660018a8d6106419190612d5d565b61064b9190612d5d565b8b61043e565b8060ff14158015610677575087816064811061066f5761066f612d74565b602002015151155b15610694576106948b8b600286901b8b8560016106418b8e612d5d565b50505b505050505050505050565b6040517fc6b4134800000000000000000000000000000000000000000000000000000000602082015260248101829052600090600290604401604080517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08184030181529082905261071391612da3565b602060405180830381855afa158015610730573d6000803e3d6000fd5b5050506040513d601f19601f820116820180604052508101906107539190612dde565b92915050565b600060108260ff1611156107b45760405162461bcd60e51b815260206004820152601360248201527f6d61782073697a6520697320313620626974730000000000000000000000000060448201526064015b60405180910390fd5b5060005b60ff821615610435576107cd8686868661092f565b6107e39060ff166201fffe600184901b16612df7565b9050816107ef81612e1d565b9250506107b8565b6107ff611f12565b60005b60208110156108365760ff82826020811061081f5761081f612d74565b60200201528061082e81612d43565b915050610802565b50610435868660008787878761043e565b6101e084015160009061085e888887846020610e2a565b5061086985826108ab565b5061087485826108ab565b5061087f85826108ab565b50600061088c86836108ab565b905061089c898988848989610f3a565b925050505b9695505050505050565b60008282606481106108bf576108bf612d74565b6020020151602001518383606481106108da576108da612d74565b60200201516060015160ff16600481106108f6576108f6612d74565b6020020151905082826064811061090f5761090f612d74565b602002015160600180519061092382612e3a565b60ff1690525092915050565b600080600884846064811061094657610946612d74565b6020020151604001516109599190612e88565b90506000600885856064811061097157610971612d74565b6020020151604001516109849190612e9c565b905060078188888581811061099b5761099b612d74565b7fff00000000000000000000000000000000000000000000000000000000000000920135821690921b1690911c60f81c9350600190508585606481106109e3576109e3612d74565b60200201516040018181516109f89190612d14565b90525050505b949350505050565b6000610a16868686866020610e2a565b63ffffffff16639bc7a98714610a6e5760405162461bcd60e51b815260206004820152600f60248201527f6e6f74206120426c6f636b496e666f000000000000000000000000000000000060448201526064016107ab565b6028848460648110610a8257610a82612d74565b6020020151604001818151610a979190612d14565b9052506001610aaa878787876008610cd6565b60ff161115610afb5760405162461bcd60e51b815260206004820152600e60248201527f646174612e666c616773203e203100000000000000000000000000000000000060448201526064016107ab565b6040848460648110610b0f57610b0f612d74565b6020020151604001818151610b249190612d14565b905250610b35868686866002610cd6565b50610b4486868686603c61171b565b50610b53868686866020610e2a565b50610b62868686866040610d6b565b50610b71868686866020610e2a565b506000610b82878787876040610d6b565b90506000610b94888888886040610d6b565b90508167ffffffffffffffff16846040015167ffffffffffffffff16101580610bd557508067ffffffffffffffff16846040015167ffffffffffffffff1611155b98975050505050505050565b60006101008261ffff161115610c395760405162461bcd60e51b815260206004820152601360248201527f6d61782073697a6520697320363420626974730000000000000000000000000060448201526064016107ab565b5060005b61ffff82161561043557610c538686868661092f565b610c649060ff16600183901b612d14565b905081610c7081612eb0565b925050610c3d565b60005b610c8785858585610e0c565b156109fe5780610c9681612d43565b915050610c7b565b600080610caf868686866004610cd6565b90508060ff16600003610cc65750600090506109fe565b6108a1868686868560ff166111b9565b600060088260ff161115610d2c5760405162461bcd60e51b815260206004820152601260248201527f6d61782073697a6520697320382062697473000000000000000000000000000060448201526064016107ab565b5060005b60ff82161561043557610d458686868661092f565b610d57906101fe600184901b16612ec4565b905081610d6381612e1d565b925050610d30565b600060408261ffff161115610dc25760405162461bcd60e51b815260206004820152601360248201527f6d61782073697a6520697320363420626974730000000000000000000000000060448201526064016107ab565b5060005b61ffff82161561043557610ddc8686868661092f565b610df89060ff166801fffffffffffffffe600184901b16612ee9565b905081610e0481612eb0565b925050610dc6565b6000610e1a8585858561092f565b60ff166001149050949350505050565b600060208260ff161115610e805760405162461bcd60e51b815260206004820152601360248201527f6d61782073697a6520697320333220626974730000000000000000000000000060448201526064016107ab565b5060005b60ff82161561043557610e998686868661092f565b610eb19060ff166401fffffffe600184901b16612f0c565b905081610ebd81612e1d565b925050610e84565b6000805b6001831115610f1357610edd600183612d14565b9150826001166001148015610ef0575080155b15610f0757610f00600183612d14565b9150600190505b600183901c9250610ec9565b826001148015610f21575080155b15610f3457610f31600183612d14565b91505b50919050565b600080610f4b888888886020610e2a565b90508063ffffffff16634a33f6fd14610fa65760405162461bcd60e51b815260206004820152601c60248201527f63656c6c206973206e6f7420657874726120626c6f636b20696e666f0000000060448201526064016107ab565b610fb086866108ab565b50610fbb86866108ab565b506000610fcc8761026289896108ab565b90506000610fdf8a8a8a856101006107f7565b905060005b60208110156111a857818160208110610fff57610fff612d74565b602002015160ff146111a85761102d8b8b8b85856020811061102357611023612d74565b6020020151611618565b506110528b8b8b85856020811061104657611046612d74565b60200201516004610cd6565b60ff166005146110a45760405162461bcd60e51b815260206004820152601460248201527f6973206e6f74206163636f756e7420626c6f636b00000000000000000000000060448201526064016107ab565b60006110ca8c8c8c8686602081106110be576110be612d74565b602002015160206111b9565b9050866020015181146110dd5750611196565b60006111038d8d8d8787602081106110f7576110f7612d74565b602002015160406107f7565b905060005b60208110156111925781816020811061112357611123612d74565b602002015160ff1461119257898c6111518e85856020811061114757611147612d74565b60200201516108ab565b6064811061116157611161612d74565b60200201516080015151036111805760019750505050505050506108a1565b8061118a81612d43565b915050611108565b5050505b806111a081612d43565b915050610fe4565b5060009a9950505050505050505050565b6000806111c7836008612f2b565b905060005b8115611203576111de8888888861092f565b6111ef9060ff16600183901b612d14565b9050816111fb81612d2c565b9250506111cc565b979650505050505050565b600080805b83156112605785858281811061122b5761122b612d74565b61124092013560f81c9050600884901b612d14565b91508061124c81612d43565b9150508361125990612d2c565b9350611213565b50949350505050565b611271611f31565b61127f858584866020610e2a565b50600082846064811061129457611294612d74565b6020020151602001516003600481106112af576112af612d74565b6020020151905060006112c6878786856020610e2a565b90508063ffffffff16634a33f6fd146113215760405162461bcd60e51b815260206004820152601060248201527f6e6f74206120426c6f636b45787472610000000000000000000000000000000060448201526064016107ab565b83826064811061133357611333612d74565b60200201516020015160036004811061134e5761134e612d74565b602002015191508160ff036113a55760405162461bcd60e51b815260206004820152600f60248201527f4e6f204d63426c6f636b4578747261000000000000000000000000000000000060448201526064016107ab565b6113b3878786856010610759565b61ffff1661cca5146114075760405162461bcd60e51b815260206004820152601260248201527f6e6f742061204d63426c6f636b4578747261000000000000000000000000000060448201526064016107ab565b600061141588888786610e0c565b905080156115d057600c85846064811061143157611431612d74565b60200201516040018181516114469190612d14565b905250611458888887866101006103f7565b50600085846064811061146d5761146d612d74565b60200201516020015160036004811061148857611488612d74565b602002015160ff146114cb578584606481106114a6576114a6612d74565b6020020151602001516003600481106114c1576114c1612d74565b60200201516114fe565b8584606481106114dd576114dd612d74565b6020020151602001516002600481106114f8576114f8612d74565b60200201515b90508060ff036115505760405162461bcd60e51b815260206004820152601060248201527f4e6f20436f6e66696720506172616d730000000000000000000000000000000060448201526064016107ab565b60006115608a8a898560206107f7565b905060005b60208110156115b75781816020811061158057611580612d74565b602002015160ff146115b75781816020811061159e5761159e612d74565b60200201519250806115af81612d43565b915050611565565b506115c48a8a848a6117ce565b955050505050506109fe565b60405162461bcd60e51b815260206004820152600f60248201527f6973206e6f206b657920626c6f636b000000000000000000000000000000000060448201526064016107ab565b600061162685858585610c9e565b9050600061163686868686610e0c565b9050801561126057600061164a85856108ab565b905084816064811061165e5761165e612d74565b602002015151611678576116768787878460206107f7565b505b5050949350505050565b61168a611f31565b600061169987878688876107f7565b905060005b6020811015611710578181602081106116b9576116b9612d74565b602002015160ff14611710576116e788888484602081106116dc576116dc612d74565b6020020151886118ea565b8382602081106116f9576116f9612d74565b60200201528061170881612d43565b91505061169e565b505095945050505050565b600080600181805b60208161ffff161015611759578583161561174057809350600191505b60019290921b918061175181612f4a565b915050611723565b50806117a75760405162461bcd60e51b815260206004820152600c60248201527f6e6f7420612055696e744c65000000000000000000000000000000000000000060448201526064016107ab565b826117b181612f4a565b9350506117c18989898987610be1565b9998505050505050505050565b6117d6611f31565b6117e485858486601c610be1565b506117f3858584866008610cd6565b50611802858584866020610e2a565b50611811858584866020610e2a565b50611820858584866010610759565b5061182f858584866010610759565b50600061183c83856108ab565b9050611846611f7f565b61184e611f12565b61186588888761185e89886108ab565b60106119e7565b9250905060005b60208110156118de5781816020811061188757611887612d74565b602002015160ff146118de576118b589898484602081106118aa576118aa612d74565b6020020151896118ea565b8582602081106118c7576118c7612d74565b6020020152806118d681612d43565b91505061186c565b50505050949350505050565b6040805160a081018252600080825260208201819052918101829052606081018290526080810191909152611923858584866008610cd6565b60ff168152611936858584866020610e2a565b63ffffffff16638e81278a1461198e5760405162461bcd60e51b815260206004820152600f60248201527f6e6f742061205369675075624b6579000000000000000000000000000000000060448201526064016107ab565b61199d858584866101006103f7565b60608201526119b0858584866040610d6b565b67ffffffffffffffff166020820152805160ff166073036109fe576119da858584866101006103f7565b6040820152949350505050565b6119ef611f12565b6119f7611f7f565b60005b6020811015611a2e5760ff838260208110611a1757611a17612d74565b602002015280611a2681612d43565b9150506119fa565b50611a40878760008888888888611a4a565b9550959350505050565b600086611a598a8a8989610e0c565b611aad57611a698a8a8989610c78565b915060005b82811015611aa757611a828b8b8a8a61092f565b611a939060ff16600184901b612d14565b915080611a9f81612d43565b915050611a6e565b50611b74565b611ab98a8a8989610e0c565b611b1557611acd8a8a89896104c18a610ec5565b67ffffffffffffffff16915060005b82811015611aa757611af08b8b8a8a61092f565b611b019060ff16600184901b612d14565b915080611b0d81612d43565b915050611adc565b6000611b238b8b8a8a61092f565b60ff169050611b388b8b8a8a6104c18b610ec5565b67ffffffffffffffff16925060005b83811015611b7157611b5d82600185901b612d14565b925080611b6981612d43565b915050611b47565b50505b611b7e8286612d5d565b600003611be45760005b6020811015611bde57848160208110611ba357611ba3612d74565b602002015160ff03611bcc5786858260208110611bc257611bc2612d74565b6020020152611bde565b80611bd681612d43565b915050611b88565b50611f06565b6000611bf088886108ab565b90506000611bfe89896108ab565b90508160ff14158015611c265750888260648110611c1e57611c1e612d74565b602002015151155b15611c5b57611c568c8c600186901b8c8660018a8e611c459190612d5d565b611c4f9190612d5d565b8c8c611a4a565b611d8b565b888260648110611c6d57611c6d612d74565b60200201515115611d8b57600060405180604001604052806001878b611c939190612d5d565b611c9d9190612d5d565b81526020018e8e60088e8860648110611cb857611cb8612d74565b602002015160400151611ccb9190612e88565b611cd6906002612d14565b9060088f8960648110611ceb57611ceb612d74565b602002015160400151611cfe9190612e88565b611d09906020612d14565b611d14906002612d14565b92611d2193929190612f6b565b611d2a91612f95565b9052905060005b600a811015611d88578681600a8110611d4c57611d4c612d74565b602002015151600003611d7657818782600a8110611d6c57611d6c612d74565b6020020152611d88565b80611d8081612d43565b915050611d31565b50505b8060ff14158015611db15750888160648110611da957611da9612d74565b602002015151155b15611dd357611dce8c8c600286901b8c856001611c458b8f612d5d565b611f03565b888160648110611de557611de5612d74565b60200201515115611f0357600060405180604001604052806001878b611e0b9190612d5d565b611e159190612d5d565b81526020018e8e60088e8760648110611e3057611e30612d74565b602002015160400151611e439190612e88565b611e4e906002612d14565b9060088f8860648110611e6357611e63612d74565b602002015160400151611e769190612e88565b611e81906020612d14565b611e8c906002612d14565b92611e9993929190612f6b565b611ea291612f95565b9052905060005b600a811015611f00578681600a8110611ec457611ec4612d74565b602002015151600003611eee57818782600a8110611ee457611ee4612d74565b6020020152611f00565b80611ef881612d43565b915050611ea9565b50505b50505b50505050505050505050565b6040518061040001604052806020906020820280368337509192915050565b6040518061040001604052806020905b6040805160a081018252600080825260208083018290529282018190526060820181905260808201528252600019909201910181611f415790505090565b604051806101400160405280600a905b6040805180820190915260008082526020820152815260200190600190039081611f8f5790505090565b60008083601f840112611fcb57600080fd5b50813567ffffffffffffffff811115611fe357600080fd5b602083019150836020828501011115611ffb57600080fd5b9250929050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b604051610100810167ffffffffffffffff8111828210171561205557612055612002565b60405290565b6040805190810167ffffffffffffffff8111828210171561205557612055612002565b604051610180810167ffffffffffffffff8111828210171561205557612055612002565b6040516080810167ffffffffffffffff8111828210171561205557612055612002565b604051610160810167ffffffffffffffff8111828210171561205557612055612002565b604051610200810167ffffffffffffffff8111828210171561205557612055612002565b604051610c80810167ffffffffffffffff8111828210171561205557612055612002565b604051610400810167ffffffffffffffff8111828210171561205557612055612002565b60405160a0810167ffffffffffffffff8111828210171561205557612055612002565b8035801515811461218857600080fd5b919050565b600082601f83011261219e57600080fd5b6121a66120a2565b8060808401858111156121b857600080fd5b845b818110156121d25780358452602093840193016121ba565b509095945050505050565b803560ff8116811461218857600080fd5b803563ffffffff8116811461218857600080fd5b803561ffff8116811461218857600080fd5b600082601f83011261222557600080fd5b61222d6120a2565b80608084018581111561223f57600080fd5b845b818110156121d25761225281612202565b845260209384019301612241565b600082601f83011261227157600080fd5b61227961210d565b8061d48084018581111561228c57600080fd5b845b818110156121d25761022081880312156122a85760008081fd5b6122b0612031565b6122b982612178565b815260206122c98982850161218d565b8183015260a080840135604084015260c06122e58186016121dd565b606085015260e06122f88c82880161218d565b608086015261230a61016087016121ee565b8386015261231c8c6101808801612214565b8286015261232d61020087016121dd565b908501525050908552909301926102200161228e565b600080600080600061d4e0868803121561235c57600080fd5b853567ffffffffffffffff81111561237357600080fd5b61237f88828901611fb9565b909650945061239390508760208801612260565b9497939650939461d4a0810135945061d4c0013592915050565b600080600080600080600061d90080898b0312156123ca57600080fd5b883567ffffffffffffffff8111156123e157600080fd5b6123ed8b828c01611fb9565b90995097505060208981013596506124088b60408c01612260565b955061d4c08a0135945061d4e08a013593508a61d51f8b011261242a57600080fd5b612432612131565b918a0191808c84111561244457600080fd5b61d5008c015b84811015612461578035835291830191830161244a565b508094505050505092959891949750929550565b60006020828403121561248757600080fd5b5035919050565b600080600080600061d4e086880312156124a757600080fd5b853567ffffffffffffffff8111156124be57600080fd5b6124ca88828901611fb9565b90965094506124de90508760208801612260565b925061d4a086013591506124f561d4c087016121dd565b90509295509295909350565b6104008101818360005b602080821061251a575061252e565b82518452928301929091019060010161250b565b50505092915050565b80357fffffffff000000000000000000000000000000000000000000000000000000008116811461218857600080fd5b803567ffffffffffffffff8116811461218857600080fd5b60006040828403121561259157600080fd5b61259961205b565b9050813581526125ab602083016121dd565b602082015292915050565b60008183036101e08112156125ca57600080fd5b6125d261205b565b91506101c0808212156125e457600080fd5b6125ec61207e565b9150833582526125fe60208501612178565b602083015261260f60408501612178565b604083015261262060608501612178565b6060830152612632856080860161257f565b60808301526126448560c0860161257f565b60a08301526101008085013560c08401526101208086013560e08501526101408087013583860152610160925082870135828601526101808701358186015250506101a08501358184015250818352808401356020840152505092915050565b6000610b808083850312156126b857600080fd5b6126c06120a2565b91506126cb83612178565b825260206126da818501612178565b818401526126eb85604086016125b6565b60408401528461023f85011261270057600080fd5b612708612155565b91840191808684111561271a57600080fd5b61022086015b848110156127415761273288826125b6565b8352918301916101e001612720565b5060608501525091949350505050565b6000610cc0828403121561276457600080fd5b61276c6120c5565b9050612777826121dd565b81526020820135602082015261278f60408301612567565b6040820152606082013560608201526127aa60808301612567565b60808201526127bb60a083016121ee565b60a08201526127cc60c083016121ee565b60c08201526127dd60e083016121dd565b60e08201526101006127f08184016121dd565b90820152610120828101359082015261014061280e848285016126a4565b9082015292915050565b60008060008060008086880361e38081121561283357600080fd5b873567ffffffffffffffff81111561284a57600080fd5b6128568a828b01611fb9565b909850965061020090507fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0820181131561288f57600080fd5b6128976120e9565b91506128a560208a01612537565b825260408901356020830152606089013560408301526080890135606083015260a0890135608083015260c089013560a08301526128e560e08a01612178565b60c08301526101006128f8818b01612178565b60e084015261012061290b818c01612178565b82850152610140915061291f828c01612178565b8185015250610160808b0135828501526101809150818b013581850152506101a0808b0135828501526101c09150818b013581850152506101e0808b013582850152828b0135818501525050508094505061297e886102208901612260565b925061d6a087013591506129968861d6c08901612751565b90509295509295509295565b60008061d4a083850312156129b657600080fd5b6129c08484612260565b9461d480939093013593505050565b60008060008061d4c085870312156129e657600080fd5b843567ffffffffffffffff8111156129fd57600080fd5b612a0987828801611fb9565b9095509350612a1d90508660208701612260565b9396929550929361d4a00135925050565b600080600080600061e1808688031215612a4757600080fd5b853567ffffffffffffffff811115612a5e57600080fd5b612a6a88828901611fb9565b9096509450612a7e90508760208801612260565b925061d4a086013591506124f58761d4c08801612751565b600080600080600061d4e08688031215612aaf57600080fd5b853567ffffffffffffffff811115612ac657600080fd5b612ad288828901611fb9565b9096509450612ae690508760208801612260565b925061d4a086013591506124f561d4c08701612202565b60008060008060008061e1a08789031215612b1757600080fd5b863567ffffffffffffffff811115612b2e57600080fd5b612b3a89828a01611fb9565b9097509550612b4e90508860208901612260565b935061d4a0870135925061d4c087013591506129968861d4e08901612751565b600080600060408486031215612b8357600080fd5b833567ffffffffffffffff811115612b9a57600080fd5b612ba686828701611fb9565b909790965060209590950135949350505050565b60008060008061d4c08587031215612bd157600080fd5b843567ffffffffffffffff811115612be857600080fd5b612bf487828801611fb9565b90955093505060208501359150612c0e8660408701612260565b905092959194509250565b6114008101818360005b6020808210612c32575061252e565b8251805160ff1685528181015167ffffffffffffffff168286015260408082015190860152606080820151908601526080908101519085015260a09093019290910190600101612c23565b600080600080600061d4e08688031215612c9657600080fd5b853567ffffffffffffffff811115612cad57600080fd5b612cb988828901611fb9565b90965094505060208601359250612cd38760408801612260565b9497939650919461d4c0013592915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b60008219821115612d2757612d27612ce5565b500190565b600081612d3b57612d3b612ce5565b506000190190565b60006000198203612d5657612d56612ce5565b5060010190565b600082821015612d6f57612d6f612ce5565b500390565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b6000825160005b81811015612dc45760208186018101518583015201612daa565b81811115612dd3576000828501525b509190910192915050565b600060208284031215612df057600080fd5b5051919050565b600061ffff808316818516808303821115612e1457612e14612ce5565b01949350505050565b600060ff821680612e3057612e30612ce5565b6000190192915050565b600060ff821660ff8103612e5057612e50612ce5565b60010192915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601260045260246000fd5b600082612e9757612e97612e59565b500490565b600082612eab57612eab612e59565b500690565b600061ffff821680612e3057612e30612ce5565b600060ff821660ff84168060ff03821115612ee157612ee1612ce5565b019392505050565b600067ffffffffffffffff808316818516808303821115612e1457612e14612ce5565b600063ffffffff808316818516808303821115612e1457612e14612ce5565b6000816000190483118215151615612f4557612f45612ce5565b500290565b600061ffff808316818103612f6157612f61612ce5565b6001019392505050565b60008085851115612f7b57600080fd5b83861115612f8857600080fd5b5050820193919092039150565b8035602083101561075357600019602084900360031b1b169291505056fea2646970667358221220b3e5cdc331e4260cf5f09946832077f316f030b21a936fc0b9f2f4fa5b10d56464736f6c634300080f0033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106101985760003560e01c80639aa3c695116100e3578063b88d34ee1161008c578063bf49c15011610066578063bf49c150146103be578063ed78d521146103d1578063f2e15bad146103e457600080fd5b8063b88d34ee14610378578063bc8568911461038b578063bddb49a51461039e57600080fd5b8063a77230cf116100bd578063a77230cf1461032a578063ad7117b314610352578063b2bc83c91461036557600080fd5b80639aa3c695146102d85780639c544ceb146102eb578063a6d8ea981461031757600080fd5b80634dca6f06116101455780637893a08a1161011f5780637893a08a1461029f57806378c64141146102b2578063883acc42146102c557600080fd5b80634dca6f0614610254578063505a7b9b1461026757806358ac1aff1461028c57600080fd5b80631f6520e6116101765780631f6520e6146101eb578063420a02f314610211578063491d90b11461023157600080fd5b806319aac94a1461019d5780631a1ae01c146101c35780631acbaa62146101d8575b600080fd5b6101b06101ab366004612343565b6103f7565b6040519081526020015b60405180910390f35b6101d66101d13660046123ad565b61043e565b005b6101b06101e6366004612475565b6106a2565b6101fe6101f936600461248e565b610759565b60405161ffff90911681526020016101ba565b61022461021f366004612343565b6107f7565b6040516101ba9190612501565b61024461023f366004612818565b610847565b60405190151581526020016101ba565b6101b06102623660046129a2565b6108ab565b61027a6102753660046129cf565b61092f565b60405160ff90911681526020016101ba565b61024461029a366004612a2e565b610a06565b6101b06102ad366004612a96565b610be1565b6101b06102c03660046129cf565b610c78565b6101b06102d33660046129cf565b610c9e565b61027a6102e636600461248e565b610cd6565b6102fe6102f9366004612a96565b610d6b565b60405167ffffffffffffffff90911681526020016101ba565b6102446103253660046129cf565b610e0c565b61033d61033836600461248e565b610e2a565b60405163ffffffff90911681526020016101ba565b6101b0610360366004612475565b610ec5565b610244610373366004612afd565b610f3a565b6101b0610386366004612343565b6111b9565b6101b0610399366004612b6e565b61120e565b6103b16103ac366004612bba565b611269565b6040516101ba9190612c19565b6101b06103cc3660046129cf565b611618565b6103b16103df366004612c7d565b611682565b6101b06103f2366004612343565b61171b565b6000805b82156104325761040d8787878761092f565b61041e9060ff16600183901b612d14565b90508261042a81612d2c565b9350506103fb565b90505b95945050505050565b60008561044d89898888610e0c565b6104a15761045d89898888610c78565b915060005b8281101561049b576104768a8a898961092f565b6104879060ff16600184901b612d14565b91508061049381612d43565b915050610462565b50610570565b6104ad89898888610e0c565b610511576104c9898988886104c189610ec5565b60ff16610d6b565b67ffffffffffffffff16915060005b8281101561049b576104ec8a8a898961092f565b6104fd9060ff16600184901b612d14565b91508061050981612d43565b9150506104d8565b600061051f8a8a898961092f565b60ff1690506105348a8a89896104c18a610ec5565b67ffffffffffffffff16925060005b8381101561056d5761055982600185901b612d14565b92508061056581612d43565b915050610543565b50505b61057a8285612d5d565b6000036105e05760005b60208110156105da5783816020811061059f5761059f612d74565b602002015160ff036105c857858482602081106105be576105be612d74565b60200201526105da565b806105d281612d43565b915050610584565b50610697565b60006105ec87876108ab565b905060006105fa88886108ab565b90508160ff14158015610622575087826064811061061a5761061a612d74565b602002015151155b15610651576106518b8b600186901b8b8660018a8d6106419190612d5d565b61064b9190612d5d565b8b61043e565b8060ff14158015610677575087816064811061066f5761066f612d74565b602002015151155b15610694576106948b8b600286901b8b8560016106418b8e612d5d565b50505b505050505050505050565b6040517fc6b4134800000000000000000000000000000000000000000000000000000000602082015260248101829052600090600290604401604080517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08184030181529082905261071391612da3565b602060405180830381855afa158015610730573d6000803e3d6000fd5b5050506040513d601f19601f820116820180604052508101906107539190612dde565b92915050565b600060108260ff1611156107b45760405162461bcd60e51b815260206004820152601360248201527f6d61782073697a6520697320313620626974730000000000000000000000000060448201526064015b60405180910390fd5b5060005b60ff821615610435576107cd8686868661092f565b6107e39060ff166201fffe600184901b16612df7565b9050816107ef81612e1d565b9250506107b8565b6107ff611f12565b60005b60208110156108365760ff82826020811061081f5761081f612d74565b60200201528061082e81612d43565b915050610802565b50610435868660008787878761043e565b6101e084015160009061085e888887846020610e2a565b5061086985826108ab565b5061087485826108ab565b5061087f85826108ab565b50600061088c86836108ab565b905061089c898988848989610f3a565b925050505b9695505050505050565b60008282606481106108bf576108bf612d74565b6020020151602001518383606481106108da576108da612d74565b60200201516060015160ff16600481106108f6576108f6612d74565b6020020151905082826064811061090f5761090f612d74565b602002015160600180519061092382612e3a565b60ff1690525092915050565b600080600884846064811061094657610946612d74565b6020020151604001516109599190612e88565b90506000600885856064811061097157610971612d74565b6020020151604001516109849190612e9c565b905060078188888581811061099b5761099b612d74565b7fff00000000000000000000000000000000000000000000000000000000000000920135821690921b1690911c60f81c9350600190508585606481106109e3576109e3612d74565b60200201516040018181516109f89190612d14565b90525050505b949350505050565b6000610a16868686866020610e2a565b63ffffffff16639bc7a98714610a6e5760405162461bcd60e51b815260206004820152600f60248201527f6e6f74206120426c6f636b496e666f000000000000000000000000000000000060448201526064016107ab565b6028848460648110610a8257610a82612d74565b6020020151604001818151610a979190612d14565b9052506001610aaa878787876008610cd6565b60ff161115610afb5760405162461bcd60e51b815260206004820152600e60248201527f646174612e666c616773203e203100000000000000000000000000000000000060448201526064016107ab565b6040848460648110610b0f57610b0f612d74565b6020020151604001818151610b249190612d14565b905250610b35868686866002610cd6565b50610b4486868686603c61171b565b50610b53868686866020610e2a565b50610b62868686866040610d6b565b50610b71868686866020610e2a565b506000610b82878787876040610d6b565b90506000610b94888888886040610d6b565b90508167ffffffffffffffff16846040015167ffffffffffffffff16101580610bd557508067ffffffffffffffff16846040015167ffffffffffffffff1611155b98975050505050505050565b60006101008261ffff161115610c395760405162461bcd60e51b815260206004820152601360248201527f6d61782073697a6520697320363420626974730000000000000000000000000060448201526064016107ab565b5060005b61ffff82161561043557610c538686868661092f565b610c649060ff16600183901b612d14565b905081610c7081612eb0565b925050610c3d565b60005b610c8785858585610e0c565b156109fe5780610c9681612d43565b915050610c7b565b600080610caf868686866004610cd6565b90508060ff16600003610cc65750600090506109fe565b6108a1868686868560ff166111b9565b600060088260ff161115610d2c5760405162461bcd60e51b815260206004820152601260248201527f6d61782073697a6520697320382062697473000000000000000000000000000060448201526064016107ab565b5060005b60ff82161561043557610d458686868661092f565b610d57906101fe600184901b16612ec4565b905081610d6381612e1d565b925050610d30565b600060408261ffff161115610dc25760405162461bcd60e51b815260206004820152601360248201527f6d61782073697a6520697320363420626974730000000000000000000000000060448201526064016107ab565b5060005b61ffff82161561043557610ddc8686868661092f565b610df89060ff166801fffffffffffffffe600184901b16612ee9565b905081610e0481612eb0565b925050610dc6565b6000610e1a8585858561092f565b60ff166001149050949350505050565b600060208260ff161115610e805760405162461bcd60e51b815260206004820152601360248201527f6d61782073697a6520697320333220626974730000000000000000000000000060448201526064016107ab565b5060005b60ff82161561043557610e998686868661092f565b610eb19060ff166401fffffffe600184901b16612f0c565b905081610ebd81612e1d565b925050610e84565b6000805b6001831115610f1357610edd600183612d14565b9150826001166001148015610ef0575080155b15610f0757610f00600183612d14565b9150600190505b600183901c9250610ec9565b826001148015610f21575080155b15610f3457610f31600183612d14565b91505b50919050565b600080610f4b888888886020610e2a565b90508063ffffffff16634a33f6fd14610fa65760405162461bcd60e51b815260206004820152601c60248201527f63656c6c206973206e6f7420657874726120626c6f636b20696e666f0000000060448201526064016107ab565b610fb086866108ab565b50610fbb86866108ab565b506000610fcc8761026289896108ab565b90506000610fdf8a8a8a856101006107f7565b905060005b60208110156111a857818160208110610fff57610fff612d74565b602002015160ff146111a85761102d8b8b8b85856020811061102357611023612d74565b6020020151611618565b506110528b8b8b85856020811061104657611046612d74565b60200201516004610cd6565b60ff166005146110a45760405162461bcd60e51b815260206004820152601460248201527f6973206e6f74206163636f756e7420626c6f636b00000000000000000000000060448201526064016107ab565b60006110ca8c8c8c8686602081106110be576110be612d74565b602002015160206111b9565b9050866020015181146110dd5750611196565b60006111038d8d8d8787602081106110f7576110f7612d74565b602002015160406107f7565b905060005b60208110156111925781816020811061112357611123612d74565b602002015160ff1461119257898c6111518e85856020811061114757611147612d74565b60200201516108ab565b6064811061116157611161612d74565b60200201516080015151036111805760019750505050505050506108a1565b8061118a81612d43565b915050611108565b5050505b806111a081612d43565b915050610fe4565b5060009a9950505050505050505050565b6000806111c7836008612f2b565b905060005b8115611203576111de8888888861092f565b6111ef9060ff16600183901b612d14565b9050816111fb81612d2c565b9250506111cc565b979650505050505050565b600080805b83156112605785858281811061122b5761122b612d74565b61124092013560f81c9050600884901b612d14565b91508061124c81612d43565b9150508361125990612d2c565b9350611213565b50949350505050565b611271611f31565b61127f858584866020610e2a565b50600082846064811061129457611294612d74565b6020020151602001516003600481106112af576112af612d74565b6020020151905060006112c6878786856020610e2a565b90508063ffffffff16634a33f6fd146113215760405162461bcd60e51b815260206004820152601060248201527f6e6f74206120426c6f636b45787472610000000000000000000000000000000060448201526064016107ab565b83826064811061133357611333612d74565b60200201516020015160036004811061134e5761134e612d74565b602002015191508160ff036113a55760405162461bcd60e51b815260206004820152600f60248201527f4e6f204d63426c6f636b4578747261000000000000000000000000000000000060448201526064016107ab565b6113b3878786856010610759565b61ffff1661cca5146114075760405162461bcd60e51b815260206004820152601260248201527f6e6f742061204d63426c6f636b4578747261000000000000000000000000000060448201526064016107ab565b600061141588888786610e0c565b905080156115d057600c85846064811061143157611431612d74565b60200201516040018181516114469190612d14565b905250611458888887866101006103f7565b50600085846064811061146d5761146d612d74565b60200201516020015160036004811061148857611488612d74565b602002015160ff146114cb578584606481106114a6576114a6612d74565b6020020151602001516003600481106114c1576114c1612d74565b60200201516114fe565b8584606481106114dd576114dd612d74565b6020020151602001516002600481106114f8576114f8612d74565b60200201515b90508060ff036115505760405162461bcd60e51b815260206004820152601060248201527f4e6f20436f6e66696720506172616d730000000000000000000000000000000060448201526064016107ab565b60006115608a8a898560206107f7565b905060005b60208110156115b75781816020811061158057611580612d74565b602002015160ff146115b75781816020811061159e5761159e612d74565b60200201519250806115af81612d43565b915050611565565b506115c48a8a848a6117ce565b955050505050506109fe565b60405162461bcd60e51b815260206004820152600f60248201527f6973206e6f206b657920626c6f636b000000000000000000000000000000000060448201526064016107ab565b600061162685858585610c9e565b9050600061163686868686610e0c565b9050801561126057600061164a85856108ab565b905084816064811061165e5761165e612d74565b602002015151611678576116768787878460206107f7565b505b5050949350505050565b61168a611f31565b600061169987878688876107f7565b905060005b6020811015611710578181602081106116b9576116b9612d74565b602002015160ff14611710576116e788888484602081106116dc576116dc612d74565b6020020151886118ea565b8382602081106116f9576116f9612d74565b60200201528061170881612d43565b91505061169e565b505095945050505050565b600080600181805b60208161ffff161015611759578583161561174057809350600191505b60019290921b918061175181612f4a565b915050611723565b50806117a75760405162461bcd60e51b815260206004820152600c60248201527f6e6f7420612055696e744c65000000000000000000000000000000000000000060448201526064016107ab565b826117b181612f4a565b9350506117c18989898987610be1565b9998505050505050505050565b6117d6611f31565b6117e485858486601c610be1565b506117f3858584866008610cd6565b50611802858584866020610e2a565b50611811858584866020610e2a565b50611820858584866010610759565b5061182f858584866010610759565b50600061183c83856108ab565b9050611846611f7f565b61184e611f12565b61186588888761185e89886108ab565b60106119e7565b9250905060005b60208110156118de5781816020811061188757611887612d74565b602002015160ff146118de576118b589898484602081106118aa576118aa612d74565b6020020151896118ea565b8582602081106118c7576118c7612d74565b6020020152806118d681612d43565b91505061186c565b50505050949350505050565b6040805160a081018252600080825260208201819052918101829052606081018290526080810191909152611923858584866008610cd6565b60ff168152611936858584866020610e2a565b63ffffffff16638e81278a1461198e5760405162461bcd60e51b815260206004820152600f60248201527f6e6f742061205369675075624b6579000000000000000000000000000000000060448201526064016107ab565b61199d858584866101006103f7565b60608201526119b0858584866040610d6b565b67ffffffffffffffff166020820152805160ff166073036109fe576119da858584866101006103f7565b6040820152949350505050565b6119ef611f12565b6119f7611f7f565b60005b6020811015611a2e5760ff838260208110611a1757611a17612d74565b602002015280611a2681612d43565b9150506119fa565b50611a40878760008888888888611a4a565b9550959350505050565b600086611a598a8a8989610e0c565b611aad57611a698a8a8989610c78565b915060005b82811015611aa757611a828b8b8a8a61092f565b611a939060ff16600184901b612d14565b915080611a9f81612d43565b915050611a6e565b50611b74565b611ab98a8a8989610e0c565b611b1557611acd8a8a89896104c18a610ec5565b67ffffffffffffffff16915060005b82811015611aa757611af08b8b8a8a61092f565b611b019060ff16600184901b612d14565b915080611b0d81612d43565b915050611adc565b6000611b238b8b8a8a61092f565b60ff169050611b388b8b8a8a6104c18b610ec5565b67ffffffffffffffff16925060005b83811015611b7157611b5d82600185901b612d14565b925080611b6981612d43565b915050611b47565b50505b611b7e8286612d5d565b600003611be45760005b6020811015611bde57848160208110611ba357611ba3612d74565b602002015160ff03611bcc5786858260208110611bc257611bc2612d74565b6020020152611bde565b80611bd681612d43565b915050611b88565b50611f06565b6000611bf088886108ab565b90506000611bfe89896108ab565b90508160ff14158015611c265750888260648110611c1e57611c1e612d74565b602002015151155b15611c5b57611c568c8c600186901b8c8660018a8e611c459190612d5d565b611c4f9190612d5d565b8c8c611a4a565b611d8b565b888260648110611c6d57611c6d612d74565b60200201515115611d8b57600060405180604001604052806001878b611c939190612d5d565b611c9d9190612d5d565b81526020018e8e60088e8860648110611cb857611cb8612d74565b602002015160400151611ccb9190612e88565b611cd6906002612d14565b9060088f8960648110611ceb57611ceb612d74565b602002015160400151611cfe9190612e88565b611d09906020612d14565b611d14906002612d14565b92611d2193929190612f6b565b611d2a91612f95565b9052905060005b600a811015611d88578681600a8110611d4c57611d4c612d74565b602002015151600003611d7657818782600a8110611d6c57611d6c612d74565b6020020152611d88565b80611d8081612d43565b915050611d31565b50505b8060ff14158015611db15750888160648110611da957611da9612d74565b602002015151155b15611dd357611dce8c8c600286901b8c856001611c458b8f612d5d565b611f03565b888160648110611de557611de5612d74565b60200201515115611f0357600060405180604001604052806001878b611e0b9190612d5d565b611e159190612d5d565b81526020018e8e60088e8760648110611e3057611e30612d74565b602002015160400151611e439190612e88565b611e4e906002612d14565b9060088f8860648110611e6357611e63612d74565b602002015160400151611e769190612e88565b611e81906020612d14565b611e8c906002612d14565b92611e9993929190612f6b565b611ea291612f95565b9052905060005b600a811015611f00578681600a8110611ec457611ec4612d74565b602002015151600003611eee57818782600a8110611ee457611ee4612d74565b6020020152611f00565b80611ef881612d43565b915050611ea9565b50505b50505b50505050505050505050565b6040518061040001604052806020906020820280368337509192915050565b6040518061040001604052806020905b6040805160a081018252600080825260208083018290529282018190526060820181905260808201528252600019909201910181611f415790505090565b604051806101400160405280600a905b6040805180820190915260008082526020820152815260200190600190039081611f8f5790505090565b60008083601f840112611fcb57600080fd5b50813567ffffffffffffffff811115611fe357600080fd5b602083019150836020828501011115611ffb57600080fd5b9250929050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b604051610100810167ffffffffffffffff8111828210171561205557612055612002565b60405290565b6040805190810167ffffffffffffffff8111828210171561205557612055612002565b604051610180810167ffffffffffffffff8111828210171561205557612055612002565b6040516080810167ffffffffffffffff8111828210171561205557612055612002565b604051610160810167ffffffffffffffff8111828210171561205557612055612002565b604051610200810167ffffffffffffffff8111828210171561205557612055612002565b604051610c80810167ffffffffffffffff8111828210171561205557612055612002565b604051610400810167ffffffffffffffff8111828210171561205557612055612002565b60405160a0810167ffffffffffffffff8111828210171561205557612055612002565b8035801515811461218857600080fd5b919050565b600082601f83011261219e57600080fd5b6121a66120a2565b8060808401858111156121b857600080fd5b845b818110156121d25780358452602093840193016121ba565b509095945050505050565b803560ff8116811461218857600080fd5b803563ffffffff8116811461218857600080fd5b803561ffff8116811461218857600080fd5b600082601f83011261222557600080fd5b61222d6120a2565b80608084018581111561223f57600080fd5b845b818110156121d25761225281612202565b845260209384019301612241565b600082601f83011261227157600080fd5b61227961210d565b8061d48084018581111561228c57600080fd5b845b818110156121d25761022081880312156122a85760008081fd5b6122b0612031565b6122b982612178565b815260206122c98982850161218d565b8183015260a080840135604084015260c06122e58186016121dd565b606085015260e06122f88c82880161218d565b608086015261230a61016087016121ee565b8386015261231c8c6101808801612214565b8286015261232d61020087016121dd565b908501525050908552909301926102200161228e565b600080600080600061d4e0868803121561235c57600080fd5b853567ffffffffffffffff81111561237357600080fd5b61237f88828901611fb9565b909650945061239390508760208801612260565b9497939650939461d4a0810135945061d4c0013592915050565b600080600080600080600061d90080898b0312156123ca57600080fd5b883567ffffffffffffffff8111156123e157600080fd5b6123ed8b828c01611fb9565b90995097505060208981013596506124088b60408c01612260565b955061d4c08a0135945061d4e08a013593508a61d51f8b011261242a57600080fd5b612432612131565b918a0191808c84111561244457600080fd5b61d5008c015b84811015612461578035835291830191830161244a565b508094505050505092959891949750929550565b60006020828403121561248757600080fd5b5035919050565b600080600080600061d4e086880312156124a757600080fd5b853567ffffffffffffffff8111156124be57600080fd5b6124ca88828901611fb9565b90965094506124de90508760208801612260565b925061d4a086013591506124f561d4c087016121dd565b90509295509295909350565b6104008101818360005b602080821061251a575061252e565b82518452928301929091019060010161250b565b50505092915050565b80357fffffffff000000000000000000000000000000000000000000000000000000008116811461218857600080fd5b803567ffffffffffffffff8116811461218857600080fd5b60006040828403121561259157600080fd5b61259961205b565b9050813581526125ab602083016121dd565b602082015292915050565b60008183036101e08112156125ca57600080fd5b6125d261205b565b91506101c0808212156125e457600080fd5b6125ec61207e565b9150833582526125fe60208501612178565b602083015261260f60408501612178565b604083015261262060608501612178565b6060830152612632856080860161257f565b60808301526126448560c0860161257f565b60a08301526101008085013560c08401526101208086013560e08501526101408087013583860152610160925082870135828601526101808701358186015250506101a08501358184015250818352808401356020840152505092915050565b6000610b808083850312156126b857600080fd5b6126c06120a2565b91506126cb83612178565b825260206126da818501612178565b818401526126eb85604086016125b6565b60408401528461023f85011261270057600080fd5b612708612155565b91840191808684111561271a57600080fd5b61022086015b848110156127415761273288826125b6565b8352918301916101e001612720565b5060608501525091949350505050565b6000610cc0828403121561276457600080fd5b61276c6120c5565b9050612777826121dd565b81526020820135602082015261278f60408301612567565b6040820152606082013560608201526127aa60808301612567565b60808201526127bb60a083016121ee565b60a08201526127cc60c083016121ee565b60c08201526127dd60e083016121dd565b60e08201526101006127f08184016121dd565b90820152610120828101359082015261014061280e848285016126a4565b9082015292915050565b60008060008060008086880361e38081121561283357600080fd5b873567ffffffffffffffff81111561284a57600080fd5b6128568a828b01611fb9565b909850965061020090507fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0820181131561288f57600080fd5b6128976120e9565b91506128a560208a01612537565b825260408901356020830152606089013560408301526080890135606083015260a0890135608083015260c089013560a08301526128e560e08a01612178565b60c08301526101006128f8818b01612178565b60e084015261012061290b818c01612178565b82850152610140915061291f828c01612178565b8185015250610160808b0135828501526101809150818b013581850152506101a0808b0135828501526101c09150818b013581850152506101e0808b013582850152828b0135818501525050508094505061297e886102208901612260565b925061d6a087013591506129968861d6c08901612751565b90509295509295509295565b60008061d4a083850312156129b657600080fd5b6129c08484612260565b9461d480939093013593505050565b60008060008061d4c085870312156129e657600080fd5b843567ffffffffffffffff8111156129fd57600080fd5b612a0987828801611fb9565b9095509350612a1d90508660208701612260565b9396929550929361d4a00135925050565b600080600080600061e1808688031215612a4757600080fd5b853567ffffffffffffffff811115612a5e57600080fd5b612a6a88828901611fb9565b9096509450612a7e90508760208801612260565b925061d4a086013591506124f58761d4c08801612751565b600080600080600061d4e08688031215612aaf57600080fd5b853567ffffffffffffffff811115612ac657600080fd5b612ad288828901611fb9565b9096509450612ae690508760208801612260565b925061d4a086013591506124f561d4c08701612202565b60008060008060008061e1a08789031215612b1757600080fd5b863567ffffffffffffffff811115612b2e57600080fd5b612b3a89828a01611fb9565b9097509550612b4e90508860208901612260565b935061d4a0870135925061d4c087013591506129968861d4e08901612751565b600080600060408486031215612b8357600080fd5b833567ffffffffffffffff811115612b9a57600080fd5b612ba686828701611fb9565b909790965060209590950135949350505050565b60008060008061d4c08587031215612bd157600080fd5b843567ffffffffffffffff811115612be857600080fd5b612bf487828801611fb9565b90955093505060208501359150612c0e8660408701612260565b905092959194509250565b6114008101818360005b6020808210612c32575061252e565b8251805160ff1685528181015167ffffffffffffffff168286015260408082015190860152606080820151908601526080908101519085015260a09093019290910190600101612c23565b600080600080600061d4e08688031215612c9657600080fd5b853567ffffffffffffffff811115612cad57600080fd5b612cb988828901611fb9565b90965094505060208601359250612cd38760408801612260565b9497939650919461d4c0013592915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b60008219821115612d2757612d27612ce5565b500190565b600081612d3b57612d3b612ce5565b506000190190565b60006000198203612d5657612d56612ce5565b5060010190565b600082821015612d6f57612d6f612ce5565b500390565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b6000825160005b81811015612dc45760208186018101518583015201612daa565b81811115612dd3576000828501525b509190910192915050565b600060208284031215612df057600080fd5b5051919050565b600061ffff808316818516808303821115612e1457612e14612ce5565b01949350505050565b600060ff821680612e3057612e30612ce5565b6000190192915050565b600060ff821660ff8103612e5057612e50612ce5565b60010192915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601260045260246000fd5b600082612e9757612e97612e59565b500490565b600082612eab57612eab612e59565b500690565b600061ffff821680612e3057612e30612ce5565b600060ff821660ff84168060ff03821115612ee157612ee1612ce5565b019392505050565b600067ffffffffffffffff808316818516808303821115612e1457612e14612ce5565b600063ffffffff808316818516808303821115612e1457612e14612ce5565b6000816000190483118215151615612f4557612f45612ce5565b500290565b600061ffff808316818103612f6157612f61612ce5565b6001019392505050565b60008085851115612f7b57600080fd5b83861115612f8857600080fd5b5050820193919092039150565b8035602083101561075357600019602084900360031b1b169291505056fea2646970667358221220b3e5cdc331e4260cf5f09946832077f316f030b21a936fc0b9f2f4fa5b10d56464736f6c634300080f0033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
