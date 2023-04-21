@@ -43,4 +43,9 @@ export class TonExplorerController {
   ) {
     return this.explorer.findTransactionByHash(hash, +workchain, +lt);
   }
+
+  @Get('findblock/:hash')
+  findBlock(@Param('hash') hash: string) {
+    return this.explorer.findBlockByHash(hash);
+  }
 }

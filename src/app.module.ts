@@ -5,9 +5,8 @@ import { TonExplorerModule } from './modules/ton-explorer/ton-explorer.module';
 import { TonReaderModule } from './modules/ton-reader/ton-reader.module';
 import { EthProviderModule } from './modules/eth-provider/eth-provider.module';
 import { TonValidatorModule } from './modules/ton-validator/ton-validator.module';
-import { BridgeModule } from './modules/bridge/bridge.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
-import { DashboardModule } from './modules/dashboard/dashboard.module';
+
 import { HealthModule } from './modules/health/health.module';
 import { LoggerModule } from './modules/logger/logger.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -20,9 +19,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     TonReaderModule,
     EthProviderModule,
     TonValidatorModule,
-    BridgeModule,
     PrismaModule,
-    DashboardModule,
     HealthModule,
     LoggerModule,
   ],
