@@ -22,14 +22,12 @@ import { TonTransactionService } from 'src/modules/prisma/services/ton-transacti
 import { TonApiService } from 'src/modules/ton-reader/services/ton-api/ton-api.service';
 import createLock from '../../utils/SimpleLock';
 import _ from 'lodash';
-import { parseBlock } from 'src/lib/utils/blockReader';
 import { TonTransaction } from '@prisma/client';
 
 @Injectable()
 export class ValidatorService {
   nonce = 0;
   validatorLock = createLock('validator');
-  bridgeLock = createLock('bridge');
 
   keyblockBuffer = new Subject<GotKeyblock>();
   isInitialKeyblock = true;
@@ -227,11 +225,6 @@ export class ValidatorService {
         await this.contractService.validatorContract
           .verifyValidators(
             '0x0000000000000000000000000000000000000000000000000000000000000000',
-            // `0x${Buffer.from(
-            //   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            //   jsonData.find((el) => el.type === 'proof-validators')!.id!.fileHash,
-            //   'base64',
-            // ).toString('hex')}`,
             `0x${data.boc.id.file_hash}`,
             subArr.map((c) => ({
               node_id: `0x${c.node_id}`,
@@ -258,18 +251,10 @@ export class ValidatorService {
       console.log(error);
     }
 
-    await this.tonBlockService.updateTonBlockStatus({
-      blockId: id,
-      inprogress: true,
-    });
     const prismaBlock = await this.tonBlockService.tonBlock({ id: id });
 
     if (await this.syncVerifying(prismaBlock.rootHash, prismaBlock.id)) {
-      await this.tonBlockService.updateTonBlockStatus({
-        blockId: id,
-        inprogress: false,
-      });
-      return;
+      return {};
     }
     this.logger.validatorLog('[Validator] validatong block by validators...');
     const blockData = await this.tonApi.getBlockBoc(prismaBlock);
@@ -281,65 +266,22 @@ export class ValidatorService {
       s: Buffer.from(el.signature, 'base64').slice(32).toString('hex'),
     }));
 
-    try {
-      await this.validatorLock.acquire();
-      for (let i = 0; i < signatures.length; i += 5) {
-        const subArr = signatures.slice(i, i + 5);
-        while (subArr.length < 5) {
-          subArr.push(signatures[0]);
-        }
-
-        await this.contractService.validatorContract
-          .verifyValidators(
-            '0x' + blockData.id.root_hash,
-            `0x${blockData.id.file_hash}`,
-            subArr.map((c) => ({
-              node_id: `0x${c.node_id}`,
-              r: `0x${c.r}`,
-              s: `0x${c.s}`,
-            })) as any[5],
-          )
-          .then((tx) => (tx as any).wait());
-      }
-
-      await this.contractService.validatorContract
-        .addCurrentBlockToVerifiedSet('0x' + blockData.id.root_hash)
-        .then((tx) => (tx as any).wait());
-
-      await this.tonBlockService.updateTonBlockStatus({
-        blockId: prismaBlock.id,
-        checked: true,
-      });
-    } catch (error) {
-      console.error(error.message);
-    } finally {
-      this.validatorLock.release();
-      await this.tonBlockService.updateTonBlockStatus({
-        blockId: id,
-        inprogress: false,
-      });
-    }
+    return {
+      signatures,
+      blockData,
+    };
   }
 
   async validateShardBlock(id: number) {
     this.logger.validatorLog('start shard validating...');
-    await this.tonBlockService.updateTonBlockStatus({
-      blockId: id,
-      inprogress: true,
-    });
 
     const prismaShardBlock = await this.tonBlockService.tonBlock({
       id: id,
     });
 
     if (await this.syncVerifying(prismaShardBlock.rootHash, id)) {
-      await this.tonBlockService.updateTonBlockStatus({
-        blockId: id,
-        inprogress: false,
-      });
-
       this.logger.validatorLog('shard already verified.');
-      return;
+      return {};
     }
 
     const shardProofRes = await this.tonApi.getShardProof(prismaShardBlock);
@@ -357,28 +299,13 @@ export class ValidatorService {
     );
 
     if (!isVerified) {
-      await this.validateMcBlockByValidator(prismaShardBlock.mcParent.id);
+      throw Error('first check mc block');
+      // await this.validateMcBlockByValidator(prismaShardBlock.mcParent.id);
     }
 
-    try {
-      await this.validatorLock.acquire();
-      await this.contractService.validatorContract
-        .parseShardProofPath(Buffer.from(bocProof, 'base64'))
-        .then((tx) => (tx as any).wait());
-      await this.tonBlockService.updateTonBlockStatus({
-        blockId: id,
-        checked: true,
-      });
-    } catch (error) {
-      console.error(error.message);
-    } finally {
-      this.validatorLock.release();
-      await this.tonBlockService.updateTonBlockStatus({
-        blockId: id,
-        inprogress: false,
-      });
-      this.logger.validatorLog('shard is verified.');
-    }
+    return {
+      bocProof,
+    };
   }
 
   async validateMCBlockByState(id: number) {
@@ -404,7 +331,7 @@ export class ValidatorService {
       }
       await this.validatorLock.acquire();
       const mc_proof = await this.tonApi.getStateProof(prismaBlock, nextBlock);
-      // console.log(mc_proof);
+
       await this.contractService.validatorContract
         .readStateProof(
           Buffer.from(mc_proof.state_proof, 'base64'),

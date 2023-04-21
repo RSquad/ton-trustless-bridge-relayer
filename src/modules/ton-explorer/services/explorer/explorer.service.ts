@@ -125,4 +125,12 @@ export class ExplorerService {
       return res;
     }
   }
+
+  findBlockByHash(hash: string) {
+    return this.tonBlockService.tonBlocks({
+      where: {
+        rootHash: hash,
+      },
+    });
+  }
 }
