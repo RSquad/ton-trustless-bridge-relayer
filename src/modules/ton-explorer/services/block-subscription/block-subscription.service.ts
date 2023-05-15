@@ -48,12 +48,12 @@ export class BlockSubscriptionService implements OnModuleDestroy {
   }
 
   async tick(initialblock: BaseTonBlockInfo) {
-    this.logger.apiLog('[BlockSub] run tick...');
+    // this.logger.apiLog('[BlockSub] run tick...');
     let seqno = initialblock.seqno;
     const actualBlock = await this.tonApi.getLastBlock();
-    this.logger.apiLog(
-      `[BlockSub] checking mcblocks from ${seqno} to ${actualBlock.seqno} `,
-    );
+    // this.logger.apiLog(
+    //   `[BlockSub] checking mcblocks from ${seqno} to ${actualBlock.seqno} `,
+    // );
 
     while (seqno < actualBlock.seqno) {
       const shardsData = await this.tonApi.getMasterchainBlockWithShards(seqno);
@@ -93,7 +93,7 @@ export class BlockSubscriptionService implements OnModuleDestroy {
       seqno += 1;
     }
 
-    this.logger.apiLog('[BlockSub] end tick.');
+    // this.logger.apiLog('[BlockSub] end tick.');
     this.actualBlock$.next(actualBlock);
   }
 
