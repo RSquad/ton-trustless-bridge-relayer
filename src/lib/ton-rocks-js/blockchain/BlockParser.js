@@ -2866,8 +2866,9 @@ function loadBlockExtra(cell, t) {
  * @returns {Object}
  */
 function loadValueFlow(cell, t) {
-  if (loadUint32(cell, t) !== 0xb8e48dfb)
-    throw Error("not a ValueFlow");
+  if (loadUint32(cell, t) !== 0xb8e48dfb) {}
+    // throw Error("not a ValueFlow");
+    // console.warn("not a ValueFlow");
   let data = {_:"ValueFlow"}; // TODO
   return data;
 }
