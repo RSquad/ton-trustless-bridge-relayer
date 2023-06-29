@@ -23,6 +23,7 @@ import { TonApiService } from 'src/modules/ton-reader/services/ton-api/ton-api.s
 import createLock from '../../utils/SimpleLock';
 import _ from 'lodash';
 import { TonTransaction } from '@prisma/client';
+import { ethers } from 'ethers';
 
 @Injectable()
 export class ValidatorService {
@@ -149,18 +150,24 @@ export class ValidatorService {
       await this.validatorLock.acquire();
 
       await this.contractService.validatorContract
-        .parseCandidatesRootBlock(boc)
+        .parseCandidatesRootBlock(boc, {
+          gasPrice: ethers.parseUnits('0.002', 'gwei'),
+        })
         .then((tx) => (tx as any).wait());
 
       if (bocs.length > 1) {
         for (let i = 1; i < bocs.length; i++) {
           await this.contractService.validatorContract
-            .parsePartValidators(bocs[i])
+            .parsePartValidators(bocs[i], {
+              gasPrice: ethers.parseUnits('0.002', 'gwei'),
+            })
             .then((tx) => (tx as any).wait());
         }
       }
       await this.contractService.validatorContract
-        .initValidators()
+        .initValidators({
+          gasPrice: ethers.parseUnits('0.002', 'gwei'),
+        })
         .then((tx) => (tx as any).wait());
     } catch (error) {
       console.error(error.message);
@@ -202,12 +209,16 @@ export class ValidatorService {
       await this.validatorLock.acquire();
 
       await this.contractService.validatorContract
-        .parseCandidatesRootBlock(boc)
+        .parseCandidatesRootBlock(boc, {
+          gasPrice: ethers.parseUnits('0.002', 'gwei'),
+        })
         .then((tx) => (tx as any).wait());
       if (bocs.length > 1) {
         for (let i = 1; i < bocs.length; i++) {
           await this.contractService.validatorContract
-            .parsePartValidators(bocs[i])
+            .parsePartValidators(bocs[i], {
+              gasPrice: ethers.parseUnits('0.002', 'gwei'),
+            })
             .then((tx) => (tx as any).wait());
         }
       }
@@ -231,11 +242,16 @@ export class ValidatorService {
               r: `0x${c.r}`,
               s: `0x${c.s}`,
             })) as any[5],
+            {
+              gasPrice: ethers.parseUnits('0.002', 'gwei'),
+            },
           )
           .then((tx) => (tx as any).wait());
       }
       await this.contractService.validatorContract
-        .setValidatorSet()
+        .setValidatorSet({
+          gasPrice: ethers.parseUnits('0.002', 'gwei'),
+        })
         .then((tx) => (tx as any).wait());
     } catch (error) {
       console.error(error.message);
@@ -336,6 +352,9 @@ export class ValidatorService {
         .readStateProof(
           Buffer.from(mc_proof.state_proof, 'base64'),
           Buffer.from(nextBlock.rootHash, 'hex'),
+          {
+            gasPrice: ethers.parseUnits('0.002', 'gwei'),
+          },
         )
         .then((tx) => (tx as any).wait());
       await this.tonBlockService.updateTonBlockStatus({
