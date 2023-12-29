@@ -1,4 +1,5 @@
-const {Cell} = require("../types/Cell");
+// const {Cell} = require("../types/Cell");
+import { Cell } from "../types/Cell.js";
 
 
 /**
@@ -9,7 +10,7 @@ const {Cell} = require("../types/Cell");
  * @param {Object} t Current position
  * @returns {BN}
  */
-function loadUint(cell, t, n) {
+export function loadUint(cell, t, n) {
     if (t.cs + n > cell.bits.cursor)
         throw Error("cannot load uint");
     const i = cell.bits.readUint(t.cs, n); t.cs += n;
@@ -24,7 +25,7 @@ function loadUint(cell, t, n) {
  * @param {Object} t Current position
  * @returns {number}
  */
-function loadUint8(cell, t) {
+export function loadUint8(cell, t) {
     return loadUint(cell, t, 8).toNumber();
 }
 
@@ -36,7 +37,7 @@ function loadUint8(cell, t) {
  * @param {Object} t Current position
  * @returns {number}
  */
-function loadUint16(cell, t) {
+export function loadUint16(cell, t) {
     return loadUint(cell, t, 16).toNumber();
 }
 
@@ -48,7 +49,7 @@ function loadUint16(cell, t) {
  * @param {Object} t Current position
  * @returns {number}
  */
-function loadUint32(cell, t) {
+export function loadUint32(cell, t) {
     return loadUint(cell, t, 32).toNumber();
 }
 
@@ -60,7 +61,7 @@ function loadUint32(cell, t) {
  * @param {Object} t Current position
  * @returns {BN}
  */
-function loadUint64(cell, t) {
+export function loadUint64(cell, t) {
     return loadUint(cell, t, 64);
 }
 
@@ -72,7 +73,7 @@ function loadUint64(cell, t) {
  * @param {Object} t Current position
  * @returns {number}
  */
-function loadInt8(cell, t) {
+export function loadInt8(cell, t) {
     if (t.cs + 8 > cell.bits.cursor)
         throw Error("cannot load int8");
     const i = cell.bits.readInt8(t.cs); t.cs += 8;
@@ -87,7 +88,7 @@ function loadInt8(cell, t) {
  * @param {Object} t Current position
  * @returns {number}
  */
-function loadInt16(cell, t) {
+export function loadInt16(cell, t) {
     if (t.cs + 16 > cell.bits.cursor)
         throw Error("cannot load int16");
     const i = cell.bits.readInt16(t.cs); t.cs += 16;
@@ -102,7 +103,7 @@ function loadInt16(cell, t) {
  * @param {Object} t Current position
  * @returns {number}
  */
-function loadInt32(cell, t) {
+export function loadInt32(cell, t) {
     if (t.cs + 32 > cell.bits.cursor)
         throw Error("cannot load int32");
     const i = cell.bits.readInt32(t.cs); t.cs += 32;
@@ -117,7 +118,7 @@ function loadInt32(cell, t) {
  * @param {Object} t Current position
  * @returns {number}
  */
-function loadBit(cell, t) {
+export function loadBit(cell, t) {
     if (t.cs + 1 > cell.bits.cursor)
         throw Error("cannot load bit");
     return cell.bits.get(t.cs++) ? 1 : 0;
@@ -131,14 +132,14 @@ function loadBit(cell, t) {
  * @param {Object} t Current position
  * @returns {Uint8Array}
  */
-function loadBits(cell, t, n) {
+export function loadBits(cell, t, n) {
     if (t.cs + n > cell.bits.cursor) {
 
         // throw Error("cannot load bits");
         console.log("cannot load bits");
         return 0;
     }
-        
+
     const bits = cell.bits.getRange(t.cs, n);
     t.cs += n;
     return bits;
@@ -152,7 +153,7 @@ function loadBits(cell, t, n) {
  * @param {Object} t Current position
  * @returns {boolean}
  */
-function loadBool(cell, t) {
+export function loadBool(cell, t) {
     if (t.cs + 1 > cell.bits.cursor)
         throw Error("cannot load Bool");
     return cell.bits.get(t.cs++) ? true : false;
@@ -166,7 +167,7 @@ function loadBool(cell, t) {
  * @param {Object} t Current position
  * @returns {number}
  */
-function loadUintLeq(cell, t, n) {
+export function loadUintLeq(cell, t, n) {
     let last_one = -1;
     let l = 1;
     for (let i = 0; i < 32; i++) {
@@ -190,7 +191,7 @@ function loadUintLeq(cell, t, n) {
  * @param {Object} t Current position
  * @returns {number}
  */
-function loadUintLess(cell, t, n) {
+export function loadUintLess(cell, t, n) {
     return loadUintLeq(cell, t, n-1);
 }
 
@@ -205,7 +206,7 @@ function loadUintLess(cell, t, n) {
  * @param {Object} t Current position
  * @returns {Object}
  */
-function loadVarUInteger(cell, t, n) {
+export function loadVarUInteger(cell, t, n) {
     let data = {_:"VarUInteger"};
     data.len = loadUintLess(cell, t, n);
     if (data.len === 0)
@@ -225,7 +226,7 @@ function loadVarUInteger(cell, t, n) {
  * @param {Object} t Current position
  * @returns {Object}
  */
-function loadGrams(cell, t) {
+export function loadGrams(cell, t) {
     let data = {_:"Grams"};
     data.amount = loadVarUInteger(cell, t, 16);
     return data;
@@ -243,7 +244,7 @@ function loadGrams(cell, t) {
  * @param {Function} f Function to parse ref
  * @returns {Object}
  */
-function loadRefIfExist(cell, t, f) {
+export function loadRefIfExist(cell, t, f) {
     const r = cell.refs[t.ref++];
     // do not load prunned cell
     if (r.type !== Cell.PrunnedBranchCell && f) {
@@ -267,7 +268,7 @@ function loadRefIfExist(cell, t, f) {
  * @param {Object} extra Extra parameters to function
  * @returns {Object}
  */
-function loadMaybe(cell, t, f, extra) {
+export function loadMaybe(cell, t, f, extra) {
     const exist = loadBit(cell, t);
     if (!exist || !f) {
         return;
@@ -290,7 +291,7 @@ function loadMaybe(cell, t, f, extra) {
  * @param {Function} f2 Function to parse PrunnedBranchCell
  * @returns {Object}
  */
-function loadMaybeRef(cell, t, f, f2) {
+export function loadMaybeRef(cell, t, f, f2) {
     const exist = loadBit(cell, t);
     if (!exist || !f) {
         return;
@@ -320,7 +321,7 @@ function loadMaybeRef(cell, t, f, f2) {
  * @param {Function} fy Function to parse Y
  * @returns {Object}
  */
-function loadEither(cell, t, fx, fy) {
+export function loadEither(cell, t, fx, fy) {
     const b = loadBit(cell, t);
     if (b === 0) {
         return fx(cell, t);
@@ -330,24 +331,24 @@ function loadEither(cell, t, fx, fy) {
     }
 }
 
-module.exports = {
-    loadUint,
-    loadUint8,
-    loadUint16,
-    loadUint32,
-    loadUint64,
-    loadInt8,
-    loadInt16,
-    loadInt32,
-    loadBit,
-    loadBits,
-    loadBool,
-    loadUintLeq,
-    loadUintLess,
-    loadVarUInteger,
-    loadGrams,
-    loadRefIfExist,
-    loadMaybe,
-    loadMaybeRef,
-    loadEither
-}
+// module.exports = {
+//     loadUint,
+//     loadUint8,
+//     loadUint16,
+//     loadUint32,
+//     loadUint64,
+//     loadInt8,
+//     loadInt16,
+//     loadInt32,
+//     loadBit,
+//     loadBits,
+//     loadBool,
+//     loadUintLeq,
+//     loadUintLess,
+//     loadVarUInteger,
+//     loadGrams,
+//     loadRefIfExist,
+//     loadMaybe,
+//     loadMaybeRef,
+//     loadEither
+// }

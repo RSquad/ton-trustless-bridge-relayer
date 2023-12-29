@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import _ from 'lodash';
 
-// @ts-ignore
-import TonRocks from '../ton-rocks-js';
+import TonRocks from '../ton-rocks-js/index.js';
 
-import { buildProof } from '../block-utils';
+import { buildProof } from '../block-utils.js';
 
-import { AProofStep } from './a-proof-step';
+import { AProofStep } from './a-proof-step.js';
 
-import type { IStateUpdate, TProofState, TProofStateType } from './base-types';
-import { BlockIdExt } from '../ton-types';
+import type { IStateUpdate, TProofState, TProofStateType } from './base-types.js';
+import { BlockIdExt } from '../ton-types/index.js';
 
 const collectLeafs = (
   root: TonRocks.types.Cell,

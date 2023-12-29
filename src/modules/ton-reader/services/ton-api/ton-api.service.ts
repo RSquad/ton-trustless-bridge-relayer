@@ -4,17 +4,19 @@ import {
   BaseTonBlockInfo,
   LiteApiBlockResponse,
   Signature,
-} from 'src/lib/types';
+} from '../../../../lib/types/index.js';
 import {
   formatTonBlock,
   tonClientBlockRequestToLiteApiBlockRequest,
-} from 'src/lib/utils';
+} from '../../../../lib/utils/index.js';
 import { TonClient4 } from 'ton';
 import axios from 'axios';
-import { parseBlock } from 'src/lib/utils/blockReader';
+import { parseBlock } from '../../../../lib/utils/blockReader.js';
 import { TonBlock } from '@prisma/client';
 import axiosRetry from 'axios-retry';
 
+console.log(axiosRetry);
+// @ts-ignore
 axiosRetry(axios, {
   retries: 100, // number of retries
   retryDelay: (retryCount) => {

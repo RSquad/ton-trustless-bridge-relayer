@@ -3,15 +3,16 @@ import { INestApplication, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TonBlock } from '@prisma/client';
 import { concatMap, delay, exhaustMap, of, Subject, Subscription } from 'rxjs';
-import { GotKeyblock } from 'src/events/got-keyblock.event';
-import { BaseTonBlockInfo, BaseTonTransactionInfo } from 'src/lib/types';
-import { hexToBase64 } from 'src/lib/utils';
-import { parseBlock } from 'src/lib/utils/blockReader';
-import { ContractService } from 'src/modules/eth-provider/services/contract/contract.service';
-import { LoggerService } from 'src/modules/logger/services/logger/logger.service';
-import { TonBlockService } from 'src/modules/prisma/services/ton-block/ton-block.service';
-import { TonTransactionService } from 'src/modules/prisma/services/ton-transaction/ton-transaction.service';
-import { TonApiService } from '../../../ton-reader/services/ton-api/ton-api.service';
+
+import { GotKeyblock } from '../../../../events/got-keyblock.event.js';
+import { BaseTonBlockInfo, BaseTonTransactionInfo } from '../../../../lib/types/index.js';
+// import { hexToBase64 } from 'src/lib/utils.js';
+import { parseBlock } from '../../../../lib/utils/blockReader.js';
+import { ContractService } from '../../../../modules/eth-provider/services/contract/contract.service.js';
+import { LoggerService } from '../../../../modules/logger/services/logger/logger.service.js';
+import { TonBlockService } from '../../../../modules/prisma/services/ton-block/ton-block.service.js';
+import { TonTransactionService } from '../../../../modules/prisma/services/ton-transaction/ton-transaction.service.js';
+import { TonApiService } from '../../../ton-reader/services/ton-api/ton-api.service.js';
 
 const MC_INTERVAL = 10 * 1000;
 
@@ -36,9 +37,9 @@ export class BlockSubscriptionService implements OnModuleDestroy {
     private eventEmitter: EventEmitter2,
   ) {
     this.sub = this.loop$.subscribe();
-    this.getInitialKeyblock().then((block) => {
-      this.actualBlock$.next(block);
-    });
+    // this.getInitialKeyblock().then((block) => {
+    //   this.actualBlock$.next(block);
+    // });
   }
 
   onModuleDestroy() {

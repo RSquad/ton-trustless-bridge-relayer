@@ -2,25 +2,25 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OnEvent } from '@nestjs/event-emitter';
 import { concatMap, of, Subject } from 'rxjs';
-import { GotKeyblock } from 'src/events/got-keyblock.event';
+import { GotKeyblock } from '../../../../events/got-keyblock.event.js';
 import {
   ProvenState,
   PSProofValidators,
   PSSetValidators,
   PSTransaction,
-} from 'src/lib/steps';
+} from '../../../../lib/steps/index.js';
 import {
   BlockIdExt,
   CFriendlyAddressString,
   InternalTransactionId,
-} from 'src/lib/ton-types';
-import { ContractService } from 'src/modules/eth-provider/services/contract/contract.service';
-import { ProviderService } from 'src/modules/eth-provider/services/provider/provider.service';
-import { LoggerService } from 'src/modules/logger/services/logger/logger.service';
-import { TonBlockService } from 'src/modules/prisma/services/ton-block/ton-block.service';
-import { TonTransactionService } from 'src/modules/prisma/services/ton-transaction/ton-transaction.service';
-import { TonApiService } from 'src/modules/ton-reader/services/ton-api/ton-api.service';
-import createLock from '../../utils/SimpleLock';
+} from '../../../../lib/ton-types/index.js';
+import { ContractService } from '../../../../modules/eth-provider/services/contract/contract.service.js';
+import { ProviderService } from '../../../../modules/eth-provider/services/provider/provider.service.js';
+import { LoggerService } from '../../../../modules/logger/services/logger/logger.service.js';
+import { TonBlockService } from '../../../../modules/prisma/services/ton-block/ton-block.service.js';
+import { TonTransactionService } from '../../../../modules/prisma/services/ton-transaction/ton-transaction.service.js';
+import { TonApiService } from '../../../../modules/ton-reader/services/ton-api/ton-api.service.js';
+import createLock from '../../utils/SimpleLock.js';
 import _ from 'lodash';
 import { TonTransaction } from '@prisma/client';
 import { ethers } from 'ethers';

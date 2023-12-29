@@ -1,12 +1,20 @@
-const {BN, compareBytes, bytesToBase64, base64ToBytes, concatBytes} = require("../utils");
+import utils from '../utils/index.js';
+const {
+  BN,
+  compareBytes,
+  bytesToBase64,
+  base64ToBytes,
+  concatBytes,
+} = utils;
+// } = require("../utils");
 
 /**
  * Block id class
  */
-class BlockId {
+export class BlockId {
     /**
      * Creates new BlockId object
-     * 
+     *
      * @param {BlockId} o? Block id to copy from
      */
     constructor(o) {
@@ -40,8 +48,8 @@ class BlockId {
 
     /**
      * Clones BlockId object
-     * 
-     * @param {BlockId} b 
+     *
+     * @param {BlockId} b
      * @returns {BlockId}
      */
     clone(b) {
@@ -50,7 +58,7 @@ class BlockId {
 
     /**
      * Gets JSON string representation of BlockId
-     * 
+     *
      * @returns {string}
      */
     toString() {
@@ -66,8 +74,8 @@ class BlockId {
 
     /**
      * Loads block id from JSON string
-     * 
-     * @param {string} s JSON representarion of BlockId 
+     *
+     * @param {string} s JSON representarion of BlockId
      */
     fromString(s) {
         const o = JSON.parse(s);
@@ -81,7 +89,7 @@ class BlockId {
 
     /**
      * Returns file hash in base64 format
-     * 
+     *
      * @returns {string}
      */
     filehashBase64() {
@@ -90,7 +98,7 @@ class BlockId {
 
     /**
      * Returns root hash in base64 format
-     * 
+     *
      * @returns {string}
      */
     roothashBase64() {
@@ -135,7 +143,7 @@ class BlockId {
 
     /**
      * Compares two blockIds
-     * 
+     *
      * @param {BlockId} a BlockId to compare with
      * @returns {boolean} True if same
      */
@@ -143,7 +151,7 @@ class BlockId {
         if (!a) return false;
         if (a.seqno !== this.seqno ||
             a.workchain !== this.workchain ||
-            !this.compareShard(a.shard) || 
+            !this.compareShard(a.shard) ||
             !compareBytes(new Uint8Array(a.file_hash.buffer), new Uint8Array(this.file_hash.buffer)) ||
             !compareBytes(new Uint8Array(a.root_hash.buffer), new Uint8Array(this.root_hash.buffer)))
             return false;
@@ -152,7 +160,7 @@ class BlockId {
 
     /**
      * Compares two shards
-     * 
+     *
      * @param {BN} a BlockId to compare with
      * @returns {boolean} True if same
      */
@@ -163,7 +171,7 @@ class BlockId {
 
     /**
      * Returns masterchain shard
-     * 
+     *
      * @returns {BN}
      */
     static shardMasterchain()  {
@@ -171,4 +179,4 @@ class BlockId {
     }
 }
 
-module.exports = {BlockId};
+// module.exports = {BlockId};

@@ -8,13 +8,13 @@ export class ProviderService {
   signer: ethers.Wallet;
 
   constructor(private configService: ConfigService) {
-    this.provider = new ethers.JsonRpcProvider(
-      this.configService.get<string>('NETWORK'),
-    );
+    // this.provider = new ethers.JsonRpcProvider(
+    //   this.configService.get<string>('NETWORK'),
+    // );
 
-    this.signer = new ethers.Wallet(
-      this.configService.get<string>('PRIVATE_KEY'),
-      this.provider,
-    );
+    // this.signer = new ethers.Wallet(
+    //   this.configService.get<string>('PRIVATE_KEY'),
+    //   this.provider,
+    // );
   }
 }

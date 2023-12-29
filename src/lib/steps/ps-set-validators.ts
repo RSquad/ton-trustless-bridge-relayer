@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import _ from 'lodash';
 
-// @ts-ignore
-import TonRocks from '../ton-rocks-js';
+import TonRocks from '../ton-rocks-js/index.js';
 
-import { BocProvider } from '../boc-provider';
-import { ByteArray32 } from '../ton-types';
+import { BocProvider } from '../boc-provider.js';
+// import { ByteArray32 } from '../ton-types/index.js';
 import {
   buildPathToConfig,
   buildProof,
@@ -13,12 +12,12 @@ import {
   makeBocLeaf,
   printPath,
   printTreeVolume,
-} from '../block-utils';
+} from '../block-utils.js';
 
-import { AValidatorsProofStep } from './a-validators-proof-step';
+import { AValidatorsProofStep } from './a-validators-proof-step.js';
 
-import type { ISubTree } from '../block-utils';
-import type { TProofState, TProofStateType } from './base-types';
+import type { ISubTree } from '../block-utils.js';
+import type { TProofState, TProofStateType } from './base-types.js';
 
 export class PSSetValidators extends AValidatorsProofStep {
   public static TypeName: TProofStateType = 'set-validators' as const;

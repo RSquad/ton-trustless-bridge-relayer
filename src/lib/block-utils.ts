@@ -2,8 +2,9 @@
 
 import _ from 'lodash';
 
-// @ts-ignore
-import TonRocks from './ton-rocks-js';
+import TonRocks from './ton-rocks-js/index.js';
+import { loadHashmap, loadValidatorDescr } from './ton-rocks-js/blockchain/BlockParser.js';
+
 
 type TBN = typeof TonRocks.utils.BN;
 
@@ -86,7 +87,7 @@ export const makeBocLeaf = async (
   return bufLeaf;
 };
 
-export const checkBoc = async (boc: string): Promise<Buffer> => {
+export const checkBoc = async (boc: string): Promise<TonRocks.types.Cell> => {
   const cells = await TonRocks.types.Cell.fromBoc(boc);
   const cellsRoot = cells[0];
   // console.log(
@@ -169,7 +170,7 @@ export const buildProofExcept = async (
 
 export const cloneTree = async (
   c: TonRocks.types.Cell,
-): TonRocks.types.Cell => {
+): Promise<TonRocks.types.Cell> => {
   const r = cloneCell(c);
   // console.log('clone:', Buffer.from(c.getHash()).toString('hex'));
 
@@ -203,7 +204,7 @@ export const buildProof = async (
   path: TonRocks.types.Cell[] = [],
   cloneTail: boolean = false,
   markCellsAsProof: boolean = true,
-): TonRocks.types.Cell => {
+): Promise<TonRocks.types.Cell> => {
   const rootCell = path[0];
 
   // if( cloneTail && path.length == 1 ) {
@@ -283,8 +284,8 @@ export const printTreeList = (
   // }
 };
 
-const loadHashmap = TonRocks.bc.BlockParser.loadHashmap;
-const loadValidatorDescr = TonRocks.bc.BlockParser.loadValidatorDescr;
+// const loadHashmap = TonRocks.bc.BlockParser.loadHashmap;
+// const loadValidatorDescr = TonRocks.bc.BlockParser.loadValidatorDescr;
 
 /*
   block_extra in_msg_descr:^InMsgDescr

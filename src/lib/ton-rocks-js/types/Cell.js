@@ -1,5 +1,17 @@
-const {BitString} = require("./BitString");
-const {bytesToBase64, compareBytes, concatBytes, crc32c, hexToBytes, bytesToHex, readNBytesUIntFromArray, sha256} = require("../utils");
+// const {BitString} = require("./BitString");
+import { BitString } from "./BitString.js";
+// const {
+import {
+  bytesToBase64,
+  compareBytes,
+  concatBytes,
+  crc32c,
+  hexToBytes,
+  bytesToHex,
+  readNBytesUIntFromArray,
+  sha256,
+} from "../utils/index.js";
+// } = require("../utils");
 
 const reachBocMagicPrefix = hexToBytes('B5EE9C72');
 const leanBocMagicPrefix = hexToBytes('68ff65f3');
@@ -19,7 +31,7 @@ function debug_log() {
 /**
  * TON Cell class
  */
-class Cell {
+export class Cell {
 
     /**
      * Creates empty Cell
@@ -101,7 +113,7 @@ class Cell {
      * Gets Cell tree from BOC
      *
      * @param {string | UInt8Array} serializedBOC
-     * @returns {Cell}
+     * @returns {Promise<Cell[]>}
      */
     static async fromBoc(serializedBoc) {
         return await deserializeBoc(serializedBoc);
@@ -1006,7 +1018,7 @@ function deserializeCellData(cellData, referenceIndexSize) {
 /**
  * @private
  * @param {string | UInt8Array} serializedBOC
- * @returns {Cell}
+ * @returns {Promise<Cell[]>}
  */
 async function deserializeBoc(serializedBoc) {
     if (typeof (serializedBoc) == 'string') {
@@ -1039,4 +1051,4 @@ async function deserializeBoc(serializedBoc) {
     return root_cells;
 }
 
-module.exports = {Cell};
+// module.exports = {Cell};
