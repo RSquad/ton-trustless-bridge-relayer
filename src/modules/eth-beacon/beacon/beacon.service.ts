@@ -61,6 +61,9 @@ export class BeaconService {
 
   private _currentSlot = 0;
   private async run() {
+    // scan finality updates and uptimistic updates;
+    // console log finality updates with committee;
+    // optional: store optimistics with special receipts and their proof paths to nearest finality update
     while ( true ) {
       const update = await this.transport.getOptimisticUpdate();
       const { slot } = update.data.attestedHeader.beacon;
@@ -68,10 +71,17 @@ export class BeaconService {
       if ( this._currentSlot !== slot ) {
         this._currentSlot = slot;
         // this.emit('optimistic', update);
-        console.log('OptimisticUpdate on slot', slot);
+        // console.log('OptimisticUpdate on slot', slot, update.data);
       }
 
       await new Promise((r) => setTimeout(r, 1000));
     }
+  }
+
+  async getUpdateByReceipt(receipt: any) {}
+
+  async getProofUpdates(update: any) {
+    // returns array of updates for send them to the contract
+    const res = [];
   }
 }
