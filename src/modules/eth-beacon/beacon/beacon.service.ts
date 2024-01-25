@@ -31,6 +31,13 @@ import {
 
 import type { ChainConfig } from '@lodestar/config';
 import type { GenesisData } from '@lodestar/light-client';
+import type {
+  altair,
+  // bellatrix,
+  capella,
+  // deneb,
+  phase0,
+} from '@lodestar/types';
 
 
 type TFinalityUpdate = {
@@ -46,6 +53,11 @@ type TOptimisticUpdate = {
 type TLightClientUpdate = {
   version: ForkName;
   data: allForks.LightClientUpdate;
+};
+
+type TCapellaBlock = {
+  version: ForkName;
+  data: capella.SignedBeaconBlock;
 };
 
 type NetworkName = "mainnet" | "sepolia";
@@ -91,6 +103,19 @@ export function computeSyncPeriodAtEpoch(epoch: Epoch): SyncPeriod {
   return Math.floor(epoch / EPOCHS_PER_SYNC_COMMITTEE_PERIOD);
 }
 
+const DOMAIN_SYNC_COMMITTEE = Uint8Array.from([7, 0, 0, 0]);
+const CAPELLA_FORK_VERSION = fromHexString("0x90000072"); // sepolia
+// curl -X 'GET' 'http://${ hostWithPort }/eth/v1/beacon/genesis' \
+//   -H 'accept: application/json'
+const jsonGenesis = { data: {
+  genesis_time: 1655733600,
+  genesis_validators_root:
+    '0xd8ea171f3c94aea21ebc42a1ed61052acf3f9209c00e4efbaaddac09ed9b8078',
+  genesis_fork_version: '0x90000069',
+}};
+
+const genesis = ssz.phase0.Genesis.fromJson(jsonGenesis.data);
+
 const configs: Record<NetworkName, IConf> = {
   sepolia: {
     chainConfig: networksChainConfig.sepolia,
@@ -116,6 +141,83 @@ const conf = configs[confName];
 3. уметь идти от данного optimistic'а до finality (вперед),
    чтобы составить цепочку проверок
 */
+
+class ContractEmulator {
+  private committee: Committee | null = null;
+  private lastCommitteeHash: Buffer = Buffer.from(
+    'b3fb275622503695a503807ebdb4316b0e19221b28aea86ec25bf576e377b736',
+    // 'cf23a84972bfd0e350ef41e809069d5a1d581612a1341129c1ddad698d2180df',
+    // '5ab3e4abf047f4fdcfae44fbfccf8df74efe40e534f33249b51054ed81b7e6be',
+    'hex',
+  );
+
+  async getLastCommitteeHash() {
+    return this.lastCommitteeHash;
+  }
+
+  async getCommittee(): Promise<Committee> {
+    return this.committee;
+  }
+
+  async processCommitteeUpdate(update: TLightClientUpdate) {
+    if ( this.committee ) {
+      this.checkHederSign(
+        update.data.attestedHeader.beacon,
+        update.data.syncAggregate,
+      );
+    }
+
+    this.committee = new Committee(update.data.nextSyncCommittee);
+    this.lastCommitteeHash = Buffer.from(
+      ssz.phase0.BeaconBlockHeader.hashTreeRoot(
+        update.data.finalizedHeader.beacon,
+      ),
+    );
+    console.log('lastCommitteeHash:', this.lastCommitteeHash.toString('hex'));
+  }
+
+  async processFinalityUpdate(update: TFinalityUpdate) {
+    if ( !this.checkHederSign(
+      update.data.attestedHeader.beacon,
+      update.data.syncAggregate,
+    )) {
+      throw new Error(
+        'Invalid signature for finalized slot ' +
+        update.data.attestedHeader.beacon.slot,
+      );
+    }
+  }
+
+  checkHederSign(
+    header: phase0.BeaconBlockHeader,
+    syncAggregate: altair.SyncAggregate,
+  ) {
+    const forkDataRoot = ssz.phase0.ForkData.hashTreeRoot({
+      currentVersion: CAPELLA_FORK_VERSION,
+      genesisValidatorsRoot: genesis.genesisValidatorsRoot,
+    });
+    const domain = new Uint8Array(32);
+    domain.set(DOMAIN_SYNC_COMMITTEE, 0);
+    domain.set(forkDataRoot.slice(0, 28), 4);
+
+    const objectRoot = ssz.phase0.BeaconBlockHeader.hashTreeRoot(
+      header,
+    );
+    const signingRoot = ssz.phase0.SigningData.hashTreeRoot({
+      objectRoot,
+      domain,
+    });
+    const res = this.committee.verifySignature(
+      signingRoot,
+      syncAggregate,
+    );
+
+    return res;
+  }
+}
+
+
+const contract = new ContractEmulator();
 
 @Injectable()
 export class BeaconService {
@@ -143,94 +245,79 @@ export class BeaconService {
   protected onOptimisticUpdate (update: TOptimisticUpdate) {
     const { slot } = update.data.attestedHeader.beacon;
 
-    console.log('OPT', slot);
+    console.log('OPT', slot, computeEpochAtSlot(slot), computeSyncPeriodAtSlot(slot));
   };
 
   protected async onFinalityUpdate (update: TFinalityUpdate) {
-    // onOptimisticUpdate(extractOptimistic(update));
-    const { slot, parentRoot } = update.data.finalizedHeader.beacon;
-
-    const DOMAIN_SYNC_COMMITTEE = Uint8Array.from([7, 0, 0, 0]);
-    const CAPELLA_FORK_VERSION = fromHexString("0x90000072"); // sepolia
-    // curl -X 'GET' 'http://${ hostWithPort }/eth/v1/beacon/genesis' \
-    //   -H 'accept: application/json'
-    const jsonGenesis = { data: {
-      genesis_time: 1655733600,
-      genesis_validators_root:
-        '0xd8ea171f3c94aea21ebc42a1ed61052acf3f9209c00e4efbaaddac09ed9b8078',
-      genesis_fork_version: '0x90000069',
-    }};
-
-    const genesis = ssz.phase0.Genesis.fromJson(jsonGenesis.data);
-
-    // computeDomain
-    const forkDataRoot = ssz.phase0.ForkData.hashTreeRoot({
-      currentVersion: CAPELLA_FORK_VERSION,
-      genesisValidatorsRoot: genesis.genesisValidatorsRoot,
-    });
-    const domain = new Uint8Array(32);
-    domain.set(DOMAIN_SYNC_COMMITTEE, 0);
-    domain.set(forkDataRoot.slice(0, 28), 4);
-
-    const objectRoot = ssz.phase0.BeaconBlockHeader.hashTreeRoot(
-      update.data.attestedHeader.beacon,
-    );
-    const signingRoot = ssz.phase0.SigningData.hashTreeRoot({
-      objectRoot,
-      domain,
-    });
-
-    const syncAggregate = update.data.syncAggregate;
-
-    const comitee = await this.findSyncCommitteeFor(slot);
-    const resVerification = comitee.verifySignature(
-      signingRoot,
-      syncAggregate,
-    );
-
-    if ( resVerification ) {
-      console.log('FIN', slot);
-    } else {
-      console.log('ERR', slot);
+    const { slot } = update.data.finalizedHeader.beacon;
+    const targetPeriod = computeSyncPeriodAtSlot(slot);
+    if ( targetPeriod > this._currentPeriod ) {
+      await this.updateCommitteeFor(slot);
     }
 
+    await contract.processFinalityUpdate(update);
+    this._currentSlot = slot;
+    console.log(
+      'FIN',
+      slot,
+      computeEpochAtSlot(slot),
+      computeSyncPeriodAtSlot(slot),
+      update.data.attestedHeader.beacon.slot,
+    );
   };
-
-  public async findSyncCommitteeFor(slot: number): Promise<Committee> {
-    const epoch = computeEpochAtSlot(slot);
-    const period = computeSyncPeriodAtEpoch(epoch);
-    const updates: TLightClientUpdate[] = await this.transport.getUpdates(period - 1, 1);
-
-    return new Committee(updates[0].data.nextSyncCommittee);
-  }
 
   public get transport(): LightClientRestTransport {
     return this._transport;
   }
 
   public start() {
-    this.svcWatcher.start();
-    this.svcOptimisticWatcher.start();
-    // this.run().catch(ex => console.log(ex));
+    this.run().catch(ex => console.log(ex));
   }
 
   private _currentSlot = 0;
+  private _currentPeriod = 0;
+
+  private async updateCommittee(period: number) {
+    const updates
+      // : TLightClientUpdate[]
+      = await this.transport.getUpdates(period - 1, 1);
+    await contract.processCommitteeUpdate(updates[0]);
+
+    this._currentSlot = updates[0].data.finalizedHeader.beacon.slot;
+    this._currentPeriod = period;
+    console.log('updateCommittee', {
+      slot: this._currentSlot,
+      period: this._currentPeriod,
+    });
+  }
+
+  private async updateCommitteeFor(slot: number) {
+    const targetPeriod = computeSyncPeriodAtSlot(slot);
+
+    if ( !this._currentPeriod ) {
+      await this.updateCommittee(targetPeriod);
+      return;
+    }
+
+    for ( let i = this._currentPeriod; i < targetPeriod; i++ ) {
+      await this.updateCommittee(i + 1);
+      await new Promise((r) => setTimeout(r, 300));
+    }
+  }
+
   private async run() {
+    const blockHash = await contract.getLastCommitteeHash();
+    const block = await this.transport.fetchBlock(`0x${
+      blockHash.toString('hex')
+    }`) as TCapellaBlock;
+    await this.updateCommitteeFor(block.data.message.slot);
+
+    this.svcWatcher.start();
+    this.svcOptimisticWatcher.start();
+
     // scan finality updates and uptimistic updates;
     // console log finality updates with committee;
     // optional: store optimistics with special receipts and their proof paths to nearest finality update
-    while ( true ) {
-      const update = await this.transport.getOptimisticUpdate();
-      const { slot } = update.data.attestedHeader.beacon;
-
-      if ( this._currentSlot !== slot ) {
-        this._currentSlot = slot;
-        // this.emit('optimistic', update);
-        // console.log('OptimisticUpdate on slot', slot, update.data);
-      }
-
-      await new Promise((r) => setTimeout(r, 1000));
-    }
   }
 
   async getUpdateByReceipt(receipt: any) {}
