@@ -133,14 +133,6 @@ const configs: Record<NetworkName, IConf> = {
 const confName: NetworkName = 'sepolia';
 const conf = configs[confName];
 
-/*
-1. мониторить finality (с подписями) и кидать их в контракт
-2. уметь находить по receipt'у (или что вернет транзакция которую вызвал пользователь)
-   optimistic/finality с этим receipt'ом (по сути найти через js нужный блок
-   который содержит данные транзакции)
-3. уметь идти от данного optimistic'а до finality (вперед),
-   чтобы составить цепочку проверок
-*/
 
 class ContractEmulator {
   private committee: Committee | null = null;
@@ -320,10 +312,42 @@ export class BeaconService {
     // optional: store optimistics with special receipts and their proof paths to nearest finality update
   }
 
-  async getUpdateByReceipt(receipt: any) {}
+  /*
+    1. мониторить finality (с подписями) и кидать их в контракт
+    2. уметь находить по receipt'у (или что вернет транзакция которую вызвал пользователь)
+      optimistic/finality с этим receipt'ом (по сути найти через js нужный блок
+      который содержит данные транзакции)
+    3. уметь идти от данного optimistic'а до finality (вперед),
+      чтобы составить цепочку проверок
+  */
+
+  async getUpdateByReceipt(receipt: any) {
+    /*
+    const data = this.idxByReceipt[receipt.txId];
+    if ( !data ) {
+      throw new Error('Not in index');
+    }
+    return data;
+    */
+  }
 
   async getProofUpdates(update: any) {
     // returns array of updates for send them to the contract
     const res = [];
+
+    /*
+    let upd = update;
+    while ( !upd.data.finalizedHeader ) {
+
+      const objectRoot = ssz.phase0.BeaconBlockHeader.hashTreeRoot(
+        upd.data.attestedHeader.beacon,
+      );
+      const strRoot = Buffer.from(objectRoot).toString('hex');
+      upd = this.idxNextByPrev[strRoot];
+      res.push(upd);
+    }
+    */
+
+    return res;
   }
 }
