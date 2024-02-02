@@ -18,7 +18,7 @@ import axiosRetry from 'axios-retry';
 console.log(axiosRetry);
 // @ts-ignore
 axiosRetry(axios, {
-  retries: 100, // number of retries
+  retries: 1, // number of retries
   retryDelay: (retryCount) => {
     console.log(`retry attempt: ${retryCount}`);
     return 2000;
@@ -98,6 +98,7 @@ export class TonApiService {
 
   async getLastKeyBlock() {
     const lastBlock = await this.getLastBlock();
+    console.log('const lastBlock = await this.getLastBlock();');
     return this.getPreviousKeyBlock(lastBlock, true);
   }
 

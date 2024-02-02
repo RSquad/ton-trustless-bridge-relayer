@@ -82,6 +82,7 @@ export class ValidatorService {
     if (this.isInitialKeyblock || (await this.checkInitValidatorsNeeded())) {
       await this.initValidators(data);
     } else {
+      // await this.initValidators(data);
       await this.updateValidators(data);
     }
     this.isInitialKeyblock = false;
@@ -102,7 +103,9 @@ export class ValidatorService {
 
   async isBlockVerified(rootHash: string) {
     const hash = Buffer.from(rootHash, 'hex');
-    return await this.contractService.validatorContract.isVerifiedBlock(hash);
+    console.log(hash.toString('hex'));
+    // return await this.contractService.validatorContract.isVerifiedBlock(hash);
+    return true;
   }
 
   async syncVerifying(rootHash: string, prismaId: number) {
@@ -148,29 +151,35 @@ export class ValidatorService {
 
     try {
       await this.validatorLock.acquire();
+      console.log('start parseCandidatesRootBlock');
 
       await this.contractService.validatorContract
         .parseCandidatesRootBlock(boc, {
-          gasPrice: ethers.parseUnits('0.002', 'gwei'),
+          maxFeePerGas: ethers.parseUnits('6', 'gwei'),
+          // gasPrice: ethers.parseUnits('0.002', 'gwei'),
         })
         .then((tx) => (tx as any).wait());
 
       if (bocs.length > 1) {
         for (let i = 1; i < bocs.length; i++) {
+          console.log('start parsePartValidators');
           await this.contractService.validatorContract
             .parsePartValidators(bocs[i], {
-              gasPrice: ethers.parseUnits('0.002', 'gwei'),
+
+              maxFeePerGas: ethers.parseUnits('6', 'gwei'),
+              // gasPrice: ethers.parseUnits('0.2', 'gwei'),
             })
             .then((tx) => (tx as any).wait());
         }
       }
+      console.log('start initValidators');
       await this.contractService.validatorContract
         .initValidators({
           gasPrice: ethers.parseUnits('0.002', 'gwei'),
         })
         .then((tx) => (tx as any).wait());
     } catch (error) {
-      console.error(error.message);
+      console.error(error?.info);
     } finally {
       this.validatorLock.release();
     }

@@ -230,7 +230,7 @@ export class BeaconService {
     this.svcWatcher.on('finality', this.onFinalityUpdate.bind(this));
     this.svcOptimisticWatcher.on('optimistic', this.onOptimisticUpdate.bind(this));
 
-    setTimeout(() => this.start(), 1000);
+    // setTimeout(() => this.start(), 1000);
   }
 
 
