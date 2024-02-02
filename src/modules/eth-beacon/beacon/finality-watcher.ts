@@ -3,14 +3,9 @@ import {EventEmitter} from "events";
 import type { LightClientRestTransport } from '@lodestar/light-client/transport';
 
 
-export class FinalityWatcher
-  extends EventEmitter
-  // extends (EventEmitter as { new (): RestEvents })
-  // extends (EventEmitter as { new (): StrictEventEmitter<EventEmitter, LightClientRestEvents> })
-  // implements LightClientTranspor
-{
+export class FinalityWatcher extends EventEmitter {
   public constructor(
-    protected transport: LightClientRestTransport, // LightClientTransport,
+    protected transport: LightClientRestTransport,
   ) {
     super();
   }

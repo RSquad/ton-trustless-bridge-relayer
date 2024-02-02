@@ -742,37 +742,28 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@lodestar/api@^1.12.1":
-  version "1.13.0"
-  resolved "https://registry.npmjs.org/@lodestar/api/-/api-1.13.0.tgz"
-  integrity sha512-umtnbL2r74ib5FNZoYLf6z0p7RXYhN+Wv/WvXc6tSrjYn6RQJG8xlJo87sV+pjuU8hgPFimGfUp2vVQQHeemhw==
+"@lodestar/api@1.12.1", "@lodestar/api@^1.12.1", "@lodestar/api@~1.12":
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/@lodestar/api/-/api-1.12.1.tgz#4fb7f08ebeb58435d3e57e998916ff9eacf25ee9"
+  integrity sha512-pDpAv3enVvOglqQLEG9lM/QsBJyD16BmiU49lFAV5NcBDhPLYi2bpvqesRSE4ZgLA38gzk9syhmLV/CT7pWrFQ==
   dependencies:
     "@chainsafe/persistent-merkle-tree" "^0.6.1"
     "@chainsafe/ssz" "^0.14.0"
-    "@lodestar/config" "^1.13.0"
-    "@lodestar/params" "^1.13.0"
-    "@lodestar/types" "^1.13.0"
-    "@lodestar/utils" "^1.13.0"
+    "@lodestar/config" "^1.12.1"
+    "@lodestar/params" "^1.12.1"
+    "@lodestar/types" "^1.12.1"
+    "@lodestar/utils" "^1.12.1"
     eventsource "^2.0.2"
     qs "^6.11.1"
 
-"@lodestar/config@^1.12.1", "@lodestar/config@~1.12":
+"@lodestar/config@1.12.1", "@lodestar/config@^1.12.1", "@lodestar/config@~1.12":
   version "1.12.1"
-  resolved "https://registry.npmjs.org/@lodestar/config/-/config-1.12.1.tgz"
+  resolved "https://registry.yarnpkg.com/@lodestar/config/-/config-1.12.1.tgz#d5807516a3448d5c7b30e5f41fb0a57f8f66867b"
   integrity sha512-ng8n22yWBJLc/ihTQ384zxGdwPyTBI1KB+aHHAb188M0v41vPZVmvl5Rt2qUMwi1OU8WD/wuFehfcO0alFj04g==
   dependencies:
     "@chainsafe/ssz" "^0.14.0"
     "@lodestar/params" "^1.12.1"
     "@lodestar/types" "^1.12.1"
-
-"@lodestar/config@^1.13.0":
-  version "1.13.0"
-  resolved "https://registry.npmjs.org/@lodestar/config/-/config-1.13.0.tgz"
-  integrity sha512-CJEQieymRz0ko9D8SEEg/opX7QDoFhakzzN2aMPUYS7ydEstcDp3pBsfjMTT2WdILZ8i8XYPLmQuFd1brUOpJg==
-  dependencies:
-    "@chainsafe/ssz" "^0.14.0"
-    "@lodestar/params" "^1.13.0"
-    "@lodestar/types" "^1.13.0"
 
 "@lodestar/light-client@~1.12":
   version "1.12.1"
@@ -791,15 +782,15 @@
     mitt "^3.0.0"
     strict-event-emitter-types "^2.0.0"
 
-"@lodestar/params@^1.12.1", "@lodestar/params@^1.13.0":
-  version "1.13.0"
-  resolved "https://registry.npmjs.org/@lodestar/params/-/params-1.13.0.tgz"
-  integrity sha512-kmodePwQjjeMw94A0m5IKlox/QsHFyN6T9OoZLqu2zsUljSJY8i6ipZv315WTK4O0CljcDgpfNOaceQ7o6lPPA==
+"@lodestar/params@1.12.1", "@lodestar/params@^1.12.1", "@lodestar/params@~1.12":
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/@lodestar/params/-/params-1.12.1.tgz#776fe11f593a217bea8d8c7f1760aae78bd57d5c"
+  integrity sha512-wqr2Fjf1WJEzaesgj/JUuMt5znAdpdu06zOj9i6dwWnmGlswEAzRHLd0l/OMyC6Rivk16RKKBPmJvvEzuWlGxQ==
 
-"@lodestar/state-transition@^1.12.1":
-  version "1.13.0"
-  resolved "https://registry.npmjs.org/@lodestar/state-transition/-/state-transition-1.13.0.tgz"
-  integrity sha512-pW0wqR3yPIyXRdEh/pRe2DeW/6BImgv/uPRqtRiwuWlA6IpEkkYoLNTGSeTnL5ZerdFX65YMfLr1Aw3ojxDHLw==
+"@lodestar/state-transition@1.12.1", "@lodestar/state-transition@^1.12.1", "@lodestar/state-transition@~1.12":
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/@lodestar/state-transition/-/state-transition-1.12.1.tgz#3fd3136c999a306f0034f832d8daee97b32f2468"
+  integrity sha512-MORjbLZNiK6RAvTW0LkN/3pfUEfmOsjf8SBVCJcHC04yxQ+Zdt/yxsGnFEfOa6kb9zBT6WtDlIsZgj8gJZDT3Q==
   dependencies:
     "@chainsafe/as-sha256" "^0.3.1"
     "@chainsafe/bls" "7.1.1"
@@ -807,25 +798,25 @@
     "@chainsafe/persistent-merkle-tree" "^0.6.1"
     "@chainsafe/persistent-ts" "^0.19.1"
     "@chainsafe/ssz" "^0.14.0"
-    "@lodestar/config" "^1.13.0"
-    "@lodestar/params" "^1.13.0"
-    "@lodestar/types" "^1.13.0"
-    "@lodestar/utils" "^1.13.0"
+    "@lodestar/config" "^1.12.1"
+    "@lodestar/params" "^1.12.1"
+    "@lodestar/types" "^1.12.1"
+    "@lodestar/utils" "^1.12.1"
     bigint-buffer "^1.1.5"
     buffer-xor "^2.0.2"
 
-"@lodestar/types@^1.12.1", "@lodestar/types@^1.13.0":
-  version "1.13.0"
-  resolved "https://registry.npmjs.org/@lodestar/types/-/types-1.13.0.tgz"
-  integrity sha512-14CmuF+oUAS1SgkBzeFlR7WOxOipC/yCR168eCqUJObHpJQXoTj6x6Mml2db3Hcv7Uf37dOdsrNOgaGtLeHpUg==
+"@lodestar/types@1.12.1", "@lodestar/types@^1.12.1", "@lodestar/types@~1.12":
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/@lodestar/types/-/types-1.12.1.tgz#b403a39d536225f09946a7661487b29ebd8c783f"
+  integrity sha512-ekWI/jVXzeZKxdyMmx8a09zzSMvc6weAL0OyI0PlLYow24y0g646ObfLwLH4PhZL52yapN1d54cSCJLei3xKig==
   dependencies:
     "@chainsafe/ssz" "^0.14.0"
-    "@lodestar/params" "^1.13.0"
+    "@lodestar/params" "^1.12.1"
 
-"@lodestar/utils@^1.12.1", "@lodestar/utils@^1.13.0":
-  version "1.13.0"
-  resolved "https://registry.npmjs.org/@lodestar/utils/-/utils-1.13.0.tgz"
-  integrity sha512-pUy4QoIWL7evgb8qnUv9QSVvvHyppiRO52pPK1xYBPOBxl3fR3tFeKfTlqe7eYcwQhnxPEgs8L5KlFGCAlX94Q==
+"@lodestar/utils@1.12.1", "@lodestar/utils@^1.12.1", "@lodestar/utils@~1.12":
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/@lodestar/utils/-/utils-1.12.1.tgz#f0e9942b5536f3c8d5a08b3ea77e597501b1c909"
+  integrity sha512-YfHzzM1d5GajtRziO4VJVvxg+5zZE+JunSCahwLRJBONWxGynY0PwQA/Qqe+N5EbHWytjT4tgZ4tMgqx3B5WrA==
   dependencies:
     "@chainsafe/as-sha256" "^0.3.1"
     any-signal "3.0.1"

@@ -1,11 +1,5 @@
 import blst from "@chainsafe/blst";
-import type {
-  altair,
-  // bellatrix,
-  // capella,
-  // deneb,
-  // phase0,
-} from '@lodestar/types';
+import type { altair } from '@lodestar/types';
 
 
 function getBit(
@@ -18,7 +12,6 @@ function getBit(
 }
 
 const verifySignature = (
-  // update: allForks.LightClientFinalityUpdate,
   message: Uint8Array,
   syncAggregate: altair.SyncAggregate,
   syncCommittee: altair.SyncCommittee,
@@ -27,9 +20,8 @@ const verifySignature = (
   const {
     bitLen,
     uint8Array,
-  // } = update.syncAggregate.syncCommitteeBits;
   } = syncAggregate.syncCommitteeBits;
-  // console.log(syncCommittee);
+
   for(let i = 0; i < bitLen; i++) {
     if ( getBit(i, uint8Array) ) {
       participantPubkeys.push(
@@ -45,9 +37,7 @@ const verifySignature = (
     syncAggregate.syncCommitteeSignature,
   );
 
-  const res = blst.verify(message, aggPubkey, sig);
-  // console.log(res);
-  return res;
+  return blst.verify(message, aggPubkey, sig);
 };
 
 export class Committee {
@@ -61,7 +51,6 @@ export class Committee {
     message: Uint8Array,
     syncAggregate: altair.SyncAggregate,
   ) {
-    // console.log(syncAggregate);
     return verifySignature(message, syncAggregate, this.syncCommittee);
   }
 }

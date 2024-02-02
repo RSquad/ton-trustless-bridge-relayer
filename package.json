@@ -22,8 +22,13 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@lodestar/api": "~1.12",
     "@lodestar/config": "~1.12",
     "@lodestar/light-client": "~1.12",
+    "@lodestar/params": "~1.12",
+    "@lodestar/state-transition": "~1.12",
+    "@lodestar/types": "~1.12",
+    "@lodestar/utils": "~1.12",
     "@nestjs/axios": "^2.0.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
@@ -86,5 +91,13 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "resolutions": {
+    "@lodestar/api": "1.12.1",
+    "@lodestar/config": "1.12.1",
+    "@lodestar/state-transition": "1.12.1",
+    "@lodestar/params": "1.12.1",
+    "@lodestar/types": "1.12.1",
+    "@lodestar/utils": "1.12.1"
   }
 }
