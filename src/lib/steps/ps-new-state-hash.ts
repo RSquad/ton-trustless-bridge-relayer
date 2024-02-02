@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import _ from 'lodash';
 
-// @ts-ignore
-import TonRocks from '../ton-rocks-js';
+import TonRocks from '../ton-rocks-js/index.js';
 
-import { BlockIdExt, ByteArray32 } from '../ton-types';
-import { buildProof } from '../block-utils';
-import { BocProvider } from '../boc-provider';
+import { BlockIdExt, ByteArray32 } from '../ton-types/index.js';
+import { buildProof } from '../block-utils.js';
+import { BocProvider } from '../boc-provider.js';
 
-import { AProofStep } from './a-proof-step';
+import { AProofStep } from './a-proof-step.js';
 
-import type { TSignature } from '../ton-types';
-import type { IStateUpdate, TProofState, TProofStateType } from './base-types';
+import type { TSignature } from '../ton-types/index.js';
+import type { IStateUpdate, TProofState, TProofStateType } from './base-types.js';
 
 export class PSNewStateHash extends AProofStep {
   public static TypeName: TProofStateType = 'state-hash' as const;

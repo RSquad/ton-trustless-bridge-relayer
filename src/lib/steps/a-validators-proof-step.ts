@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-ignore
-import TonRocks from '../ton-rocks-js';
 
-import { ValidatorSet } from '../ton-types';
+import TonRocks from '../ton-rocks-js/index.js';
 
-import { AProofStep } from './a-proof-step';
+import { ValidatorSet } from '../ton-types/index.js';
 
-import type { IStateUpdate } from './base-types';
+import { AProofStep } from './a-proof-step.js';
+
+import type { IStateUpdate } from './base-types.js';
 
 function walkTree(cell: TonRocks.types.Cell, parts: TonRocks.types.Cell[]) {
   // console.log('start walk:', Buffer.from(cell.getHash()).toString('hex'));

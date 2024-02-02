@@ -1,7 +1,10 @@
-const {BlockId} = require("../blockchain/BlockId");
+// const {BlockId} = require("../blockchain/BlockId");
+import { BlockId } from "../blockchain/BlockId.js";
 
-const rocksTestnetConfig = require('./test.rocks.config.json');
-const freetonTestnetConfig = require('./ton-global.config.json');
+// const rocksTestnetConfig = require('./test.rocks.config.json');
+// const freetonTestnetConfig = require('./ton-global.config.json');
+import rocksTestnetConfig from './test.rocks.config.json' assert { type: "json" };
+import freetonTestnetConfig from './ton-global.config.json' assert { type: "json" };
 
 
 class NetworkOptions {
@@ -20,7 +23,7 @@ class NetworkOptions {
     }
 }
 
-const RocksTestnet = new NetworkOptions(rocksTestnetConfig);
-const FreetonTestnet = new NetworkOptions(freetonTestnetConfig);
+export const RocksTestnet = new NetworkOptions(rocksTestnetConfig);
+export const FreetonTestnet = new NetworkOptions(freetonTestnetConfig);
 
-module.exports = {RocksTestnet, FreetonTestnet};
+// module.exports = {RocksTestnet, FreetonTestnet};

@@ -1,8 +1,7 @@
 import _ from 'lodash';
 import { BN } from 'bn.js';
 
-// @ts-ignore
-import TonRocks from '../ton-rocks-js';
+import TonRocks from '../ton-rocks-js/index.js';
 
 export type TBN = typeof TonRocks.utils.BN;
 

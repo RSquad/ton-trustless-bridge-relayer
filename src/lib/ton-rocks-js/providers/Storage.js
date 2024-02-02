@@ -1,14 +1,17 @@
-const {BlockId} = require("../blockchain/BlockId");
-const {crc16, bytesToHex} = require("../utils");
+// const {BlockId} = require("../blockchain/BlockId");
+import { BlockId } from "../blockchain/BlockId.js";
+import utils from "../utils/index.js";
+// const {crc16, bytesToHex} = require("../utils");
+const {crc16, bytesToHex} = utils;
 
 /**
  * TON Storage class
  */
-class Storage {
+export class Storage {
     /**
      * Creates Storage class with specific zerohash
-     * 
-     * @param {string} zerohash 
+     *
+     * @param {string} zerohash
      */
     constructor(zerohash) {
         this.zerohash = zerohash;
@@ -20,7 +23,7 @@ class Storage {
 
     /**
      * Gets known blocks from storage
-     * 
+     *
      * @returns {Object} Object with known block ids
      */
     getKnownBlocks() {
@@ -29,8 +32,8 @@ class Storage {
 
     /**
      * Adds block id to known blocks
-     * 
-     * @param {BlockId} blockId 
+     *
+     * @param {BlockId} blockId
      */
     addBlock(blockId) {
         this.knownBlocks[blockId.seqno] = blockId;
@@ -69,7 +72,7 @@ class BrowserStorage extends Storage {
     constructor(zerohash) {
         super(zerohash);
     }
-    
+
     /**
      * @private
      */
@@ -129,7 +132,7 @@ class DummyStorage extends Storage {
     constructor(zerohash) {
         super(zerohash);
     }
-    
+
     /**
      * @private
      */
@@ -142,4 +145,4 @@ class DummyStorage extends Storage {
 }
 
 
-module.exports = {Storage, BrowserStorage, DummyStorage};
+// module.exports = {Storage, BrowserStorage, DummyStorage};

@@ -4,6 +4,7 @@
   "description": "",
   "author": "",
   "private": true,
+  "type": "module",
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
@@ -21,6 +22,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@lodestar/config": "~1.12",
+    "@lodestar/light-client": "~1.12",
     "@nestjs/axios": "^2.0.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",

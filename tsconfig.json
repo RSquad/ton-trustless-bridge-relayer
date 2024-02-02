@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "ESNext",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -21,6 +21,6 @@
     "esModuleInterop": true,
     "allowJs": true,
     "useDefineForClassFields": true,
-    "moduleResolution": "node"
+    "moduleResolution": "Node16"
   }
 }

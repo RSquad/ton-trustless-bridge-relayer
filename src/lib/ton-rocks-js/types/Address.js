@@ -1,4 +1,13 @@
-const {crc16, hexToBytes, bytesToHex, stringToBytes, base64toString, stringToBase64} = require("../utils");
+// const {
+import {
+  crc16,
+  hexToBytes,
+  bytesToHex,
+  stringToBytes,
+  base64toString,
+  stringToBase64
+} from "../utils/index.js";
+// } = require("../utils");
 
 const bounceable_tag = 0x11;
 const non_bounceable_tag = 0x51;
@@ -6,7 +15,7 @@ const test_flag = 0x80;
 
 /**
  * @private
- * @param {string} addressString 
+ * @param {string} addressString
  * @return {{isTestOnly: boolean, workchain: number, hashPart: Uint8Array, isBounceable: boolean}}
  */
 function parseFriendlyAddress(addressString) {
@@ -46,9 +55,9 @@ function parseFriendlyAddress(addressString) {
 /**
  * TON Address class
  */
-class Address {
+export class Address {
   /**
-   * @param {string | Address} anyForm 
+   * @param {string | Address} anyForm
    */
   static isValid(anyForm) {
     try {
@@ -67,7 +76,7 @@ class Address {
 
   /**
    * Creates Address class
-   * 
+   *
    * @throws {Error}
    * @param {string | Address} anyForm Address
    */
@@ -110,7 +119,7 @@ class Address {
 
   /**
    * Returns string representation of Address
-   * 
+   *
    * @param {boolean} isUserFriendly? User-friendly (base64) format or not (hex with wc: prefix)
    * @param {boolean} isUrlSafe? Add crc16 to address
    * @param {boolean} isBounceable? Is address bounceable
@@ -153,4 +162,4 @@ class Address {
   }
 }
 
-module.exports = {Address};
+// module.exports = {Address};

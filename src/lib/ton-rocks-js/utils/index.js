@@ -1,12 +1,19 @@
-const BN = require("bn.js");
-const nacl = require("tweetnacl");
-const ethunit = require("ethjs-unit");
-const bip39 = require("bip39");
+// const BN = require("bn.js");
+import BN from "bn.js";
+// const nacl = require("tweetnacl");
+import nacl from "tweetnacl";
+// const ethunit = require("ethjs-unit");
+import ethunit from "ethjs-unit";
+// const bip39 = require("bip39");
+import bip39 from "bip39";
 
-let nodeCrypto = null;
-if (typeof window === 'undefined') {
-    nodeCrypto = require('crypto');
-}
+import nodeCrypto from "crypto";
+
+// let nodeCrypto = null;
+// if (typeof window === 'undefined') {
+//     // nodeCrypto = require('crypto');
+//     nodeCrypto = import('crypto');
+// }
 
 /**
  * Converts bytes to binary string
@@ -14,7 +21,7 @@ if (typeof window === 'undefined') {
  * @param {Uint8Array} bytes
  * @returns {string}
  */
-const bytesToBinString = (bytes) => bytes.reduce((str, byte) => str + byte.toString(2).padStart(8, '0'), '');
+export const bytesToBinString = (bytes) => bytes.reduce((str, byte) => str + byte.toString(2).padStart(8, '0'), '');
 
 /**
  * Converts string to Uint8Array
@@ -22,7 +29,7 @@ const bytesToBinString = (bytes) => bytes.reduce((str, byte) => str + byte.toStr
  * @param {string} str
  * @returns {Uint8Array}
  */
-function stringToArray(str) {
+export function stringToArray(str) {
     let buf = new Uint8Array(str.length);
     for (let i = 0; i < str.length; i++) {
         buf[i] = str.charCodeAt(i);
@@ -36,7 +43,7 @@ function stringToArray(str) {
  * @param {Uint8Array} b
  * @returns {string}
  */
-function bytesToString(b) {
+export function bytesToString(b) {
     // convert bytes to string
     // encoding can be specfied, defaults to utf-8 which is ascii.
     return new TextDecoder().decode(b);
@@ -48,7 +55,7 @@ function bytesToString(b) {
  * @param {Uint8Array} bytes
  * @returns {Promise<ArrayBuffer>}
  */
-function sha256(bytes) {
+export function sha256(bytes) {
     if (typeof window === 'undefined') {
         return nodeCrypto.createHash('sha256').update(bytes).digest();
     } else {
@@ -62,7 +69,7 @@ function sha256(bytes) {
  * @param {Uint8Array} bytes
  * @returns {Promise<ArrayBuffer>}
  */
-function sha512(bytes) {
+export function sha512(bytes) {
     if (typeof window === 'undefined') {
         return nodeCrypto.createHash('sha512').update(bytes).digest();
     } else {
@@ -76,7 +83,7 @@ function sha512(bytes) {
  * @param {number | BN | string} amount
  * @returns {BN}
  */
-function toNano(amount) {
+export function toNano(amount) {
     return ethunit.toWei(amount, 'gwei');
 }
 
@@ -86,7 +93,7 @@ function toNano(amount) {
  * @param {number | BN | string} amount
  * @returns {string}
  */
-function fromNano(amount) {
+export function fromNano(amount) {
     return ethunit.fromWei(amount, 'gwei');
 }
 
@@ -109,7 +116,7 @@ for (let ord = 0; ord <= 0xff; ord++) {
  * @param {Uint8Array} buffer
  * @returns {string}
  */
-function bytesToHex(buffer) {
+export function bytesToHex(buffer) {
     const hex_array = [];
     //(new Uint8Array(buffer)).forEach((v) => { hex_array.push(to_hex_array[v]) });
     for (let i = 0; i < buffer.byteLength; i++) {
@@ -125,7 +132,7 @@ function bytesToHex(buffer) {
  * @param {string} s
  * @returns {Uint8Array}
  */
-function hexToBytes(s) {
+export function hexToBytes(s) {
     s = s.toLowerCase();
     const length2 = s.length;
     if (length2 % 2 !== 0) {
@@ -148,7 +155,7 @@ function hexToBytes(s) {
  * @param {number} size
  * @returns {Uint8Array}
  */
-function stringToBytes(str, size = 1) {
+export function stringToBytes(str, size = 1) {
     let buf;
     let bufView;
     if (size === 1) {
@@ -236,7 +243,7 @@ function stringToBytes(str, size = 1) {
 * @param bytes {Uint8Array}
 * @return {Uint8Array}
 */
-function crc32c(bytes) {
+export function crc32c(bytes) {
   //Version suitable for crc32-c of BOC
   const int_crc = _crc32c(0, bytes);
   const arr = new ArrayBuffer(4);
@@ -251,7 +258,7 @@ function crc32c(bytes) {
  * @param {ArrayLike<number>} data
  * @returns {Uint8Array}
  */
-function crc16(data) {
+export function crc16(data) {
     const poly = 0x1021;
     let reg = 0;
     const message = new Uint8Array(data.length + 2);
@@ -280,7 +287,7 @@ function crc16(data) {
  * @param {Uint8Array} b
  * @returns {Uint8Array}
  */
-function concatBytes(a, b) {
+export function concatBytes(a, b) {
   try {
     const c = new Uint8Array(a.length + b.length);
     c.set(a);
@@ -299,7 +306,7 @@ function concatBytes(a, b) {
  * @param {Uint8Array} b
  * @returns {boolean}
  */
-function compareBytes(a, b) {
+export function compareBytes(a, b) {
   // // TODO Make it smarter
   // return a.toString() === b.toString();
   const hexA = Buffer.from(a).toString('hex');
@@ -336,7 +343,7 @@ const base64abc = (() => {
  * @param {Uint8Array} bytes
  * @returns {string}
  */
-function bytesToBase64(bytes) {
+export function bytesToBase64(bytes) {
     let result = "";
     let i;
     const l = bytes.length;
@@ -368,7 +375,7 @@ function bytesToBase64(bytes) {
  * @param {string} base64
  * @returns {string}
  */
-function base64toString(base64) {
+export function base64toString(base64) {
     if (typeof window === 'undefined') {
         return Buffer.from(base64, 'base64').toString('binary');
     } else {
@@ -382,7 +389,7 @@ function base64toString(base64) {
  * @param {string} s
  * @returns {string}
  */
-function stringToBase64(s) {
+export function stringToBase64(s) {
     if (typeof window === 'undefined') {
         return Buffer.from(s, "binary").toString('base64')
     } else {
@@ -396,7 +403,7 @@ function stringToBase64(s) {
  * @param {string} base64
  * @returns {Uint8Array}
  */
-function base64ToBytes(base64) {
+export function base64ToBytes(base64) {
     const binary_string = base64toString(base64);
     const len = binary_string.length;
     const bytes = new Uint8Array(len);
@@ -413,7 +420,7 @@ function base64ToBytes(base64) {
  * @param {Uint8Array} ui8array Array to read from
  * @returns {number}
  */
-function readNBytesUIntFromArray(n, ui8array) {
+export function readNBytesUIntFromArray(n, ui8array) {
     let res = 0;
     for (let c = 0; c < n; c++) {
         res *= 256;
@@ -422,7 +429,10 @@ function readNBytesUIntFromArray(n, ui8array) {
     return res;
 }
 
-module.exports = {
+// export type BN = typeof BN;
+
+// module.exports = {
+export default {
     BN,
     nacl,
     bip39,

@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import _ from 'lodash';
 
-// @ts-ignore
-import TonRocks from '../ton-rocks-js';
-import { ExtBlkRef } from '../ton-types';
+import TonRocks from '../ton-rocks-js/index.js';
+import { ExtBlkRef } from '../ton-types/index.js';
 
-import { AProofStep } from './a-proof-step';
+import { AProofStep } from './a-proof-step.js';
 
-import type { IStateUpdate, TProofState, TProofStateType } from './base-types';
+import type { IStateUpdate, TProofState, TProofStateType } from './base-types.js';
 
 export class PSShardBlock extends AProofStep {
   public static TypeName: TProofStateType = 'shard-block' as const;

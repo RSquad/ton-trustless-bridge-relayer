@@ -1,6 +1,10 @@
-const {BN, bytesToHex} = require("../utils");
+// const {BN, bytesToHex} = require("../utils");
+import utils from "../utils/index.js";
 
-class BitString {
+const  { BN, bytesToHex } = utils;
+
+
+export class BitString {
     /**
      * @param {number} length Length of BitString in bits
      */
@@ -33,7 +37,7 @@ class BitString {
 
     /**
      * Gets n-th bit
-     * 
+     *
      * @param {number} n
      * @return {boolean} Bit value at position `n`
      */
@@ -43,7 +47,7 @@ class BitString {
 
     /**
      * Gets `n` length bit range from `start` position
-     * 
+     *
      * @param {number} start Start position
      * @param {number} n
      * @return {Uint8Array} [start:start+n] bits
@@ -65,7 +69,7 @@ class BitString {
 
     /**
      * Reads unsigned int
-     * 
+     *
      * @param {number} start Start position
      * @param {number} bitLength Size of uint in bits
      * @returns {BN} number
@@ -88,7 +92,7 @@ class BitString {
 
     /**
      * Reads Uint8
-     * 
+     *
      * @param {number} start Start position
      * @returns {number}
      */
@@ -98,7 +102,7 @@ class BitString {
 
     /**
      * Reads Uint16
-     * 
+     *
      * @param {number} start Start position
      * @returns {number}
      */
@@ -108,7 +112,7 @@ class BitString {
 
     /**
      * Reads Uint32
-     * 
+     *
      * @param {number} start Start position
      * @returns {number}
      */
@@ -118,7 +122,7 @@ class BitString {
 
     /**
      * Reads Uint64
-     * 
+     *
      * @param {number} start Start position
      * @returns {BN}
      */
@@ -128,7 +132,7 @@ class BitString {
 
     /**
      * Reads Int8
-     * 
+     *
      * @param {number} start Start position
      * @returns {number}
      */
@@ -140,7 +144,7 @@ class BitString {
 
     /**
      * Reads Int16
-     * 
+     *
      * @param {number} start Start position
      * @returns {number}
      */
@@ -152,7 +156,7 @@ class BitString {
 
     /**
      * Reads Int32
-     * 
+     *
      * @param {number} start Start position
      * @returns {number}
      */
@@ -174,7 +178,7 @@ class BitString {
 
     /**
      * Sets bit value to 1 at position `n`
-     * 
+     *
      * @param {number} n
      */
     on(n) {
@@ -184,7 +188,7 @@ class BitString {
 
     /**
      * Sets bit value to 0 at position `n`
-     * 
+     *
      * @param {number} n
      */
     off(n) {
@@ -194,7 +198,7 @@ class BitString {
 
     /**
      * Toggles bit value at position `n`
-     * 
+     *
      * @param {number} n
      */
     toggle(n) {
@@ -204,7 +208,7 @@ class BitString {
 
     /**
      * forEach every bit
-     * 
+     *
      * @param {function(boolean): void} callback
      */
     forEach(callback) {
@@ -216,7 +220,7 @@ class BitString {
 
     /**
      * Writes bit and increase cursor
-     * 
+     *
      * @param {boolean | number} b
      */
     writeBit(b) {
@@ -230,7 +234,7 @@ class BitString {
 
     /**
      * Writes bit array
-     * 
+     *
      * @param {Array<boolean | number>} ba
      */
     writeBitArray(ba) {
@@ -241,7 +245,7 @@ class BitString {
 
     /**
      * Writes unsigned int
-     * 
+     *
      * @param {number | BN} number Number to write
      * @param {number} bitLength Size of uint in bits
      */
@@ -262,7 +266,7 @@ class BitString {
 
     /**
      * Writes signed int
-     * 
+     *
      * @param {number | BN} number Number to write
      * @param {number} bitLength Size of int in bits
      */
@@ -293,7 +297,7 @@ class BitString {
 
     /**
      * Writes unsigned 8-bit int
-     * 
+     *
      * @param {number} ui8 Number to write
      */
     writeUint8(ui8) {
@@ -302,7 +306,7 @@ class BitString {
 
     /**
      * Writes array of unsigned 8-bit ints
-     * 
+     *
      * @param {Uint8Array} ui8 Array to write
      */
     writeBytes(ui8) {
@@ -313,7 +317,7 @@ class BitString {
 
     /**
      * Writes string
-     * 
+     *
      * @param {string} s String to write
      */
     writeString(s) {
@@ -323,8 +327,8 @@ class BitString {
     }
 
     /**
-     * Writes grams value 
-     * 
+     * Writes grams value
+     *
      * @param {number | BN} amount Amount in nanograms
      */
     writeGrams(amount) {
@@ -340,11 +344,11 @@ class BitString {
 
     /**
      * Writes TON address  <br>
-     * 
+     *
      * addr_none$00 = MsgAddressExt; <br>
      * addr_std$10 anycast:(Maybe Anycast) <br>
      * workchain_id:int8 address:uint256 = MsgAddressInt; <br>
-     * 
+     *
      * @param {Address | null} address Address to write
      */
     writeAddress(address) {
@@ -360,7 +364,7 @@ class BitString {
 
     /**
      * Writes another BitString to this BitString
-     * 
+     *
      * @param {BitString} anotherBitString
      */
     writeBitString(anotherBitString) {
@@ -371,7 +375,7 @@ class BitString {
 
     /**
      * Clones this bitstring to new
-     * 
+     *
      * @returns {BitString}
      */
     clone() {
@@ -384,7 +388,7 @@ class BitString {
 
     /**
      * Gets string hex representation of bit string
-     * 
+     *
      * @return {string} hex
      */
     toString() {
@@ -393,7 +397,7 @@ class BitString {
 
     /**
      * Gets Top Upped Array (see TON docs)
-     * 
+     *
      * @return {Uint8Array}
      */
     getTopUppedArray() {
@@ -414,7 +418,7 @@ class BitString {
 
     /**
      * Gets hex representation of bit string
-     * 
+     *
      * @return {string} hex
      */
     toHex() {
@@ -438,7 +442,7 @@ class BitString {
 
     /**
      * Sets this cell data to match provided topUppedArray
-     * 
+     *
      * @param {Uint8Array} array Array to copy from
      * @param {boolean} fullfilledBytes Is bytes in array fullfiled
      */
@@ -466,4 +470,4 @@ class BitString {
     }
 }
 
-module.exports = {BitString};
+// module.exports = {BitString};

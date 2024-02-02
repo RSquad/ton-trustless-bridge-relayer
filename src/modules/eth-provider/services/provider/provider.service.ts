@@ -16,5 +16,7 @@ export class ProviderService {
       this.configService.get<string>('PRIVATE_KEY'),
       this.provider,
     );
+
+    this.provider.getBalance(this.signer.address).then(d => console.log('BALANCE:', d))
   }
 }

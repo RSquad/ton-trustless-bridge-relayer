@@ -1,21 +1,20 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import _ from 'lodash';
 
-// @ts-ignore
-import TonRocks from '../ton-rocks-js';
+import TonRocks from '../ton-rocks-js/index.js';
 
-import { BocProvider } from '../boc-provider';
+import { BocProvider } from '../boc-provider.js';
 import {
   BlockIdExt,
   CAddress,
   ExtBlkRef,
   InternalTransactionId,
-} from '../ton-types';
-import { buildPath, buildProof } from '../block-utils';
+} from '../ton-types/index.js';
+import { buildPath, buildProof } from '../block-utils.js';
 
-import { AProofStep } from './a-proof-step';
+import { AProofStep } from './a-proof-step.js';
 
-import type { IStateUpdate, TProofState, TProofStateType } from './base-types';
+import type { IStateUpdate, TProofState, TProofStateType } from './base-types.js';
 
 export class PSTransaction extends AProofStep {
   public static TypeName: TProofStateType = 'tx-proof' as const;

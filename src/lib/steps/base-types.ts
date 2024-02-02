@@ -1,4 +1,4 @@
-import { ByteArray32, ValidatorSet } from '../ton-types';
+import { ByteArray32, ValidatorSet } from '../ton-types/index.js';
 
 export type TProofStateType =
   | 'set-validators'
