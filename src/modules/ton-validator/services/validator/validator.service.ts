@@ -382,13 +382,13 @@ export class ValidatorService {
   }
 
   async validateTransaction(transaction: TonTransaction) {
-    const prismaTx = (
+    const prismaTx: any = ((
       await this.tonTransactionService.tonTransactions({
         where: { ...transaction },
       })
-    )[0];
+    )[0]) || transaction;
 
-    const block = await this.tonApi.getBlockBoc(prismaTx.mcParent);
+    const block = await this.tonApi.getBlockBoc(prismaTx?.mcParent);
 
     const proven = new ProvenState();
     await proven.add(
