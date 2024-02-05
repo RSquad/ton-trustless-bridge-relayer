@@ -1,231 +1,40 @@
 import { Injectable } from '@nestjs/common';
 
-import { createChainForkConfig } from '@lodestar/config';
-import {
-  genesisData,
-  networksChainConfig,
-} from '@lodestar/config/networks';
-import { LightClientRestTransport } from '@lodestar/light-client/transport';
-import { getClient } from "@lodestar/api";
+import { ssz } from "@lodestar/types";
 
 import { FinalityWatcher } from './finality-watcher.js';
 import { OptimisticWatcher } from './optimistic-watcher.js';
-import { Committee } from './committee.js';
-
+import { NethermindApi } from './nethermind-api.js';
+import { BeaconApi } from './beacon-api.js';
+import { ContractEmulator } from './contract-emulator.js';
+import { DBWrapper } from './db-wrapper.js';
 import {
-  allForks,
-  ssz,
-  Epoch,
-  Slot,
-  SyncPeriod,
-} from "@lodestar/types";
-import {
-  EPOCHS_PER_SYNC_COMMITTEE_PERIOD,
-  SLOTS_PER_EPOCH,
-  // FINALIZED_ROOT_GINDEX,
-  // BLOCK_BODY_EXECUTION_PAYLOAD_GINDEX,
-  ForkName,
-  // ForkSeq,
-  // ForkExecution,
-} from "@lodestar/params";
+  computeEpochAtSlot,
+  computeSyncPeriodAtSlot,
+} from './utils.js';
 
-import type { ChainConfig } from '@lodestar/config';
-import type { GenesisData } from '@lodestar/light-client';
 import type {
-  altair,
-  // bellatrix,
-  capella,
-  // deneb,
-  phase0,
-} from '@lodestar/types';
+  TFinalityUpdate,
+  TOptimisticUpdate,
+  TDenebBlock,
+} from './types.js';
 
-
-type TFinalityUpdate = {
-  version: ForkName;
-  data: allForks.LightClientFinalityUpdate
-};
-
-type TOptimisticUpdate = {
-  version: ForkName;
-  data: allForks.LightClientOptimisticUpdate
-};
-
-type TLightClientUpdate = {
-  version: ForkName;
-  data: allForks.LightClientUpdate;
-};
-
-type TCapellaBlock = {
-  version: ForkName;
-  data: capella.SignedBeaconBlock;
-};
-
-type NetworkName = "mainnet" | "sepolia";
-
-interface IConf {
-  chainConfig: ChainConfig,
-  genesisData: GenesisData,
-  BEACON_API: string;
-}
-
-function fromHexString(hex: string): Uint8Array {
-  if (typeof hex !== "string") {
-    throw new Error(`hex argument type ${typeof hex} must be of type string`);
-  }
-
-  if (hex.startsWith("0x")) {
-    hex = hex.slice(2);
-  }
-
-  if (hex.length % 2 !== 0) {
-    throw new Error(`hex string length ${hex.length} must be multiple of 2`);
-  }
-
-  const byteLen = hex.length / 2;
-  const bytes = new Uint8Array(byteLen);
-  for (let i = 0; i < byteLen; i++) {
-    const byte = parseInt(hex.slice(i * 2, (i + 1) * 2), 16);
-    bytes[i] = byte;
-  }
-  return bytes;
-}
-
-export function computeEpochAtSlot(slot: Slot): Epoch {
-  return Math.floor(slot / SLOTS_PER_EPOCH);
-  // return Math.round((slot + 0.5) / SLOTS_PER_EPOCH);
-}
-
-export function computeSyncPeriodAtSlot(slot: Slot): SyncPeriod {
-  return computeSyncPeriodAtEpoch(computeEpochAtSlot(slot));
-}
-
-export function computeSyncPeriodAtEpoch(epoch: Epoch): SyncPeriod {
-  return Math.floor(epoch / EPOCHS_PER_SYNC_COMMITTEE_PERIOD);
-}
-
-const DOMAIN_SYNC_COMMITTEE = Uint8Array.from([7, 0, 0, 0]);
-const CAPELLA_FORK_VERSION = fromHexString("0x90000072"); // sepolia
-// curl -X 'GET' 'http://${ hostWithPort }/eth/v1/beacon/genesis' \
-//   -H 'accept: application/json'
-const jsonGenesis = { data: {
-  genesis_time: 1655733600,
-  genesis_validators_root:
-    '0xd8ea171f3c94aea21ebc42a1ed61052acf3f9209c00e4efbaaddac09ed9b8078',
-  genesis_fork_version: '0x90000069',
-}};
-
-const genesis = ssz.phase0.Genesis.fromJson(jsonGenesis.data);
-
-const configs: Record<NetworkName, IConf> = {
-  sepolia: {
-    chainConfig: networksChainConfig.sepolia,
-    genesisData: genesisData.sepolia,
-    BEACON_API: 'https://lodestar-sepolia.chainsafe.io/',
-  },
-  mainnet: {
-    chainConfig: networksChainConfig.mainnet,
-    genesisData: genesisData.mainnet,
-    BEACON_API: 'http://testing.mainnet.beacon-api.nimbus.team/',
-  },
-};
-
-
-const confName: NetworkName = 'sepolia';
-const conf = configs[confName];
-
-
-class ContractEmulator {
-  private committee: Committee | null = null;
-  private lastCommitteeHash: Buffer = Buffer.from(
-    'b3fb275622503695a503807ebdb4316b0e19221b28aea86ec25bf576e377b736',
-    // 'cf23a84972bfd0e350ef41e809069d5a1d581612a1341129c1ddad698d2180df',
-    // '5ab3e4abf047f4fdcfae44fbfccf8df74efe40e534f33249b51054ed81b7e6be',
-    'hex',
-  );
-
-  async getLastCommitteeHash() {
-    return this.lastCommitteeHash;
-  }
-
-  async getCommittee(): Promise<Committee> {
-    return this.committee;
-  }
-
-  async processCommitteeUpdate(update: TLightClientUpdate) {
-    if ( this.committee ) {
-      this.checkHederSign(
-        update.data.attestedHeader.beacon,
-        update.data.syncAggregate,
-      );
-    }
-
-    this.committee = new Committee(update.data.nextSyncCommittee);
-    this.lastCommitteeHash = Buffer.from(
-      ssz.phase0.BeaconBlockHeader.hashTreeRoot(
-        update.data.finalizedHeader.beacon,
-      ),
-    );
-    console.log('lastCommitteeHash:', this.lastCommitteeHash.toString('hex'));
-  }
-
-  async processFinalityUpdate(update: TFinalityUpdate) {
-    if ( !this.checkHederSign(
-      update.data.attestedHeader.beacon,
-      update.data.syncAggregate,
-    )) {
-      throw new Error(
-        'Invalid signature for finalized slot ' +
-        update.data.attestedHeader.beacon.slot,
-      );
-    }
-  }
-
-  checkHederSign(
-    header: phase0.BeaconBlockHeader,
-    syncAggregate: altair.SyncAggregate,
-  ) {
-    const forkDataRoot = ssz.phase0.ForkData.hashTreeRoot({
-      currentVersion: CAPELLA_FORK_VERSION,
-      genesisValidatorsRoot: genesis.genesisValidatorsRoot,
-    });
-    const domain = new Uint8Array(32);
-    domain.set(DOMAIN_SYNC_COMMITTEE, 0);
-    domain.set(forkDataRoot.slice(0, 28), 4);
-
-    const objectRoot = ssz.phase0.BeaconBlockHeader.hashTreeRoot(
-      header,
-    );
-    const signingRoot = ssz.phase0.SigningData.hashTreeRoot({
-      objectRoot,
-      domain,
-    });
-    const res = this.committee.verifySignature(
-      signingRoot,
-      syncAggregate,
-    );
-
-    return res;
-  }
-}
-
-
-const contract = new ContractEmulator();
 
 @Injectable()
 export class BeaconService {
-  private _transport: LightClientRestTransport;
   private svcWatcher: FinalityWatcher;
   private svcOptimisticWatcher: OptimisticWatcher;
+  private dbWrapper = new DBWrapper();
+  private nethermindApi: NethermindApi;
+  private beaconApi: BeaconApi;
+  private contract = new ContractEmulator();
 
   constructor() {
-    const {BEACON_API: baseUrl} = conf;
-    const config = createChainForkConfig(conf.chainConfig);
-    const api = getClient({ baseUrl }, { config });
-    this._transport = new LightClientRestTransport(api);
-    console.log('transport created');
+    this.nethermindApi = new NethermindApi('http://159.223.222.96:8545');
+    this.beaconApi = new BeaconApi('sepolia');
 
-    this.svcWatcher = new FinalityWatcher(this._transport);
-    this.svcOptimisticWatcher = new OptimisticWatcher(this._transport);
+    this.svcWatcher = new FinalityWatcher(this.beaconApi.transport);
+    this.svcOptimisticWatcher = new OptimisticWatcher(this.beaconApi.transport);
 
     this.svcWatcher.on('finality', this.onFinalityUpdate.bind(this));
     this.svcOptimisticWatcher.on('optimistic', this.onOptimisticUpdate.bind(this));
@@ -233,11 +42,12 @@ export class BeaconService {
     // setTimeout(() => this.start(), 1000);
   }
 
-
-  protected onOptimisticUpdate (update: TOptimisticUpdate) {
+  protected async onOptimisticUpdate (update: TOptimisticUpdate) {
     const { slot } = update.data.attestedHeader.beacon;
 
     console.log('OPT', slot, computeEpochAtSlot(slot), computeSyncPeriodAtSlot(slot));
+
+    await this.dbWrapper.handleUpdate(update);
   };
 
   protected async onFinalityUpdate (update: TFinalityUpdate) {
@@ -247,7 +57,7 @@ export class BeaconService {
       await this.updateCommitteeFor(slot);
     }
 
-    await contract.processFinalityUpdate(update);
+    await this.contract.processFinalityUpdate(update);
     this._currentSlot = slot;
     console.log(
       'FIN',
@@ -256,14 +66,55 @@ export class BeaconService {
       computeSyncPeriodAtSlot(slot),
       update.data.attestedHeader.beacon.slot,
     );
-  };
 
-  public get transport(): LightClientRestTransport {
-    return this._transport;
-  }
+    await this.dbWrapper.handleUpdate(update);
+  };
 
   public start() {
     this.run().catch(ex => console.log(ex));
+
+    this.svcOptimisticWatcher.once('optimistic', (update: TOptimisticUpdate) => {
+      // 4248062
+      const fromSlot = 4248000; // 4173400;
+      const toSlot = 4248100; // update.data.attestedHeader.beacon.slot;
+
+      setTimeout(async () => {
+        await this.dbWrapper.handleBlockAsOptimisticUpdate(
+        await this.beaconApi.transport.fetchBlock(
+          `${ toSlot }`,
+        ));
+        await new Promise((r) => setTimeout(r, 300));
+
+        await this.indexBackward(fromSlot, toSlot);
+
+        // testing
+        await new Promise((r) => setTimeout(r, 10000));
+        const txHash = '0xffbb40166a93097ad35d26d7c59d26c3c1e0f181a9b116bf275b05b5c69457db';
+        console.log('start testing getUpdateByReceipt for', txHash);
+        const update = await this.getUpdateByReceipt(txHash);
+        console.log('update');
+        console.log(update);
+      }, 1000);
+    });
+  }
+
+  private async indexBackward(fromSlot: number, toSlot: number) {
+    let update = await this.dbWrapper.findBySlot(toSlot);
+    while ( update.data.attestedHeader.beacon.slot > fromSlot ) {
+      const hash = Buffer.from(
+        update.data.attestedHeader.beacon.parentRoot,
+      );
+      update = await this.dbWrapper.findByHash(hash);
+      if ( !update ) {
+        update = await this.dbWrapper.handleBlockAsOptimisticUpdate(
+          await this.beaconApi.transport.fetchBlock(`0x${
+            hash.toString('hex')
+          }`),
+        );
+        await new Promise((r) => setTimeout(r, 300));
+      }
+      console.log('while', update.data.attestedHeader.beacon.slot, fromSlot, toSlot);
+    }
   }
 
   private _currentSlot = 0;
@@ -272,8 +123,8 @@ export class BeaconService {
   private async updateCommittee(period: number) {
     const updates
       // : TLightClientUpdate[]
-      = await this.transport.getUpdates(period - 1, 1);
-    await contract.processCommitteeUpdate(updates[0]);
+      = await this.beaconApi.transport.getUpdates(period - 1, 1);
+    await this.contract.processCommitteeUpdate(updates[0]);
 
     this._currentSlot = updates[0].data.finalizedHeader.beacon.slot;
     this._currentPeriod = period;
@@ -298,10 +149,11 @@ export class BeaconService {
   }
 
   private async run() {
-    const blockHash = await contract.getLastCommitteeHash();
-    const block = await this.transport.fetchBlock(`0x${
+    const blockHash = await this.contract.getLastCommitteeHash();
+    const block = await this.beaconApi.transport.fetchBlock(`0x${
       blockHash.toString('hex')
-    }`) as TCapellaBlock;
+    }`) as TDenebBlock;
+    await this.dbWrapper.handleBlockAsOptimisticUpdate(block);
     await this.updateCommitteeFor(block.data.message.slot);
 
     this.svcWatcher.start();
@@ -321,32 +173,53 @@ export class BeaconService {
       чтобы составить цепочку проверок
   */
 
-  async getUpdateByReceipt(receipt: any) {
-    /*
-    const data = this.idxByReceipt[receipt.txId];
-    if ( !data ) {
+  async getUpdateByReceipt(txHash: string) {
+    const {
+      receipt,
+      // receiptProof,
+    } = await this.nethermindApi.getTransactionReceiptWithProof(txHash);
+    const { blockNumber } = receipt;
+    console.log({ blockNumber });
+
+    const {
+      parentBeaconBlockRoot,
+    } = await this.nethermindApi.getBlockByNumber(blockNumber);
+    console.log({ parentBeaconBlockRoot });
+
+    const block = await this.beaconApi.transport.fetchBlock(parentBeaconBlockRoot);
+    const body = block.data.message.body as any;
+    console.log(block.data.message.slot);
+    console.log(body.executionPayload.blockNumber);
+
+    const hash = Buffer.from(
+      parentBeaconBlockRoot.substring(2),
+      'hex',
+    );
+    const update = await this.dbWrapper.findNext(hash);
+
+    if ( !update ) {
       throw new Error('Not in index');
     }
-    return data;
-    */
+
+    return update;
   }
 
   async getProofUpdates(update: any) {
     // returns array of updates for send them to the contract
     const res = [];
 
-    /*
     let upd = update;
     while ( !upd.data.finalizedHeader ) {
-
-      const objectRoot = ssz.phase0.BeaconBlockHeader.hashTreeRoot(
-        upd.data.attestedHeader.beacon,
-      );
-      const strRoot = Buffer.from(objectRoot).toString('hex');
-      upd = this.idxNextByPrev[strRoot];
+      upd = this.dbWrapper.findNext(Buffer.from(
+        ssz.phase0.BeaconBlockHeader.hashTreeRoot(
+          upd.data.attestedHeader.beacon,
+        ),
+      ));
+      if ( !upd ) {
+        throw new Error('Not finalized yet');
+      }
       res.push(upd);
     }
-    */
 
     return res;
   }
