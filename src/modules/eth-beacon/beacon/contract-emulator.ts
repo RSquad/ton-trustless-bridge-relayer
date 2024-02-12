@@ -87,6 +87,7 @@ export class ContractEmulator {
       objectRoot,
       domain,
     });
+    // console.log('DOMAIN', Buffer.from(domain).toString('hex'))
     const res = this.committee.verifySignature(
       signingRoot,
       syncAggregate,

@@ -22,6 +22,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@chainsafe/bls": "^7.1.2",
+    "@chainsafe/blst": "^0.2.9",
+    "@chainsafe/ssz": "^0.11.1",
     "@lodestar/api": "~1.12",
     "@lodestar/config": "~1.12",
     "@lodestar/light-client": "~1.12",
@@ -37,6 +40,9 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/terminus": "^9.2.2",
     "@prisma/client": "^4.12.0",
+    "ethereumjs-util": "^7.1.5",
+    "@ton/crypto": "^3.2.0",
+    "@tonconnect/protocol": "^2.2.6",
     "axios": "^1.3.4",
     "axios-retry": "^3.4.0",
     "bip39": "^3.1.0",
@@ -49,8 +55,9 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "ton": "^13.4.1",
-    "ton-core": "^0.49.0",
-    "ton-crypto": "^3.2.0"
+    "ton-core": "^0.53.0",
+    "ton-crypto": "^3.2.0",
+    "tonweb-mnemonic": "^1.0.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

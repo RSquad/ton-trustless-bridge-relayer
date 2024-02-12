@@ -1,4 +1,4 @@
-import { allForks, ssz } from "@lodestar/types";
+import { allForks, deneb, ssz } from "@lodestar/types";
 
 import { blockToLightClientHeader } from './utils.js';
 
@@ -16,7 +16,7 @@ export class DBWrapper {
         block.version,
         block.data.message as allForks.AllForksLightClient["BeaconBlock"],
       ),
-    } as allForks.LightClientOptimisticUpdate;
+    } as deneb.LightClientOptimisticUpdate;
 
     const update: TOptimisticUpdate = {
       data,

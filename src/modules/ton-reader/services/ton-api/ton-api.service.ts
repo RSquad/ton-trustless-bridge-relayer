@@ -15,18 +15,18 @@ import { parseBlock } from '../../../../lib/utils/blockReader.js';
 import { TonBlock } from '@prisma/client';
 import axiosRetry from 'axios-retry';
 
-console.log(axiosRetry);
-// @ts-ignore
-axiosRetry(axios, {
-  retries: 1, // number of retries
-  retryDelay: (retryCount) => {
-    console.log(`retry attempt: ${retryCount}`);
-    return 2000;
-  },
-  retryCondition: () => {
-    return true;
-  },
-});
+// console.log(axiosRetry);
+// // @ts-ignore
+// axiosRetry(axios, {
+//   retries: 1, // number of retries
+//   retryDelay: (retryCount) => {
+//     console.log(`retry attempt: ${retryCount}`);
+//     return 2000;
+//   },
+//   retryCondition: () => {
+//     return true;
+//   },
+// });
 
 @Injectable()
 export class TonApiService {

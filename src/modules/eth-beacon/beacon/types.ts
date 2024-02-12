@@ -6,12 +6,12 @@ import type { deneb } from '@lodestar/types';
 
 export type TFinalityUpdate = {
   version: ForkName;
-  data: allForks.LightClientFinalityUpdate
+  data: deneb.LightClientFinalityUpdate
 };
 
 export type TOptimisticUpdate = {
   version: ForkName;
-  data: allForks.LightClientOptimisticUpdate
+  data: deneb.LightClientOptimisticUpdate
 };
 
 export type TLightClientUpdate = {
