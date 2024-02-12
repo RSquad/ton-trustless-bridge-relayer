@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { BN } from 'bn.js';
+import BN from 'bn.js';
 
 import TonRocks from '../ton-rocks-js/index.js';
 
@@ -162,7 +162,7 @@ export class ByteArray32 extends ByteArray {
     = ExtBlkRef;
 */
 type TExtBlkRef = {
-  end_lt: TBN; // uint64 // dec
+  end_lt: BN; // uint64 // dec
   seq_no: number; // uint32
   root_hash: string; // bits256 // base64
   file_hash: string; // bits256 // base64
@@ -187,7 +187,7 @@ export class ExtBlkRef {
   }
 
   protected constructor(
-    private endLt: TBN, // uint64
+    private endLt: BN, // uint64
     private seqNo: number, // uint32
     private rootHash: ByteArray32, // bits256
     private fileHash: ByteArray32, // bits256
@@ -295,7 +295,7 @@ export class BlockIdExt {
   protected constructor(
     // private shardId: ShardIdent,
     private workchain: CWorkchain,
-    private shard: TBN,
+    private shard: BN,
 
     private seqNo: number, // uint32
     private rootHash: ByteArray32, // bits256
@@ -422,8 +422,8 @@ class Message {
     return this._message.toString(encoding, start, end);
   }
 
-  public verify(validators: ValidatorSet, signatures: TSignature[]): TBN {
-    const bnSignedWeight = new TonRocks.utils.BN();
+  public verify(validators: ValidatorSet, signatures: TSignature[]): BN {
+    const bnSignedWeight = new BN(0);
     for (let j = 0; j < signatures.length; j++) {
       const signature = Signature.fromData(signatures[j]);
       /*
@@ -476,7 +476,7 @@ export class MsgBlock extends Message {
 }
 
 type TValidatorDesc = {
-  weight: TBN;
+  weight: BN;
   public_key: { pubkey: Uint8Array };
 };
 
@@ -487,9 +487,9 @@ type TValidatorDesc = {
 // type TValidatorRecord = Record<string, IValidatorItem>;
 
 type TValidatorSet = {
-  total: TBN;
-  main: TBN;
-  total_weight: TBN;
+  total: BN;
+  main: BN;
+  total_weight: BN;
   list: { map: Map<string, TValidatorDesc> };
 };
 
@@ -511,7 +511,7 @@ class Validator {
   protected constructor(
     private nodeId: ByteArray32,
     private pubKey: ByteArray32,
-    private weight: TBN,
+    private weight: BN,
   ) {
     //
   }
@@ -542,7 +542,11 @@ export class ValidatorSet {
       res.push(await Validator.fromData({ weight, public_key }));
     }
 
-    return new ValidatorSet(res, validators.main, validators.total_weight);
+    return new ValidatorSet(
+      res,
+      validators.main.toNumber(),
+      validators.total_weight,
+    );
   }
 
   private map: TValidatorRecord;
@@ -550,7 +554,7 @@ export class ValidatorSet {
   protected constructor(
     validators: Validator[],
     private mainValidators: number,
-    private totalWeight: TBN,
+    private totalWeight: BN,
   ) {
     this.map = _.reduce(
       validators,
@@ -611,7 +615,7 @@ export class ValidatorSet {
 // "lt": "5302299000003",
 // "hash": "Tdi1I58XUdrSq4BROzQ7ftD/JnxGyxhFz3THZtZ+D8A="
 export type TInternalTransactionId = {
-  lt: TBN;
+  lt: BN;
   hash: string;
 };
 
@@ -713,7 +717,7 @@ export class InternalTransactionId {
   }
 
   protected constructor(
-    private lt: TBN,
+    private lt: BN,
     private hash: ByteArray32, // bits256
   ) {}
 
@@ -731,8 +735,8 @@ export class InternalTransactionId {
     return { lt, hash };
   }
 
-  public toString() // format: ('normal' | 'lite-client') = 'normal'
-  {
+  public toString() {
+    // format: ('normal' | 'lite-client') = 'normal'
     // if ( format == 'lite-client' ) {
     const { lt, hash } = this.toJSON();
 

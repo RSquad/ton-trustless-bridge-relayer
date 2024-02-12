@@ -3,8 +3,11 @@
 import _ from 'lodash';
 
 import TonRocks from './ton-rocks-js/index.js';
-import { loadHashmap, loadValidatorDescr } from './ton-rocks-js/blockchain/BlockParser.js';
-
+import {
+  loadHashmap,
+  loadValidatorDescr,
+} from './ton-rocks-js/blockchain/BlockParser.js';
+import BN from 'bn.js';
 
 type TBN = typeof TonRocks.utils.BN;
 
@@ -401,7 +404,7 @@ export const buildPathToConfig = (
     (
       c2: TonRocks.types.Cell,
       p2: { cs: number; ref: number },
-      n: TBN,
+      n: BN,
       // ) =>
       //   console.log({c2,p2,n})
     ) =>
