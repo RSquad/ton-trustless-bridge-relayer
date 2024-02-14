@@ -147,25 +147,27 @@ export class LightClient implements Contract {
   }
 
   async sendVerifyOptimisticUpdate(
-      provider: ContractProvider,
-      via: Sender,
-      opts: {
+    provider: ContractProvider,
+    via: Sender,
+    opts: {
 
-          value: bigint;
-          queryID?: number;
-          beacon: Cell
-      }
-  ) {
-      await provider.internal(via, {
-          value: opts.value,
-          sendMode: SendMode.PAY_GAS_SEPARATELY,
-          body: beginCell()
-              .storeUint(Opcodes.verify_optimistic, 32)
-              .storeUint(opts.queryID ?? 0, 64)
-              .storeRef(opts.beacon)
-              .endCell(),
-      });
-  }
+        value: bigint;
+        queryID?: number;
+        beacon: Cell;
+        nextHash: string;
+    }
+) {
+    await provider.internal(via, {
+        value: opts.value,
+        sendMode: SendMode.PAY_GAS_SEPARATELY,
+        body: beginCell()
+            .storeUint(Opcodes.verify_optimistic, 32)
+            .storeUint(opts.queryID ?? 0, 64)
+            .storeBuffer(Buffer.from(opts.nextHash.slice(2), 'hex'))
+            .storeRef(opts.beacon)
+            .endCell(),
+    });
+}
 
   async sendUpdateReceipt(
       provider: ContractProvider,
@@ -343,25 +345,38 @@ export class LightClient implements Contract {
   async getBeaconValidationStatus(provider: ContractProvider, hash: string) {
       const state = await provider.getState();
       if (state.state.type !== 'active') {
-          return { amount: 0n };
+          return { isValid: false };
       }
-      const { stack } = await provider.get('get_update_validation_status', [
+
+      try {
+        const { stack } = await provider.get('get_update_validation_status', [
           {
               type: 'slice',
-              cell: beginCell().storeBuffer(Buffer.from(hash, 'hex'), 32).endCell()
+              cell: beginCell().storeBuffer(Buffer.from(hash.slice(2), 'hex'), 32).endCell()
           } as TupleItemSlice
       ]);
       const [isValid] = [stack.readNumber()];
+      console.log('got valid status:', isValid === 1, hash)
       return { isValid: isValid === 1 };
+      } catch (error) {
+        console.log('got error status:', false, hash);
+        return { isValid: false };
+      }
+
   }
 
   async getLastFinalityHash(provider: ContractProvider) {
       const state = await provider.getState();
       if (state.state.type !== 'active') {
-          return { amount: 0n };
+          return { hash: '0' };
       }
-      const { stack } = await provider.get('get_last_filaity_hash', []);
-      const [hash] = [stack.readBigNumber().toString(16) ];
-      return { hash };
+      try {
+        const { stack } = await provider.get('get_last_filaity_hash', []);
+        const [hash] = [stack.readBigNumber().toString(16) ];
+        return { hash };
+      } catch (error) {
+        return { hash: '0' };
+      }
+
   }
 }

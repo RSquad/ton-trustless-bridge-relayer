@@ -28,7 +28,14 @@ export interface IExecution {
   withdrawalsRoot: string;
 }
 
-export function normalizeBeacon(update: TOptimisticUpdate): IBeacon {
+export function normalizeBeacon<T extends {
+  data: {
+    attestedHeader: {
+      beacon: TOptimisticUpdate['data']['attestedHeader']['beacon']
+    }
+  }
+}>(update: T): IBeacon {
+
   const beacon = update.data.attestedHeader.beacon;
 
   const strRoot = Buffer.from(
@@ -47,7 +54,13 @@ export function normalizeBeacon(update: TOptimisticUpdate): IBeacon {
   }
 }
 
-export function normalizeExecution(update: TOptimisticUpdate): IExecution {
+export function normalizeExecution<T extends {
+  data: {
+    attestedHeader: {
+      execution: TOptimisticUpdate['data']['attestedHeader']['execution']
+    }
+  }
+}>(update: T): IExecution {
   const execution = update.data.attestedHeader.execution;
 
   return {

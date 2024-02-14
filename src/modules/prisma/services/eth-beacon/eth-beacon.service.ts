@@ -96,6 +96,11 @@ export class EthBeaconService {
 
   async findNext(hash: string) {
     const beacon = await this.prisma.beacon.findFirst({
+      include: {
+        Child: true,
+        Parent: true,
+        execution: true
+      },
       where: {
         parentRoot: hash
       }

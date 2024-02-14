@@ -16,7 +16,7 @@ export type TOptimisticUpdate = {
 
 export type TLightClientUpdate = {
   version: ForkName;
-  data: allForks.LightClientUpdate;
+  data: deneb.LightClientUpdate;
 };
 
 export type TAllForksBlock = {

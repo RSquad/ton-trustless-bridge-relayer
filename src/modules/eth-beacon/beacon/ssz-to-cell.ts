@@ -80,7 +80,6 @@ export function BLSSignatureToCell(value: string, tail?: Cell) {
 }
 
 export function SSZRootToCell(value: string, tail?: Cell) {
-  console.log('Root.maxChunkCount', Root.maxChunkCount);
   return SSZByteVectorTypeToCell(value, 32, Root.maxChunkCount, tail);
 }
 
