@@ -58,11 +58,14 @@ export class EthBeaconService {
         }
       : undefined;
 
+
+
     const createdBeacon = this.prisma.beacon.create({
       data: {
         ...beacon,
-        ...connect
-      }
+        isFinality,
+        ...connect,
+      } as any
     });
 
     const createdExecution = await this.prisma.execution.create({

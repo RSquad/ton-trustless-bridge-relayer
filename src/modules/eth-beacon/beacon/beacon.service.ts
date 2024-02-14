@@ -54,7 +54,7 @@ function committeeToCell(
     Dictionary.Values.Buffer(48),
   );
   data.pubkeys.forEach((item, i) => {
-    CommitteeContent.set(i, bytes(item));
+    CommitteeContent.set(i, Buffer.from(item));
   });
 
   if (skip) {
@@ -352,7 +352,7 @@ export class BeaconService {
     console.log('LAST FINALITY HASH:', lastFinalityHash.hash)
 
     const testBeacon = normalizeBeacon(updates[0]);
-    if (lastFinalityHash.hash === testBeacon.selfHash) {
+    if (lastFinalityHash.hash === testBeacon.selfHash || true) {
 
     }
     else if (!testPeriod && lastFinalityHash.hash === '0') {

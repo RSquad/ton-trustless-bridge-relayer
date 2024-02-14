@@ -129,10 +129,11 @@ async function prepareOptimistics(
   const isVerified = await Promise.all(
     beacons.map((op) => beaconService.isBeaconVerified(op.selfHash)),
   );
-  const bocs = beacons.map((optimistic) => {
+  const bocs = beacons.map((optimistic, index) => {
+
     return verifyOptimisticBoc(
       transformBeaconToCell(optimistic),
-      optimistic.Child.selfHash,
+      optimistic?.Child?.selfHash || '0x0',
     );
   });
 

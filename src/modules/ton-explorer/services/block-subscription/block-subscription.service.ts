@@ -37,9 +37,9 @@ export class BlockSubscriptionService implements OnModuleDestroy {
     private eventEmitter: EventEmitter2,
   ) {
     this.sub = this.loop$.subscribe();
-    // this.getInitialKeyblock().then((block) => {
-    //   this.actualBlock$.next(block);
-    // });
+    this.getInitialKeyblock().then((block) => {
+      this.actualBlock$.next(block);
+    });
   }
 
   onModuleDestroy() {
