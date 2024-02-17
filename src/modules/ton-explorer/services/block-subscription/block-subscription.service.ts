@@ -81,10 +81,10 @@ export class BlockSubscriptionService implements OnModuleDestroy {
       await this.saveShardBlocks(shards, prismaMCBlock);
 
       if (parsedBlock.info.key_block && this.shouldVerifyKeyblock) {
-        // this.eventEmitter.emit(
-        //   'keyblock.new',
-        //   new GotKeyblock(mcBlock, boc, parsedBlock, prismaMCBlock),
-        // );
+        this.eventEmitter.emit(
+          'keyblock.new',
+          new GotKeyblock(mcBlock, boc, parsedBlock, prismaMCBlock),
+        );
       }
 
       if (parsedBlock.info.key_block) {

@@ -104,8 +104,8 @@ export class ValidatorService {
   async isBlockVerified(rootHash: string) {
     const hash = Buffer.from(rootHash, 'hex');
     console.log(hash.toString('hex'));
-    // return await this.contractService.validatorContract.isVerifiedBlock(hash);
-    return true;
+    return await this.contractService.validatorContract.isVerifiedBlock(hash);
+    // return true;
   }
 
   async syncVerifying(rootHash: string, prismaId: number) {
