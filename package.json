@@ -2,10 +2,10 @@
   "name": "ton-trustless-bridge-evm-ton-light-client-sync",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "RSquad",
   "private": true,
   "type": "module",
-  "license": "UNLICENSED",
+  "license": "GPL-3.0-or-later",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
