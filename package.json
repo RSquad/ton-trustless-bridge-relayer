@@ -2,7 +2,7 @@
   "name": "ton-trustless-bridge-evm-ton-light-client-sync",
   "version": "0.0.1",
   "description": "",
-  "author": "RSquad",
+  "author": "RSquad Blockchain Lab",
   "private": true,
   "type": "module",
   "license": "GPL-3.0-or-later",
