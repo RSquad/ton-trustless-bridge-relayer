@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import TonRocks from '../ton-rocks-js';
-import { LiteApiBlockResponse, ParsedBlock } from '../types';
+
+import TonRocks from '../ton-rocks-js/index.js';
+import { LiteApiBlockResponse, ParsedBlock } from '../types/index.js';
 
 export async function parseBlock(
   block: LiteApiBlockResponse,

@@ -3,15 +3,16 @@ import { INestApplication, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TonBlock } from '@prisma/client';
 import { concatMap, delay, exhaustMap, of, Subject, Subscription } from 'rxjs';
-import { GotKeyblock } from 'src/events/got-keyblock.event';
-import { BaseTonBlockInfo, BaseTonTransactionInfo } from 'src/lib/types';
-import { hexToBase64 } from 'src/lib/utils';
-import { parseBlock } from 'src/lib/utils/blockReader';
-import { ContractService } from 'src/modules/eth-provider/services/contract/contract.service';
-import { LoggerService } from 'src/modules/logger/services/logger/logger.service';
-import { TonBlockService } from 'src/modules/prisma/services/ton-block/ton-block.service';
-import { TonTransactionService } from 'src/modules/prisma/services/ton-transaction/ton-transaction.service';
-import { TonApiService } from '../../../ton-reader/services/ton-api/ton-api.service';
+
+import { GotKeyblock } from '../../../../events/got-keyblock.event.js';
+import { BaseTonBlockInfo, BaseTonTransactionInfo } from '../../../../lib/types/index.js';
+// import { hexToBase64 } from 'src/lib/utils.js';
+import { parseBlock } from '../../../../lib/utils/blockReader.js';
+import { ContractService } from '../../../../modules/eth-provider/services/contract/contract.service.js';
+import { LoggerService } from '../../../../modules/logger/services/logger/logger.service.js';
+import { TonBlockService } from '../../../../modules/prisma/services/ton-block/ton-block.service.js';
+import { TonTransactionService } from '../../../../modules/prisma/services/ton-transaction/ton-transaction.service.js';
+import { TonApiService } from '../../../ton-reader/services/ton-api/ton-api.service.js';
 
 const MC_INTERVAL = 10 * 1000;
 
@@ -48,12 +49,12 @@ export class BlockSubscriptionService implements OnModuleDestroy {
   }
 
   async tick(initialblock: BaseTonBlockInfo) {
-    // this.logger.apiLog('[BlockSub] run tick...');
+    this.logger.apiLog('[BlockSub] run tick...');
     let seqno = initialblock.seqno;
     const actualBlock = await this.tonApi.getLastBlock();
-    // this.logger.apiLog(
-    //   `[BlockSub] checking mcblocks from ${seqno} to ${actualBlock.seqno} `,
-    // );
+    this.logger.apiLog(
+      `[BlockSub] checking mcblocks from ${seqno} to ${actualBlock.seqno} `,
+    );
 
     while (seqno < actualBlock.seqno) {
       const shardsData = await this.tonApi.getMasterchainBlockWithShards(seqno);
@@ -80,10 +81,10 @@ export class BlockSubscriptionService implements OnModuleDestroy {
       await this.saveShardBlocks(shards, prismaMCBlock);
 
       if (parsedBlock.info.key_block && this.shouldVerifyKeyblock) {
-        this.eventEmitter.emit(
-          'keyblock.new',
-          new GotKeyblock(mcBlock, boc, parsedBlock, prismaMCBlock),
-        );
+        // this.eventEmitter.emit(
+        //   'keyblock.new',
+        //   new GotKeyblock(mcBlock, boc, parsedBlock, prismaMCBlock),
+        // );
       }
 
       if (parsedBlock.info.key_block) {
@@ -93,7 +94,7 @@ export class BlockSubscriptionService implements OnModuleDestroy {
       seqno += 1;
     }
 
-    // this.logger.apiLog('[BlockSub] end tick.');
+    this.logger.apiLog('[BlockSub] end tick.');
     this.actualBlock$.next(actualBlock);
   }
 

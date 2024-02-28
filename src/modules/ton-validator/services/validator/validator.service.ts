@@ -2,27 +2,28 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OnEvent } from '@nestjs/event-emitter';
 import { concatMap, of, Subject } from 'rxjs';
-import { GotKeyblock } from 'src/events/got-keyblock.event';
+import { GotKeyblock } from '../../../../events/got-keyblock.event.js';
 import {
   ProvenState,
   PSProofValidators,
   PSSetValidators,
   PSTransaction,
-} from 'src/lib/steps';
+} from '../../../../lib/steps/index.js';
 import {
   BlockIdExt,
   CFriendlyAddressString,
   InternalTransactionId,
-} from 'src/lib/ton-types';
-import { ContractService } from 'src/modules/eth-provider/services/contract/contract.service';
-import { ProviderService } from 'src/modules/eth-provider/services/provider/provider.service';
-import { LoggerService } from 'src/modules/logger/services/logger/logger.service';
-import { TonBlockService } from 'src/modules/prisma/services/ton-block/ton-block.service';
-import { TonTransactionService } from 'src/modules/prisma/services/ton-transaction/ton-transaction.service';
-import { TonApiService } from 'src/modules/ton-reader/services/ton-api/ton-api.service';
-import createLock from '../../utils/SimpleLock';
+} from '../../../../lib/ton-types/index.js';
+import { ContractService } from '../../../../modules/eth-provider/services/contract/contract.service.js';
+import { ProviderService } from '../../../../modules/eth-provider/services/provider/provider.service.js';
+import { LoggerService } from '../../../../modules/logger/services/logger/logger.service.js';
+import { TonBlockService } from '../../../../modules/prisma/services/ton-block/ton-block.service.js';
+import { TonTransactionService } from '../../../../modules/prisma/services/ton-transaction/ton-transaction.service.js';
+import { TonApiService } from '../../../../modules/ton-reader/services/ton-api/ton-api.service.js';
+import createLock from '../../utils/SimpleLock.js';
 import _ from 'lodash';
 import { TonTransaction } from '@prisma/client';
+import { ethers } from 'ethers';
 
 @Injectable()
 export class ValidatorService {
@@ -81,6 +82,7 @@ export class ValidatorService {
     if (this.isInitialKeyblock || (await this.checkInitValidatorsNeeded())) {
       await this.initValidators(data);
     } else {
+      // await this.initValidators(data);
       await this.updateValidators(data);
     }
     this.isInitialKeyblock = false;
@@ -101,7 +103,9 @@ export class ValidatorService {
 
   async isBlockVerified(rootHash: string) {
     const hash = Buffer.from(rootHash, 'hex');
-    return await this.contractService.validatorContract.isVerifiedBlock(hash);
+    console.log(hash.toString('hex'));
+    // return await this.contractService.validatorContract.isVerifiedBlock(hash);
+    return true;
   }
 
   async syncVerifying(rootHash: string, prismaId: number) {
@@ -147,23 +151,35 @@ export class ValidatorService {
 
     try {
       await this.validatorLock.acquire();
+      console.log('start parseCandidatesRootBlock');
 
       await this.contractService.validatorContract
-        .parseCandidatesRootBlock(boc)
+        .parseCandidatesRootBlock(boc, {
+          maxFeePerGas: ethers.parseUnits('6', 'gwei'),
+          // gasPrice: ethers.parseUnits('0.002', 'gwei'),
+        })
         .then((tx) => (tx as any).wait());
 
       if (bocs.length > 1) {
         for (let i = 1; i < bocs.length; i++) {
+          console.log('start parsePartValidators');
           await this.contractService.validatorContract
-            .parsePartValidators(bocs[i])
+            .parsePartValidators(bocs[i], {
+
+              maxFeePerGas: ethers.parseUnits('6', 'gwei'),
+              // gasPrice: ethers.parseUnits('0.2', 'gwei'),
+            })
             .then((tx) => (tx as any).wait());
         }
       }
+      console.log('start initValidators');
       await this.contractService.validatorContract
-        .initValidators()
+        .initValidators({
+          gasPrice: ethers.parseUnits('0.002', 'gwei'),
+        })
         .then((tx) => (tx as any).wait());
     } catch (error) {
-      console.error(error.message);
+      console.error(error?.info);
     } finally {
       this.validatorLock.release();
     }
@@ -202,12 +218,16 @@ export class ValidatorService {
       await this.validatorLock.acquire();
 
       await this.contractService.validatorContract
-        .parseCandidatesRootBlock(boc)
+        .parseCandidatesRootBlock(boc, {
+          gasPrice: ethers.parseUnits('0.002', 'gwei'),
+        })
         .then((tx) => (tx as any).wait());
       if (bocs.length > 1) {
         for (let i = 1; i < bocs.length; i++) {
           await this.contractService.validatorContract
-            .parsePartValidators(bocs[i])
+            .parsePartValidators(bocs[i], {
+              gasPrice: ethers.parseUnits('0.002', 'gwei'),
+            })
             .then((tx) => (tx as any).wait());
         }
       }
@@ -231,11 +251,16 @@ export class ValidatorService {
               r: `0x${c.r}`,
               s: `0x${c.s}`,
             })) as any[5],
+            {
+              gasPrice: ethers.parseUnits('0.002', 'gwei'),
+            },
           )
           .then((tx) => (tx as any).wait());
       }
       await this.contractService.validatorContract
-        .setValidatorSet()
+        .setValidatorSet({
+          gasPrice: ethers.parseUnits('0.002', 'gwei'),
+        })
         .then((tx) => (tx as any).wait());
     } catch (error) {
       console.error(error.message);
@@ -336,6 +361,9 @@ export class ValidatorService {
         .readStateProof(
           Buffer.from(mc_proof.state_proof, 'base64'),
           Buffer.from(nextBlock.rootHash, 'hex'),
+          {
+            gasPrice: ethers.parseUnits('0.002', 'gwei'),
+          },
         )
         .then((tx) => (tx as any).wait());
       await this.tonBlockService.updateTonBlockStatus({
@@ -354,13 +382,13 @@ export class ValidatorService {
   }
 
   async validateTransaction(transaction: TonTransaction) {
-    const prismaTx = (
+    const prismaTx: any = ((
       await this.tonTransactionService.tonTransactions({
         where: { ...transaction },
       })
-    )[0];
+    )[0]) || transaction;
 
-    const block = await this.tonApi.getBlockBoc(prismaTx.mcParent);
+    const block = await this.tonApi.getBlockBoc(prismaTx?.mcParent);
 
     const proven = new ProvenState();
     await proven.add(

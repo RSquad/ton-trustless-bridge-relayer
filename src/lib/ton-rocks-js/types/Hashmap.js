@@ -1,16 +1,29 @@
-const {BN} = require("../utils");
-const {Cell} = require("./Cell");
-const {
-    loadBit,
-    loadUint,
-    loadUintLeq,
-    loadMaybeRef
-} = require("../blockchain/BlockUtils");
+// const {BN} = require("../utils");
+// const {Cell} = require("./Cell");
+// const {
+//     loadBit,
+//     loadUint,
+//     loadUintLeq,
+//     loadMaybeRef
+// } = require("../blockchain/BlockUtils");
+
+// import { BN } from "../utils/index.js";
+import { Cell } from "./Cell.js";
+import {
+  loadBit,
+  loadUint,
+  loadUintLeq,
+  loadMaybeRef
+} from "../blockchain/BlockUtils.js";
+import utils from "../utils/index.js";
+
+const  { BN } = utils;
+
 
 /**
  * TON Hashmap class
  */
-class Hashmap {
+export class Hashmap {
 
     /**
      * Creates empty hashmap with `n` bitwidth
@@ -306,7 +319,7 @@ class Hashmap {
 /**
  * TON HashmapE class
  */
-class HashmapE extends Hashmap {
+export class HashmapE extends Hashmap {
 
     /**
      * Creates empty hashmap with `n` bitwidth
@@ -358,7 +371,7 @@ class HashmapE extends Hashmap {
 /**
  * TON HashmapAug class
  */
-class HashmapAug extends Hashmap {
+export class HashmapAug extends Hashmap {
 
     /**
      * Creates empty hashmap with `n` bitwidth
@@ -375,7 +388,7 @@ class HashmapAug extends Hashmap {
 /**
  * TON HashmapAugE class
  */
-class HashmapAugE extends HashmapE {
+export class HashmapAugE extends HashmapE {
 
     /**
      * Creates empty hashmap with `n` bitwidth
@@ -389,4 +402,4 @@ class HashmapAugE extends HashmapE {
     }
 }
 
-module.exports = {Hashmap, HashmapE, HashmapAug, HashmapAugE};
+// module.exports = {Hashmap, HashmapE, HashmapAug, HashmapAugE};

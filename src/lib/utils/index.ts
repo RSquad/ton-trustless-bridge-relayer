@@ -2,7 +2,7 @@ import {
   BaseTonBlockInfo,
   BaseTonTransactionInfo,
   LiteApiBlockRequest,
-} from '../types';
+} from '../types/index.js';
 
 export function hexToBase64(hex: string) {
   return Buffer.from(hex, 'hex').toString('base64');

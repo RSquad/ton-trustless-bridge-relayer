@@ -1,18 +1,27 @@
-const {Cell, Address} = require("../types");
-const {BN, nacl, sha256, sha512, crc16, crc32c, compareBytes, base64ToBytes, bytesToBinString, bytesToHex, concatBytes, stringToArray} = require("../utils");
-const {BlockParser} = require("./BlockParser");
-const {BlockId} = require("./BlockId");
+// const {Cell, Address} = require("../types");
+import { Cell, Address } from "../types/index.js";
+// const {BlockParser} = require("./BlockParser");
+import { BlockParser } from "./BlockParser.js";
+// const {BlockId} = require("./BlockId");
+import { BlockId } from "./BlockId.js";
 
+import utils from "../utils/index.js";
+
+const {
+  BN, nacl, sha256, sha512, crc16, crc32c,
+  compareBytes, base64ToBytes, bytesToBinString,
+  bytesToHex, concatBytes, stringToArray,
+} = utils;
 
 /**
  * Main BlockAPI class. <br>
  * Examples in test/test-blockapi.js
  */
-class Block {
+export class Block {
 
   /**
    * Creates BlockAPI class
-   * 
+   *
    * @constructor
    * @param {Object} provider Provider object
    * @param {Object} storage Storage object
@@ -25,7 +34,7 @@ class Block {
 
   /**
    * Tries to run method function several times
-   * 
+   *
    * @param {number} retry Retry count
    * @param {Function} method Async BlockAPI function
    * @returns {Promise<{ok:boolean, reason:(Error|undefined)}>} Function result object
@@ -42,7 +51,7 @@ class Block {
 
   /**
    * Gets latest known block id
-   * 
+   *
    * @returns {Promise<{ok:boolean, reason:(Error|undefined), id:(BlockId|undefined), clientDiff:(number|undefined), serverDiff:(number|undefined), tonDiff:(number|undefined)}>} result
    */
   async getLatestId() {
@@ -68,7 +77,7 @@ class Block {
 
   /**
    * Tries to lookup block by id, lt or time
-   * 
+   *
    * @param {BlockId} blockId? Block id to lookup
    * @param {BN} lt? Block logical time
    * @param {number} utime? Block create unix time
@@ -125,9 +134,9 @@ class Block {
 
   /**
    * Gets header of block
-   * 
+   *
    * @param {BlockId} blockId Block id object
-   * @returns {Promise<{ok:boolean, reason:(Error|undefined), blockHeader:(Object|undefined)}>} 
+   * @returns {Promise<{ok:boolean, reason:(Error|undefined), blockHeader:(Object|undefined)}>}
    */
   async getHeader(blockId) {
     let result = {ok:false};
@@ -174,9 +183,9 @@ class Block {
 
   /**
    * Gets block data
-   * 
+   *
    * @param {BlockId} blockId Block id object
-   * @returns {Promise<{ok:boolean, reason:(Error|undefined), block:(Object|undefined)}>} 
+   * @returns {Promise<{ok:boolean, reason:(Error|undefined), block:(Object|undefined)}>}
    */
   async getData(blockId) {
     let result = {ok:false};
@@ -283,9 +292,9 @@ class Block {
 
   /**
    * Validates block by Merkle proofs
-   * 
+   *
    * @param {BlockId} blockId Block id object
-   * @returns {Promise<{ok:boolean, reason:(Error|undefined), valid:(boolean|undefined)}>} 
+   * @returns {Promise<{ok:boolean, reason:(Error|undefined), valid:(boolean|undefined)}>}
    */
   async validate(blockId) {
     let result = {ok:false};
@@ -473,7 +482,7 @@ class Block {
                 throw Error('signature set contains duplicate signature');
               seen.push(signature.signature.toString());
               // check one signature
-              
+
               //const res = verify_signature(to_sign, k.signatures.signatures[j].signature, node_list[s].key);
               const res = nacl.sign.detached.verify(to_sign, signature.signature, node_list[s].key);
               if (!res)
@@ -497,7 +506,7 @@ class Block {
           if (k.to_key_block)
             this.storage.addBlock(k.to);
         }
-        
+
         from = blockProof.to;
 
         if (blockId.compare(from)) {
@@ -518,9 +527,9 @@ class Block {
 
   /**
    * Gets shards info
-   * 
+   *
    * @param {BlockId} blockId Block id object
-   * @returns {Promise<{ok:boolean, reason:(Error|undefined), shardHashes:(Object|undefined), blockHeader:(Object|undefined), shardState:(Object|undefined)}>} 
+   * @returns {Promise<{ok:boolean, reason:(Error|undefined), shardHashes:(Object|undefined), blockHeader:(Object|undefined), shardState:(Object|undefined)}>}
    */
   async getShards(blockId) {
     let result = {ok:false};
@@ -593,13 +602,13 @@ class Block {
 
   /**
    * Gets transaction list
-   * 
+   *
    * @param {number} maxCount Maximum number of transactions
    * @param {Address | string} accountAddr Account address
    * @param {BN} lt Logical time of first transaction
    * @param {Uint32Array} hash Hash of first transaction
    * @param {BN} to_lt Logical time of last transaction (not including)
-   * @returns {Promise<{ok:boolean, reason:(Error|undefined), transactionList:(Object|undefined), blockIdList:(Object|undefined)}>} 
+   * @returns {Promise<{ok:boolean, reason:(Error|undefined), transactionList:(Object|undefined), blockIdList:(Object|undefined)}>}
    */
   async getTransactions(maxCount, accountAddr, lt, hash, to_lt) {
     let result = {ok:false};
@@ -632,11 +641,11 @@ class Block {
           result.ok = true;
           result.transactionList = transactionList;
           result.blockIdList = blockIdList;
-      
+
           return result;
         }
 
-        if (!res) 
+        if (!res)
           throw Error("empty answer");
 
         if (res.transactions.length === 0) {
@@ -645,7 +654,7 @@ class Block {
           result.ok = true;
           result.transactionList = transactionList;
           result.blockIdList = blockIdList;
-      
+
           return result;
         }
 
@@ -688,7 +697,7 @@ class Block {
           result.ok = true;
           result.transactionList = transactionList;
           result.blockIdList = blockIdList;
-      
+
           return result;
         }
       }
@@ -734,10 +743,10 @@ class Block {
 
   /**
    * Gets account state
-   * 
+   *
    * @param {BlockId} blockId Block id object
    * @param {Address | string} accountAddr Account address
-   * @returns {Promise<{ok:boolean, reason:(Error|undefined), account:(Object|undefined), blockHeader:(Object|undefined), shardState:(Object|undefined), lastTransHash:(Uint32Array|undefined), lastTransLt:(BN|undefined)}>} 
+   * @returns {Promise<{ok:boolean, reason:(Error|undefined), account:(Object|undefined), blockHeader:(Object|undefined), shardState:(Object|undefined), lastTransHash:(Uint32Array|undefined), lastTransLt:(BN|undefined)}>}
    */
   async getAccountState(blockId, accountAddr) {
     let result = {ok:false};
@@ -894,10 +903,10 @@ class Block {
 
   /**
    * Gets blockchain config
-   * 
+   *
    * @param {BlockId} blockId Block id object
    * @param {number} configNum? Config number (All if not specified)
-   * @returns {Promise<{ok:boolean, reason:(Error|undefined), configParam:(Object|undefined), configAddr:(Uint8Array|undefined), blockHeader:(Object|undefined), shardState:(Object|undefined)}>} 
+   * @returns {Promise<{ok:boolean, reason:(Error|undefined), configParam:(Object|undefined), configAddr:(Uint8Array|undefined), blockHeader:(Object|undefined), shardState:(Object|undefined)}>}
    */
   async getConfig(blockId, configNum) {
     let result = {ok:false};
@@ -1011,11 +1020,11 @@ class Block {
 
   /**
    * Runs get method on remote node
-   * 
+   *
    * @todo Make proof checks
    * @param {BlockId} blockId Block id object
    * @param {Address | string} accountAddr Account address
-   * @returns {Promise<{ok:boolean, reason:(Error|undefined), smc:(Object|undefined)}>} 
+   * @returns {Promise<{ok:boolean, reason:(Error|undefined), smc:(Object|undefined)}>}
    */
   async runSmcMethod(blockId, accountAddr, method, params) {
     console.warn('Incomplete, do not use');
@@ -1036,7 +1045,7 @@ class Block {
     }
     return result;
   }
-  
+
   async sendMessage(message) {
     let result = {ok:false};
     try {
@@ -1116,4 +1125,4 @@ class ValidatorSetPRNG {
   }
 }
 
-module.exports = {Block};
+// module.exports = {Block};

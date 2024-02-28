@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { EthProviderModule } from '../eth-provider/eth-provider.module';
-import { LoggerModule } from '../logger/logger.module';
-import { PrismaModule } from '../prisma/prisma.module';
-import { ValidatorService } from './services/validator/validator.service';
-import { ValidatorController } from './controllers/validator/validator.controller';
-import { TonReaderModule } from '../ton-reader/ton-reader.module';
+import { EthProviderModule } from '../eth-provider/eth-provider.module.js';
+import { LoggerModule } from '../logger/logger.module.js';
+import { PrismaModule } from '../prisma/prisma.module.js';
+import { ValidatorService } from './services/validator/validator.service.js';
+import { ValidatorController } from './controllers/validator/validator.controller.js';
+import { TonReaderModule } from '../ton-reader/ton-reader.module.js';
 
 @Module({
   imports: [

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { BaseTonBlockInfo } from 'src/lib/types';
-import { LoggerService } from 'src/modules/logger/services/logger/logger.service';
-import { PrismaService } from '../prisma/prisma.service';
+import { BaseTonBlockInfo } from '../../../../lib/types/index.js';
+import { LoggerService } from '../../../../modules/logger/services/logger/logger.service.js';
+import { PrismaService } from '../prisma/prisma.service.js';
 
 @Injectable()
 export class TonBlockService {

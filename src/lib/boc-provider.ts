@@ -2,10 +2,12 @@
 import path from 'path';
 import fs from 'fs';
 
-// @ts-ignore
-import TonRocks from './ton-rocks-js';
-import { ByteArray32 } from './ton-types';
+import TonRocks from './ton-rocks-js/index.js';
+
+import { ByteArray32 } from './ton-types/index.js';
 import _ from 'lodash';
+
+const __dirname = path.resolve(path.dirname(''));
 
 export class FileProvider {
   public constructor(private strPath: string) {}

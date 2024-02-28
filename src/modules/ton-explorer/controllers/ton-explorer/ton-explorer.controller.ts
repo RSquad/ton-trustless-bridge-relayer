@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
-import { ExplorerService } from '../../services/explorer/explorer.service';
+import { ExplorerService } from '../../services/explorer/explorer.service.js';
 
 @Controller('ton-explorer')
 export class TonExplorerController {

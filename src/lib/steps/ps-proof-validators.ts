@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import _ from 'lodash';
 
-// @ts-ignore
-import TonRocks from '../ton-rocks-js';
+import TonRocks from '../ton-rocks-js/index.js';
 
-import { BocProvider } from '../boc-provider';
-import { BlockIdExt } from '../ton-types';
+import { BocProvider } from '../boc-provider.js';
+import { BlockIdExt } from '../ton-types/index.js';
 
-import { AValidatorsProofStep } from './a-validators-proof-step';
-import { PSSetValidators } from './ps-set-validators';
+import { AValidatorsProofStep } from './a-validators-proof-step.js';
+import { PSSetValidators } from './ps-set-validators.js';
 
-import type { TSignature } from '../ton-types';
-import type { IStateUpdate, TProofState, TProofStateType } from './base-types';
+import type { TSignature } from '../ton-types/index.js';
+import type { IStateUpdate, TProofState, TProofStateType } from './base-types.js';
 
 const bnTwo = new TonRocks.utils.BN(2);
 const bnThree = new TonRocks.utils.BN(3);

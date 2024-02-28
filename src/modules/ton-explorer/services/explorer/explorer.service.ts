@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { TonBlockService } from 'src/modules/prisma/services/ton-block/ton-block.service';
-import { TonTransactionService } from 'src/modules/prisma/services/ton-transaction/ton-transaction.service';
-import { TonApiService } from 'src/modules/ton-reader/services/ton-api/ton-api.service';
-import { BlockSubscriptionService } from '../block-subscription/block-subscription.service';
+import { TonBlockService } from '../../../prisma/services/ton-block/ton-block.service.js';
+import { TonTransactionService } from '../../../prisma/services/ton-transaction/ton-transaction.service.js';
+import { TonApiService } from '../../../ton-reader/services/ton-api/ton-api.service.js';
+import { BlockSubscriptionService } from '../block-subscription/block-subscription.service.js';
 
 @Injectable()
 export class ExplorerService {

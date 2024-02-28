@@ -1,14 +1,14 @@
 import _ from 'lodash';
 
-import { AProofStep } from './a-proof-step';
-import { PSSetValidators } from './ps-set-validators';
-import { PSProofValidators } from './ps-proof-validators';
-import { PSShardState } from './ps-shard-state';
-import { PSShardBlock } from './ps-shard-block';
-import { PSNewStateHash } from './ps-new-state-hash';
-import { PSTransaction } from './ps-transaction';
+import { AProofStep } from './a-proof-step.js';
+import { PSSetValidators } from './ps-set-validators.js';
+import { PSProofValidators } from './ps-proof-validators.js';
+import { PSShardState } from './ps-shard-state.js';
+import { PSShardBlock } from './ps-shard-block.js';
+import { PSNewStateHash } from './ps-new-state-hash.js';
+import { PSTransaction } from './ps-transaction.js';
 
-import type { TProofState } from './base-types';
+import type { TProofState } from './base-types.js';
 
 export class ProvenState {
   private steps: AProofStep[] = [];

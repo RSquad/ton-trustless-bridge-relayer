@@ -46,3 +46,50 @@ model TonTransaction {
   mcParent   TonBlock? @relation(fields: [mcParentId], references: [id])
   mcParentId Int?
 }
+
+model Beacon {
+  id         Int       @id @default(autoincrement())
+
+  slot Int
+  proposerIndex Int
+  parentRoot String
+  stateRoot String
+  bodyRoot String
+
+  selfHash String
+  isFinality Boolean @default(false)
+
+  Parent   Beacon?  @relation("ParentBeacon", fields: [ParentBeaconId], references: [id])
+  Child    Beacon?  @relation("ParentBeacon")
+  ParentBeaconId Int? @unique
+
+  execution Execution?
+}
+
+model Execution {
+  id         Int       @id @default(autoincrement())
+
+  parentHash String
+  feeRecipient String
+  stateRoot String
+  receiptsRoot String
+  logsBloom String
+  prevRandao String
+  blockNumber Int
+  gasLimit Int
+  gasUsed Int
+  timestamp Int
+  extraData String
+  baseFeePerGas String
+  blockHash String
+  transactionsRoot String
+  withdrawalsRoot String
+
+  beacon   Beacon? @relation(fields: [beaconId], references: [id])
+  beaconId Int? @unique
+
+  executionBranch1 String
+  executionBranch2 String
+  executionBranch3 String
+  executionBranch4 String
+}

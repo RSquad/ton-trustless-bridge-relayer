@@ -3,7 +3,7 @@ import {
   BaseTonBlockInfo,
   LiteApiBlockResponse,
   ParsedBlock,
-} from 'src/lib/types';
+} from 'src/lib/types/index.js';
 
 export class GotKeyblock {
   block: BaseTonBlockInfo;

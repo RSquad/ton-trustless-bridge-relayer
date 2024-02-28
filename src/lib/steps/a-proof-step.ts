@@ -1,4 +1,4 @@
-import type { IStateUpdate, TProofState, TProofStateType } from './base-types';
+import type { IStateUpdate, TProofState, TProofStateType } from './base-types.js';
 
 export abstract class AProofStep {
   public abstract get TypeName(): TProofStateType;
